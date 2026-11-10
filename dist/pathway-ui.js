@@ -44,6 +44,9 @@
     $('resultDetails').replaceChildren();
     for(const [op,v]of Object.entries(result.byOperation)){if(result.pathway!=='mixed'&&result.pathway!==op)continue;const p=document.createElement('p');p.textContent=title(op)+': '+v.correct+' / '+v.attempts+' correct ('+Math.round(v.accuracy*100)+'%)';$('resultDetails').append(p);}
     $('resultNote').textContent=!result.valid?'The full uninterrupted 90 seconds are required. This check earns no pass. Your practice history is retained.':result.official?(result.passed?'One passing day recorded. Your next qualifying pass must be on another day.':'Today’s official score is saved. Extra practice remains open; your next qualifying check is another day.'):'Extra practice result saved. Only the first completed check each day counts toward a trophy.';
+    // An interrupted check is not official, so the game gate is still closed:
+    // offer the check again instead of a game that would bounce the student out.
+    if(!result.valid&&afterCheck){const callback=afterCheck;afterCheck=()=>intro(callback);$('checkContinue').textContent='Try the check again';}
     render();
   }
   function start(){
@@ -57,6 +60,8 @@
   $('checkAnswer').oninput=e=>{e.target.value=e.target.value.replace(/[^0-9]/g,'').slice(0,3);};
   function closeCheck(){if(active){end(true);return;}$('checkDialog').close();afterCheck=null;}
   $('closeCheck').onclick=closeCheck;$('checkDialog').addEventListener('cancel',e=>{e.preventDefault();closeCheck();});
+  // However the dialog closes, a check can never keep running out of sight.
+  $('checkDialog').addEventListener('close',()=>{if(!active)return;clearInterval(tick);tick=null;try{active.finish({interrupted:true});}catch(e){}active=null;question=null;render();});
   $('checkContinue').onclick=()=>{const callback=afterCheck;afterCheck=null;$('checkDialog').close();callback?.();};
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&active)end(true);});
   const nativeOpen=openWorld;openWorld=function(key,action='play'){if(action==='play'&&!P.progress().find(p=>p.id===P.getPathway()).checks.today){intro(()=>nativeOpen(key,action));return;}nativeOpen(key,action);};

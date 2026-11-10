@@ -16,3 +16,6 @@ body.arcadeHome{height:auto!important;overflow:auto!important}.arcadeHome #homeS
 @media(max-width:700px){.pathCard h3{font-size:17px}.operationSymbol{font-size:14px}.pathTrophy{font-size:19px}}
 
 .districtTab{display:flex;align-items:center;gap:6px;text-decoration:none;border:1px solid #c7a7ef66;background:#ffffff0d;color:#f4eaff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:800;white-space:nowrap}.districtTab small{font-size:8px;color:#ffe5a3;background:#ffe5a314;padding:3px 5px;border-radius:5px}@media(max-width:1100px){.arcadeHome header{flex-wrap:wrap}.arcadeHome .saveNote{display:none}}@media(max-width:700px){.districtTab{font-size:10px;padding:8px 9px}.districtTab small{display:none}.arcadeHome .brand{font-size:20px}}
+
+/* Short screens: keep the whole 90-second check keypad visible without scrolling. */
+@media(max-height:560px){.checkDialog{padding:12px 16px}.checkDialog h2{font-size:20px;margin:2px 0 6px}#checkRunning:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:center}#checkRunning>*{grid-column:1}#checkRunning .checkPad{grid-column:2;grid-row:1/span 5;margin:0;gap:6px}#checkRunning .checkPad button{min-height:40px}#checkRunning .checkQuestion{margin:6px 0;font-size:30px}}
