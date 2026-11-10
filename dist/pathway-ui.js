@@ -64,9 +64,9 @@
   $('checkDialog').addEventListener('close',()=>{if(!active)return;clearInterval(tick);tick=null;try{active.finish({interrupted:true});}catch(e){}active=null;question=null;render();});
   $('checkContinue').onclick=()=>{const callback=afterCheck;afterCheck=null;$('checkDialog').close();callback?.();};
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&active)end(true);});
-  const nativeOpen=openWorld;openWorld=function(key,action='play'){if(action==='play'&&!P.progress().find(p=>p.id===P.getPathway()).checks.today){intro(()=>nativeOpen(key,action));return;}nativeOpen(key,action);};
-  const nativeCommand=command;command=function(action){if(action==='play'&&!P.progress().find(p=>p.id===P.getPathway()).checks.today){const key=selected;home();intro(()=>nativeOpen(key,'play'));return;}nativeCommand(action);};
-  window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==$('game').contentWindow)return;if(e.data?.type==='arcade-practice-progress')render();if(e.data?.type==='arcade-mode'&&e.data.mode==='play'&&selected&&!P.progress().find(p=>p.id===P.getPathway()).checks.today){const key=selected;home();intro(()=>nativeOpen(key,'play'));}});
+  // Every game stays open: Let's play goes straight to the game. The 90-second
+  // check is optional and starts only from its own button on the pathways panel.
+  window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==$('game').contentWindow)return;if(e.data?.type==='arcade-practice-progress')render();});
   // A guided example exercises the real rules with an isolated, in-memory
   // learner and simulated dates. It never reads or writes the player record.
   let example=null,exampleStep=0,exampleNow=0;

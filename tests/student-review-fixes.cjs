@@ -103,7 +103,8 @@ test('Fluency check cannot keep running after its dialog is dismissed',()=>{
   const ui=read('dist/pathway-ui.js'),shell=read('dist/arcade.js');
   assert(/checkDialog'\)\.addEventListener\('close'/.test(ui),'closing the dialog ends the check');
   assert(shell.includes("d.id==='checkDialog'"),'backdrop taps use the interrupted-check path');
-  assert(ui.includes('Try the check again'),'an interrupted check offers the check again, not the gated game');
+  assert(!/openWorld\s*=|command\s*=\s*function/.test(ui),'Play opens the game directly; the check is never forced in front of it');
+  assert(ui.includes("$('checkButton').onclick=()=>intro()"),'the check still starts from its own button');
 });
 
 test('Dirt and Wave can resume after a pause during the finish sequence',()=>{
