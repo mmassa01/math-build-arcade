@@ -89,3 +89,9 @@ html:has(#room:not([hidden])),body.arcadeHome:has(#room:not([hidden])){overflow:
 .arcadeHome #homeScreen .gallery .tileTools{width:100%;flex-direction:row;gap:6px!important}
 .arcadeHome #homeScreen .gallery .tileTools button{flex:1 1 0;min-width:0;min-height:40px;padding:7px 4px!important;border:1px solid #79dff466;border-radius:12px;background:#241650aa}
 }
+
+/* Touch screens: the demo and video links need a finger-sized target at every width. */
+@media(pointer:coarse){.arcadeHome #homeScreen .gallery .tileTools button{min-height:40px;padding:7px 8px!important}}
+
+/* While a game is open, coin toasts sit under the room bar so they never cover the answer keypad. */
+body:has(#room:not([hidden])) .toast{bottom:auto;top:56px;transform:translate(-50%,-20px)}body:has(#room:not([hidden])) .toast.show{transform:translate(-50%,0)}

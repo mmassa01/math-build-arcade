@@ -58,6 +58,8 @@
     if(!Number.isSafeInteger(state.coins+amount) || !Number.isSafeInteger(state.lifetimeEarned+amount)) return {ok:false,reason:'invalid-reward',state:getState(),unlocked:[]};
     var before=state.lifetimeEarned;
     state.coins+=amount; state.lifetimeEarned+=amount; state.rewardIds.push(id);
+    // Reward ids are unique per play session; keep the save bounded.
+    if(state.rewardIds.length>5000) state.rewardIds=state.rewardIds.slice(-2500);
     var unlocked=catalog.filter(function(v){return v.price && v.unlockAt>before && v.unlockAt<=state.lifetimeEarned && state.owned.indexOf(v.id)<0;}).map(function(v){return v.id;});
     unlocked.forEach(function(id){if(state.pendingUnlocks.indexOf(id)<0) state.pendingUnlocks.push(id);});
     save(); return {ok:true,amount:amount,unlocked:unlocked,state:getState()};
@@ -107,5 +109,11 @@
     var acknowledged=Array.isArray(ids) ? ids : state.pendingUnlocks.slice();
     state.pendingUnlocks=state.pendingUnlocks.filter(function(id){return acknowledged.indexOf(id)<0;}); save(); return getState();
   }
+  // Another tab or a restored page may have saved a newer profile. Adopt it
+  // so the next save here cannot roll back a purchase or earned coins.
+  if(typeof window!=='undefined' && window.addEventListener) window.addEventListener('storage',function(e){
+    if(e.key!==KEY && e.key!==null) return;
+    try {state=clean(JSON.parse(storage && storage.getItem(KEY)));} catch (x) {}
+  });
   return {catalog:catalog,gear:gear,getState:getState,reward:reward,complete:complete,purchase:purchase,equip:equip,acknowledgeUnlocks:acknowledgeUnlocks};
 }));
