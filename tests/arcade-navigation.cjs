@@ -1,0 +1,10 @@
+const fs=require('fs'),assert=require('node:assert/strict');
+const source=fs.readFileSync('dist/arcade.js','utf8');
+const open=source.match(/function openWorld\([\s\S]*?\nfunction home/)[0];
+const home=source.match(/function home\([\s\S]*?\nfunction command/)[0];
+assert(open.includes('clearTimeout(frameUnloadTimer)'),'opening a game cancels a queued blank-frame unload');
+assert(open.includes('frameNavigation++'),'each game navigation invalidates older unload work');
+assert(home.includes('setTimeout'),'returning home unloads after the current event turn');
+assert(home.includes('frameNavigation===unloadNavigation&&!selected'),'only the still-current home navigation may blank the frame');
+assert(!/function home\(\)\{selected=null;\$\('game'\)\.src='about:blank'/.test(source),'home never starts an immediate blank navigation that can beat the next game');
+console.log('PASS arcade navigation: rapid home-to-game switching cancels stale blank iframe navigation');

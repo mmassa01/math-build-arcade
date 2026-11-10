@@ -1,0 +1,15 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const prefix=fs.readFileSync('tests/dirt-wave-runtime.cjs','utf8').split('\nfor(const name of')[0],scope={require,console,__dirname};vm.createContext(scope);vm.runInContext(prefix+';this.makeHarness=harness;',scope);
+for(const name of ['dirt','wave']){
+ const h=scope.makeHarness(name);
+ h.run(`var probe={issued:0,shown:[],records:[]};var ArcadeLearning={active:true,begin(){},next(){probe.issued++;return {id:'mul:7:8',token:'issued-'+probe.issued,text:'7 × 8',answer:56,choices:[55,56,57,58]}},shown(q){probe.shown.push(q.token)},record(q,correct,ms,opts){probe.records.push({q,correct,ms,opts})}};window.ArcadeLearning=ArcadeLearning;`);
+ h.run(fs.readFileSync('dist/dirt/engine.js','utf8'));h.run('DirtEngine=window.DirtEngine;start(false)');
+ assert.equal(h.run('probe.issued'),0,name+' does not reserve an academic question during launch');assert.equal(h.run('probe.shown.length'),0,'no early shown clock');assert.equal(h.run('race.question'),null);assert.equal(h.node('choices').numberEntry.question.text,'','neutral card contains no math');assert.equal(h.node('choices').numberEntry.question.answer,null);assert.equal(h.node('choices').numberEntry.enabled,false,'entry disabled until GO');
+ h.run('loop(2999)');assert.equal(h.run('mode'),'countdown');assert.equal(h.run('probe.issued'),0);assert.equal(h.run('race.elapsed'),0,'countdown consumes neither race nor answer time');assert.equal(h.run('race.questionElapsed'),0);
+ h.run('loop(3000)');assert.equal(h.run('mode'),'racing');assert.equal(h.run('probe.issued'),1);assert.equal(h.run('probe.shown.length'),1);assert.equal(h.node('choices').numberEntry.question.text,'7 × 8');assert.equal(h.node('choices').numberEntry.enabled,true);assert.equal(h.run('race.questionRemaining'),3);
+ // Restart while the old mode was racing. A mode guard alone would leak here.
+ h.run('start(false)');assert.equal(h.run('mode'),'countdown');assert.equal(h.run('probe.issued'),1,'restart reserves nothing until its GO');assert.equal(h.run('probe.shown.length'),1,'restart cannot mark a new card early');assert.equal(h.node('choices').numberEntry.question.text,'');h.run('loop(3000)');assert.equal(h.run('probe.issued'),2);assert.equal(h.run('probe.shown.length'),2);
+ h.run('loop(5999)');assert.equal(h.run('probe.records.length'),0,'full first2.999seconds remain available afterGO');assert(h.run('race.questionRemaining')>0);h.run('loop(6000)');assert.equal(h.run('probe.records.length'),1);assert.equal(h.run('probe.records[0].opts.timeout'),true);assert.equal(h.run('race.coins'),0);
+ const css=fs.readFileSync('dist/'+(name==='wave'?'wave':'dirt')+'/cinema.css','utf8');assert(css.includes('.race-awaiting .number-answer-row'));assert(css.includes('.race-awaiting .card-console-card .card-console-timer'));assert(css.includes("content:'GET READY'"));assert(!/race-awaiting[^}]+display\s*:\s*none/.test(css),'waiting dock keeps its geometry');
+ console.log('PASS '+name+' countdown: neutral deck, no academic reservation/clock beforeGO, restart safety, disabled entry, full fresh3seconds and timeout without coins');
+}

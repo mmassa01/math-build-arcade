@@ -1,0 +1,15 @@
+{
+  "name": "math-build-arcade",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "A static browser-based math fluency arcade.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "node tests/release-gate.cjs",
+    "test:release": "node tests/release-gate.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

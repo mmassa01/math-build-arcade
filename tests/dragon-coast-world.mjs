@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {coastEdge,coastHeight,coastGeometry,treeRecords,rockRecords,rockGeometry,treeGeometry,COAST_PERIOD,WATER_LEVEL} from '../dist/dragon/coast-world.mjs';
+for(let z=0;z<780;z+=3.7){assert(coastEdge(z,1)>15);assert(coastEdge(z,-1)>60);assert(coastEdge(z,1)<coastEdge(z,-1));for(let x=-170;x<=170;x+=3){assert(Math.abs(coastHeight(x,z)-coastHeight(x,z+COAST_PERIOD))<1e-9);assert(coastHeight(x,z)<8);if(Math.abs(x)<12)assert(coastHeight(x,z)<WATER_LEVEL);}}
+for(const side of [-1,1])for(let k=0;k<3;k++){const g=coastGeometry(side,k),p=g.attributes.position,n=g.attributes.normal;for(let i=0;i<p.count;i++){assert(Number.isFinite(p.getY(i)));assert(n.getY(i)>0,'both banks face upward');}const neighbor=coastGeometry(side,(k+1)%3);for(let i=0;i<=72;i++){const a=p.count-73+i,b=i;assert(Math.abs(p.getY(a)-neighbor.attributes.position.getY(b))<1e-5,'terrain chunks meet');}g.dispose();neighbor.dispose();}
+const trees=treeRecords();assert.equal(trees.length,2200);assert.equal(new Set(trees.map(t=>t.variant)).size,4);for(const r of trees){assert.equal(r.y,coastHeight(r.x,r.z));assert(r.y>WATER_LEVEL+2);assert(r.h>=5.5&&r.h<=12.5);assert(Math.abs(r.x)>coastEdge(r.z,Math.sign(r.x))+6);}
+assert(treeGeometry().attributes.position.count===8,'crossed detailed tree textures, not cone trees');
+const rocks=rockRecords();assert.equal(rocks.length,120);for(let i=0;i<3;i++){const g=rockGeometry(i);for(const v of g.attributes.position.array)assert(Number.isFinite(v));g.computeBoundingBox();assert(g.boundingBox.max.y-g.boundingBox.min.y>1.2);g.dispose();}
+const source=fs.readFileSync('dist/dragon/flight3d.mjs','utf8');assert(source.includes('new CoastWorld(this.scene)'));assert(source.includes('this.coast?.update(time)'));assert(!source.includes('PhotoShores'));assert(source.includes('this.reflectLake()'));assert(source.includes('s.motion?.roll'));assert(source.includes('waterVertex,waterFragment'));assert(source.includes('PCFSoftShadowMap'));
+for(const path of ['forest-atlas-v49.webp','granite-v49.webp'])assert(fs.statSync('dist/dragon/art/'+path).size>10000);
+console.log('PASS low 3D coast: clear water corridor, periodic seamless terrain, grounded forest, irregular rocks, preserved water/banking, real asset files');

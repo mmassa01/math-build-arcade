@@ -1,0 +1,858 @@
+{
+  "review": "v55",
+  "testedDate": "2026-11-04",
+  "passed": 40,
+  "total": 40,
+  "consistent": {
+    "desktop": {
+      "games": 10,
+      "widthRange": [
+        236,
+        236
+      ],
+      "heightRange": [
+        112,
+        112
+      ],
+      "consistent": true
+    },
+    "phone": {
+      "games": 10,
+      "widthRange": [
+        108,
+        108
+      ],
+      "heightRange": [
+        82,
+        82
+      ],
+      "consistent": true
+    },
+    "ipad": {
+      "games": 10,
+      "widthRange": [
+        236,
+        236
+      ],
+      "heightRange": [
+        112,
+        112
+      ],
+      "consistent": true
+    },
+    "landscape": {
+      "games": 10,
+      "widthRange": [
+        147.33,
+        147.33
+      ],
+      "heightRange": [
+        72,
+        72
+      ],
+      "consistent": true
+    }
+  },
+  "cases": [
+    {
+      "game": "Horse",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 18,
+        "y": 181.16,
+        "w": 1064,
+        "h": 243.84,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Horse",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 9,
+        "y": 181.55,
+        "w": 372,
+        "h": 262.45,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Horse",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 18,
+        "y": 176.38,
+        "w": 988,
+        "h": 140,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Horse",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 12,
+        "y": 108,
+        "w": 820,
+        "h": 125,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Wave Rider",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 15,
+        "y": 57,
+        "w": 1070,
+        "h": 290,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Wave Rider",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 9,
+        "y": 48,
+        "w": 372,
+        "h": 337,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Wave Rider",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 15,
+        "y": 57,
+        "w": 994,
+        "h": 160,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Wave Rider",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 7,
+        "y": 46,
+        "w": 830,
+        "h": 132,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Subway",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1100,
+        "h": 363,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Subway",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 348,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Subway",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 233,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Subway",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 167,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dirt Track",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 15,
+        "y": 57,
+        "w": 1070,
+        "h": 290,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dirt Track",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 9,
+        "y": 48,
+        "w": 372,
+        "h": 337,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dirt Track",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 15,
+        "y": 57,
+        "w": 994,
+        "h": 160,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dirt Track",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 7,
+        "y": 46,
+        "w": 830,
+        "h": 132,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Star Defender",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 16,
+        "y": 105,
+        "w": 1068,
+        "h": 279,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Star Defender",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 13,
+        "y": 97,
+        "w": 366,
+        "h": 302,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Star Defender",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 16,
+        "y": 105,
+        "w": 992,
+        "h": 149,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Star Defender",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 10,
+        "y": 78,
+        "w": 824,
+        "h": 117,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dragon Quest",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 16,
+        "y": 79,
+        "w": 1068,
+        "h": 305,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dragon Quest",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 9,
+        "y": 68,
+        "w": 372,
+        "h": 353,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dragon Quest",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 16,
+        "y": 79,
+        "w": 992,
+        "h": 175,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Dragon Quest",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 10,
+        "y": 64,
+        "w": 820,
+        "h": 144.31,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Ping-Pong",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1100,
+        "h": 391,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Ping-Pong",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 413,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Ping-Pong",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 261,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Ping-Pong",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 195,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Seed",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1100,
+        "h": 374,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Seed",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 398,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Seed",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 244,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Seed",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 192,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Castle",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1100,
+        "h": 374,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Castle",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 398,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Castle",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 244,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Castle",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 192,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Car Shop",
+      "layout": "desktop",
+      "viewport": {
+        "w": 1100,
+        "h": 780
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1100,
+        "h": 374,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Car Shop",
+      "layout": "phone",
+      "viewport": {
+        "w": 390,
+        "h": 760
+      },
+      "cardWidth": 108,
+      "cardHeight": 82,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 398,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Car Shop",
+      "layout": "ipad",
+      "viewport": {
+        "w": 1024,
+        "h": 650
+      },
+      "cardWidth": 236,
+      "cardHeight": 112,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 244,
+        "visible": true
+      },
+      "issues": []
+    },
+    {
+      "game": "Car Shop",
+      "layout": "landscape",
+      "viewport": {
+        "w": 844,
+        "h": 390
+      },
+      "cardWidth": 147.33,
+      "cardHeight": 72,
+      "topAlignment": 0,
+      "pass": true,
+      "scene": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 192,
+        "visible": true
+      },
+      "issues": []
+    }
+  ]
+}

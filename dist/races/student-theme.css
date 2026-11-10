@@ -1,0 +1,1012 @@
+/* Student theme: one look for every screen a student sees.
+   Loaded last on the landing page and all four ride pages.
+   Landing look: purple dotted sky, gold and pink, Lilita headings,
+   chunky pill buttons, white-framed cards. */
+@font-face {
+  font-family: Lilita;
+  src: url('LilitaOne-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+:root {
+  --st-purple: #1c123e;
+  --st-panel: #2a1d52;
+  --st-panel-2: #352552;
+  --st-line: #ffffff30;
+  --st-gold: #ffda3e;
+  --st-gold-shadow: #b08b1a;
+  --st-pink: #e63d86;
+  --st-text: #ffffff;
+  --st-soft: #eee5ff;
+  --st-muted: #c9bce4;
+  --st-green: #2fbf71;
+  --st-red: #ff6b6b;
+  --st-display: Lilita, 'Trebuchet MS', sans-serif;
+  --st-body: system-ui, 'Segoe UI', sans-serif;
+}
+
+/* ===================================================================
+   1. LANDING PAGE: fits one screen at Chromebook and board sizes
+   =================================================================== */
+@media (min-width: 900px) and (min-height: 600px) {
+  body.student-home {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .student-home > main {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: clamp(10px, 1.8vh, 22px) clamp(18px, 2.4vw, 36px);
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'head head'
+      'hero next'
+      'play play'
+      'strip strip'
+      'foot foot';
+    column-gap: clamp(16px, 2vw, 28px);
+    row-gap: clamp(8px, 1.6vh, 18px);
+  }
+  .student-home > main > header {
+    grid-area: head;
+    margin: 0;
+    align-items: center;
+  }
+  /* Name chip sits in the middle of the top bar. */
+  .student-home > main > .student-identity {
+    grid-area: head;
+    justify-self: center;
+    align-self: center;
+    margin: 0;
+    padding: 4px 16px 4px 4px;
+    border-radius: 40px;
+    z-index: 1;
+  }
+  .student-home .student-identity .student-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  .student-home .student-identity h2 {
+    font: 400 20px/1 var(--st-display);
+    margin: 0;
+  }
+  .student-home .race-hero {
+    grid-area: hero;
+    padding: 0;
+    align-self: center;
+    text-align: center;
+  }
+  .student-home .race-greeting {
+    margin: 0 0 6px;
+    padding: 5px 14px;
+    font-size: clamp(13px, 1.7vh, 16px);
+  }
+  .student-home .race-hero h1 {
+    font-size: clamp(22px, 3.4vh, 36px);
+  }
+  .student-home .race-hero h1 strong {
+    font-size: clamp(54px, 10vh, 120px);
+    line-height: 0.95;
+    text-shadow: 0 5px var(--st-pink);
+  }
+  .student-home .race-hero > p:last-child {
+    margin: 8px 0 0;
+    font-size: clamp(14px, 1.9vh, 20px);
+  }
+  .student-home .next-race {
+    grid-area: next;
+    align-self: center;
+    padding: clamp(14px, 2.4vh, 26px) clamp(18px, 2vw, 30px);
+    border-radius: 26px;
+  }
+  .student-home .next-race h2 {
+    font-size: clamp(24px, 4vh, 40px);
+    margin: 4px 0;
+  }
+  .student-home .next-race p {
+    margin: 4px 0 0;
+    font-size: clamp(13px, 1.8vh, 16px);
+  }
+  .student-home .next-race-start {
+    padding: clamp(12px, 2vh, 18px) clamp(18px, 2vw, 28px);
+  }
+  .student-home .next-race-start .action {
+    font-size: clamp(22px, 3.4vh, 32px);
+  }
+
+  /* Rides fill whatever height is left. */
+  .student-home .play {
+    grid-area: play;
+    margin: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .student-home .play .sectionhead {
+    margin: 0;
+  }
+  .student-home .play h2 {
+    margin: 0;
+    font-size: clamp(22px, 3.2vh, 32px);
+  }
+  .student-home .tiles {
+    flex: 1;
+    min-height: 0;
+    margin-top: clamp(6px, 1.2vh, 14px);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 22px);
+    padding: 4px 6px 10px;
+  }
+  .student-home .tile {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-width: 6px;
+  }
+  .student-home .tile .art {
+    flex: 1;
+    min-height: 70px;
+    height: auto;
+  }
+  .student-home .tile .art iframe {
+    height: 140%;
+    top: -14%;
+  }
+  .student-home .tile .art canvas {
+    max-height: 100%;
+  }
+  .student-home .copy {
+    padding: clamp(6px, 1.2vh, 14px) 8px 6px;
+  }
+  .student-home .copy h3 {
+    font-size: clamp(19px, 2.9vh, 28px);
+  }
+  .student-home .copy p {
+    min-height: 0;
+    margin: 4px 0 clamp(6px, 1.2vh, 12px);
+    font-size: clamp(12px, 1.7vh, 15px);
+    line-height: 1.3;
+  }
+  .student-home .tile .action {
+    padding: clamp(8px, 1.4vh, 13px) 10px;
+    font-size: clamp(17px, 2.5vh, 22px);
+  }
+  .student-home .home-strip {
+    grid-area: strip;
+  }
+  .student-home > main > footer {
+    grid-area: foot;
+    margin: 0;
+  }
+  .student-home > main > footer p {
+    margin: 0;
+    font-size: 11px;
+  }
+}
+
+/* Bottom strip: rewards, trophies and progress open in a pop-up. */
+.home-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 18px);
+}
+.home-strip-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--st-line);
+  background: #ffffff10;
+  color: var(--st-text);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.home-strip-btn:hover {
+  background: #ffffff1c;
+  border-color: var(--st-gold);
+}
+.home-strip-btn.hs-reward {
+  border-color: #c79bff;
+  background: linear-gradient(120deg, #5b2fa0, #352552);
+}
+.home-strip-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.home-strip-btn strong {
+  display: block;
+  font: 400 clamp(17px, 2.4vh, 21px)/1.1 var(--st-display);
+}
+.home-strip-btn small {
+  display: block;
+  margin-top: 2px;
+  color: var(--st-soft);
+  font-size: 13px;
+  font-weight: 700;
+}
+@media (max-width: 899px), (max-height: 599px) {
+  .home-strip {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+}
+
+.home-dialog {
+  width: min(1100px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
+  background: var(--st-purple)
+    radial-gradient(circle, #ffffff14 2px, transparent 2.5px);
+  background-size: 38px 38px;
+  color: var(--st-text);
+  overflow: auto;
+  box-shadow: 0 30px 90px #000a;
+}
+.home-dialog::backdrop {
+  background: #0b0620cc;
+}
+.home-dialog > section,
+.home-dialog > details {
+  margin: 0 !important;
+  border: 0;
+}
+.home-dialog-close {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 14px 0;
+  pointer-events: none;
+}
+.home-dialog-close button {
+  pointer-events: auto;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 30px;
+  background: var(--st-gold);
+  color: var(--st-purple);
+  font: 400 18px var(--st-display);
+  cursor: pointer;
+}
+.home-dialog .student-data > summary {
+  display: none;
+}
+.home-dialog .student-data-content {
+  border-radius: 0;
+}
+
+/* ===================================================================
+   2. SHARED STUDENT CONTROLS
+   =================================================================== */
+.st-btn,
+.wu-button,
+.result .primary,
+.drill .primary,
+.panel .primary,
+.buttons .primary {
+  border: 0 !important;
+  border-radius: 40px !important;
+  background: var(--st-gold) !important;
+  color: var(--st-purple) !important;
+  font: 400 clamp(17px, 2.4vh, 22px) / 1.1 var(--st-display) !important;
+  letter-spacing: 0.3px;
+  padding: 12px 24px !important;
+  box-shadow: 0 5px 0 var(--st-gold-shadow) !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+.wu-button:active,
+.result .primary:active,
+.buttons .primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--st-gold-shadow) !important;
+}
+.buttons .secondary,
+.result .secondary {
+  border: 2px solid var(--st-line) !important;
+  border-radius: 40px !important;
+  background: var(--st-panel-2) !important;
+  color: var(--st-text) !important;
+  font: 700 15px var(--st-body) !important;
+  padding: 10px 18px !important;
+}
+
+/* ===================================================================
+   3. RIDE PAGES: chrome matches the landing; the race fits one screen
+   (html.student-ride is set on jetski, subway, sprint and rosenbaum)
+   =================================================================== */
+.student-ride:not(.ride-rosenbaum) body {
+  background: var(--st-purple)
+    radial-gradient(circle, #ffffff14 2px, transparent 2.5px);
+  background-size: 38px 38px;
+  color: var(--st-text);
+  font-family: var(--st-body);
+}
+.student-ride:not(.ride-rosenbaum) .brand {
+  font: 400 clamp(24px, 3.4vh, 32px) / 1 var(--st-display);
+  letter-spacing: 0.5px;
+  color: var(--st-gold);
+}
+.student-ride:not(.ride-rosenbaum) .brand span {
+  color: var(--st-text);
+}
+.student-ride .tools .tool,
+.student-ride .tools > a,
+.student-ride .tools > button {
+  min-height: 40px;
+  padding: 0 16px;
+  line-height: 36px;
+  border: 2px solid var(--st-line);
+  border-radius: 30px;
+  background: var(--st-panel-2);
+  color: var(--st-text);
+  font: 700 14px var(--st-body);
+  text-decoration: none;
+}
+.student-ride .tools .chip {
+  border-radius: 30px;
+  background: var(--st-gold);
+  color: var(--st-purple);
+  font: 400 15px var(--st-display);
+  padding: 6px 14px;
+}
+.student-ride .game-wallet .wallet-chip {
+  background: var(--st-gold);
+  color: var(--st-purple);
+  border-radius: 30px;
+  font-weight: 900;
+}
+.student-ride .game-wallet a {
+  color: var(--st-soft);
+  font-weight: 700;
+}
+
+/* Panels around the question and scores. */
+.student-ride .drill,
+.student-ride .setup,
+.ride-subway .panel {
+  background: var(--st-panel) !important;
+  border: 2px solid var(--st-line) !important;
+  border-radius: 24px !important;
+  color: var(--st-text);
+}
+.student-ride .drill.correct,
+.ride-subway .panel.correct {
+  border-color: var(--st-green) !important;
+  box-shadow: 0 0 0 3px #2fbf7155 !important;
+}
+.student-ride .drill.wrong,
+.ride-subway .panel.wrong {
+  border-color: var(--st-pink) !important;
+}
+.student-ride .eyebrow {
+  color: var(--st-gold) !important;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+.ride-subway .panel h1 {
+  font: 400 clamp(22px, 3.2vh, 30px) / 1.1 var(--st-display);
+}
+.student-ride .equation,
+.student-ride .equation .iq-equation {
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+  color: var(--st-text);
+}
+.student-ride .feedback,
+.student-ride .hint,
+.student-ride .intro {
+  color: var(--st-soft) !important;
+}
+.student-ride .scoreline,
+.student-ride .stats,
+.student-ride .scores {
+  border-color: var(--st-line) !important;
+}
+.student-ride .scoreline strong,
+.student-ride .stats strong,
+.student-ride .scores strong {
+  font: 400 26px var(--st-display);
+  color: var(--st-gold);
+}
+.student-ride .scoreline small,
+.student-ride .stats small,
+.student-ride .scores small {
+  color: var(--st-muted) !important;
+}
+.student-ride .progress .bar,
+.student-ride .progress {
+  background-color: #ffffff1c;
+}
+.student-ride .progress .bar i {
+  background: var(--st-gold);
+}
+
+/* Answer box and keypad: white keys, purple numbers, like the ride cards. */
+.student-ride .item-controls .iq-input,
+.student-ride .wu-card .iq-input,
+.student-ride .equation input {
+  border: 4px solid var(--st-gold) !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  color: var(--st-purple) !important;
+  font: 400 clamp(30px, 5vh, 44px) var(--st-display) !important;
+}
+.student-ride .item-controls .iq-pad,
+.student-ride .wu-card .iq-pad {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+.student-ride .item-controls .iq-pad button,
+.student-ride .wu-card .iq-pad button {
+  min-height: clamp(42px, 6vh, 58px);
+  border: 0;
+  border-radius: 16px;
+  background: #fff;
+  color: var(--st-purple);
+  font: 400 clamp(22px, 3.4vh, 30px) var(--st-display);
+  box-shadow: 0 4px 0 #b8a8d8;
+  cursor: pointer;
+}
+.student-ride .item-controls .iq-pad button:active,
+.student-ride .wu-card .iq-pad button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #b8a8d8;
+}
+.student-ride .item-controls .iq-pad [data-erase],
+.student-ride .item-controls .iq-pad [data-check],
+.student-ride .wu-card .iq-pad [data-erase],
+.student-ride .wu-card .iq-pad [data-check] {
+  grid-column: span 5;
+  background: var(--st-panel-2);
+  color: var(--st-text);
+  font: 700 16px var(--st-body);
+  box-shadow: none;
+  border: 2px solid var(--st-line);
+}
+.student-ride .item-controls .iq-choice button {
+  border: 0;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--st-purple);
+  font: 400 26px var(--st-display);
+  box-shadow: 0 4px 0 #b8a8d8;
+}
+
+/* Race art keeps each ride's world, framed like the landing cards. */
+.student-ride .arena,
+.student-ride .game {
+  border: 6px solid #fff !important;
+  border-radius: 26px !important;
+}
+
+/* --- Fit Jet Ski and Sprint: race art left, question right. --- */
+@media (min-width: 900px) and (min-height: 600px) {
+  .student-ride:not(.ride-rosenbaum) body {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .student-ride:not(.ride-rosenbaum) body > main {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1500px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: clamp(8px, 1.4vh, 18px) clamp(14px, 2vw, 28px) !important;
+  }
+  .ride-jetski body > main,
+  .ride-sprint body > main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(330px, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'head head'
+      'wallet dash'
+      'arena dash'
+      'prog dash'
+      'lbl dash';
+    column-gap: clamp(12px, 1.6vw, 22px);
+    row-gap: 8px;
+  }
+  .ride-jetski main > header,
+  .ride-sprint main > header {
+    grid-area: head;
+    margin: 0 0 4px;
+  }
+  .ride-jetski main > .game-wallet,
+  .ride-sprint main > .game-wallet {
+    grid-area: wallet;
+    margin: 0;
+  }
+  .ride-jetski main > .arena,
+  .ride-sprint main > .arena {
+    grid-area: arena;
+    height: auto !important;
+    min-height: 0;
+  }
+  .ride-jetski main > .progress {
+    grid-area: prog;
+    margin: 0;
+  }
+  .ride-jetski main > .progresslabels {
+    grid-area: lbl;
+    margin: 0;
+  }
+  .ride-jetski main > .dashboard,
+  .ride-sprint main > .dashboard {
+    grid-area: dash;
+    margin: 0 !important;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: min-content;
+    gap: 10px !important;
+    overflow: auto;
+  }
+  .ride-jetski .drill,
+  .ride-jetski .setup,
+  .ride-sprint .drill,
+  .ride-sprint .setup {
+    padding: clamp(10px, 1.8vh, 18px) clamp(14px, 1.4vw, 20px) !important;
+  }
+  .ride-jetski .equation,
+  .ride-sprint .equation,
+  .ride-subway .equation {
+    margin: 2px 0 !important;
+  }
+  .ride-jetski .item-controls .iq-input,
+  .ride-sprint .item-controls .iq-input,
+  .ride-subway .item-controls .iq-input {
+    height: clamp(46px, 7vh, 64px);
+    margin: 6px 0 10px;
+  }
+  .ride-jetski .scoreline,
+  .ride-sprint .scores,
+  .ride-sprint .scoreline {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: 0 !important;
+  }
+
+  /* --- Subway already sits side by side; make it fit the height. --- */
+  .ride-subway body > main {
+    display: flex;
+    flex-direction: column;
+  }
+  .ride-subway main > .layout {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch !important;
+    grid-template-columns: minmax(0, 1.25fr) minmax(330px, 1fr) !important;
+  }
+  .ride-subway .game {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  .ride-subway .panel {
+    min-height: 0;
+    overflow: auto;
+    padding: clamp(12px, 2vh, 22px) clamp(14px, 1.6vw, 22px) !important;
+  }
+  .ride-subway .panel h1 {
+    margin: 4px 0 !important;
+  }
+  .ride-subway main > header {
+    margin-bottom: 6px;
+  }
+}
+@media (min-width: 900px) and (max-height: 800px) {
+  .student-ride .feedback,
+  .student-ride .hint,
+  .ride-subway .panel .intro {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+  .ride-subway .panel .intro {
+    display: none;
+  }
+}
+
+/* ===================================================================
+   4. STARTING LINE, WARM-UP, RESULTS AND REVIEW
+   =================================================================== */
+.student-ride .wu-overlay {
+  background: #120a2ae6 !important;
+  padding: 16px !important;
+  place-items: center !important;
+  font-family: var(--st-body) !important;
+}
+.student-ride .wu-card {
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  background: var(--st-purple)
+    radial-gradient(circle, #ffffff12 2px, transparent 2.5px) !important;
+  background-size: 38px 38px !important;
+  color: var(--st-text) !important;
+  border: 3px solid var(--st-line);
+  border-radius: 30px !important;
+  padding: clamp(16px, 3vh, 30px) clamp(18px, 2.4vw, 32px) !important;
+}
+.student-ride .wu-head p {
+  color: var(--st-gold) !important;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+.student-ride .wu-card h1,
+.student-ride .wu-card h2,
+.student-ride .wu-card h3 {
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.3px !important;
+  color: var(--st-text);
+}
+.student-ride .wu-card h1 {
+  font-size: clamp(28px, 4.6vh, 40px) !important;
+  margin: 6px 0 8px !important;
+}
+.student-ride .wu-card p,
+.student-ride .wu-card small,
+.student-ride .wu-card label {
+  color: var(--st-soft);
+}
+.student-ride .wu-close {
+  color: var(--st-soft) !important;
+  font-weight: 700;
+}
+.student-ride .wu-skill {
+  background: var(--st-gold) !important;
+  color: var(--st-purple) !important;
+  font-weight: 900;
+}
+.student-ride .wu-option {
+  background: #fff !important;
+  color: var(--st-purple) !important;
+  border: 0 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 7px 0 #ffffff30;
+}
+.student-ride .wu-option h2,
+.student-ride .wu-option h3 {
+  color: var(--st-purple) !important;
+}
+.student-ride .wu-option p,
+.student-ride .wu-option .wu-choice-detail {
+  color: #514469 !important;
+}
+.student-ride .wu-choice-grid .wu-option:last-child .wu-button {
+  background: var(--st-purple) !important;
+  color: #fff !important;
+  box-shadow: 0 5px 0 #000 !important;
+}
+.student-ride .wu-steps span {
+  background: #ffffff12 !important;
+  color: var(--st-soft) !important;
+  border: 2px solid var(--st-line);
+}
+.student-ride .wu-steps .on {
+  background: var(--st-gold) !important;
+  color: var(--st-purple) !important;
+  border-color: var(--st-gold);
+}
+.student-ride .wu-notes,
+.student-ride .wu-focus {
+  background: #ffffff12 !important;
+  color: var(--st-soft) !important;
+  border-color: var(--st-line) !important;
+}
+.student-ride .wu-card select {
+  border-radius: 14px;
+  padding: 6px 10px;
+  font-weight: 700;
+}
+.student-ride .wu-question,
+.student-ride .wu-problem {
+  font-family: var(--st-display) !important;
+  color: var(--st-text) !important;
+}
+.student-ride .wu-pad button {
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  color: var(--st-purple) !important;
+  font: 400 26px var(--st-display) !important;
+  box-shadow: 0 4px 0 #b8a8d8 !important;
+}
+.student-ride .wu-input {
+  border: 4px solid var(--st-gold) !important;
+  border-radius: 18px !important;
+  color: var(--st-purple) !important;
+  font-family: var(--st-display) !important;
+}
+@media (max-height: 800px) {
+  .student-ride .wu-steps {
+    margin: 10px 0 !important;
+  }
+  .student-ride .wu-steps span {
+    padding: 8px 12px !important;
+  }
+  .student-ride .wu-card p {
+    margin: 6px 0 !important;
+    font-size: 15px;
+  }
+}
+
+/* Results card after a race. */
+.student-ride .modal {
+  background: #120a2ae0 !important;
+  padding: 16px !important;
+}
+.student-ride .modal .result {
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  box-sizing: border-box;
+  background: var(--st-purple)
+    radial-gradient(circle, #ffffff12 2px, transparent 2.5px) !important;
+  background-size: 38px 38px !important;
+  border: 3px solid var(--st-gold) !important;
+  border-radius: 30px !important;
+  color: var(--st-text);
+  padding: clamp(16px, 3vh, 30px) !important;
+}
+.student-ride .modal .result h2 {
+  font: 400 clamp(30px, 5vh, 42px) / 1.05 var(--st-display) !important;
+  color: var(--st-gold);
+  margin: 6px 0 !important;
+}
+.student-ride .modal .result p {
+  color: var(--st-soft) !important;
+  margin: 4px 0;
+  line-height: 1.4 !important;
+}
+.student-ride .modal .result .primary {
+  margin-top: 8px;
+}
+.student-ride .modal .result > p a {
+  color: var(--st-gold);
+  font-weight: 700;
+}
+
+/* Review my race overlay. */
+.student-ride .rr-overlay {
+  background: #120a2ae6 !important;
+}
+.student-ride .rr-card {
+  max-height: calc(100dvh - 32px);
+  border: 4px solid var(--st-gold) !important;
+  border-radius: 30px !important;
+}
+.student-ride .rr-card h2,
+.student-ride .rr-card .rr-h3 {
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+}
+
+/* Keep header buttons clear of the race timer badge. */
+@media (min-width: 900px) {
+  .student-ride:not(.ride-rosenbaum) body:has(.race-time-bar) main > header {
+    padding-right: clamp(345px, 26vw, 370px);
+  }
+}
+.student-ride .race-time-bar {
+  background: var(--st-purple) !important;
+  border: 3px solid var(--st-gold) !important;
+  border-radius: 18px !important;
+}
+.student-ride .race-time-bar strong {
+  font-family: var(--st-display);
+  font-weight: 400;
+  color: var(--st-gold);
+}
+
+/* ===================================================================
+   5. TIGER DOWNS HORSE RACE (rosenbaum.html)
+   =================================================================== */
+.ride-rosenbaum .kid {
+  background: var(--st-purple)
+    radial-gradient(circle, #ffffff14 2px, transparent 2.5px) !important;
+  background-size: 38px 38px !important;
+  color: var(--st-text);
+}
+.ride-rosenbaum .race-stage,
+.ride-rosenbaum .club-stage {
+  background: transparent !important;
+  min-height: 0 !important;
+}
+.ride-rosenbaum .club-heading h1,
+.ride-rosenbaum .race-heading h1 {
+  font: 400 clamp(24px, 3.6vh, 32px) / 1.05 var(--st-display) !important;
+  letter-spacing: 0.5px !important;
+  color: var(--st-text);
+}
+.ride-rosenbaum .race-eyebrow,
+.ride-rosenbaum .club-kicker {
+  color: var(--st-gold) !important;
+}
+.ride-rosenbaum .club-emblem,
+.ride-rosenbaum .race-skill {
+  background: transparent !important;
+  border: 2px solid var(--st-gold) !important;
+  border-radius: 30px !important;
+  color: var(--st-gold) !important;
+}
+.ride-rosenbaum .club-card,
+.ride-rosenbaum .race-stage .qcard {
+  background: #fff !important;
+  color: var(--st-purple) !important;
+  border: 0 !important;
+  border-radius: 26px !important;
+  box-shadow: 0 7px 0 #ffffff28 !important;
+}
+.ride-rosenbaum .club-card h2,
+.ride-rosenbaum .club-card h3 {
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+  color: var(--st-purple);
+}
+.ride-rosenbaum .race-stage .eq {
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+  color: var(--st-purple);
+}
+.ride-rosenbaum .chip2 {
+  background: var(--st-panel-2) !important;
+  border: 2px solid var(--st-line) !important;
+  border-radius: 30px !important;
+  color: var(--st-text) !important;
+}
+.ride-rosenbaum .chip2.best-chip b,
+.ride-rosenbaum .chip2.best-chip {
+  color: var(--st-gold) !important;
+}
+.ride-rosenbaum .horse-pace-note {
+  color: var(--st-soft) !important;
+  background: transparent !important;
+}
+.ride-rosenbaum .race-stage .track2 {
+  border: 6px solid #fff !important;
+  border-radius: 26px !important;
+  overflow: hidden;
+}
+.ride-rosenbaum .ansbox {
+  border: 4px solid var(--st-gold) !important;
+  border-radius: 18px !important;
+  color: var(--st-purple) !important;
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+}
+.ride-rosenbaum .pad button {
+  border: 0 !important;
+  border-radius: 14px !important;
+  background: #f1ecfb !important;
+  color: var(--st-purple) !important;
+  font: 400 24px var(--st-display) !important;
+  box-shadow: 0 4px 0 #b8a8d8 !important;
+}
+.ride-rosenbaum .pad button.go {
+  background: var(--st-gold) !important;
+  box-shadow: 0 4px 0 var(--st-gold-shadow) !important;
+}
+.ride-rosenbaum .kbtn {
+  border-radius: 40px !important;
+  font-family: var(--st-display) !important;
+  font-weight: 400 !important;
+  background: var(--st-gold) !important;
+  color: var(--st-purple) !important;
+  box-shadow: 0 5px 0 var(--st-gold-shadow) !important;
+  border: 0 !important;
+}
+.ride-rosenbaum .kbtn.green {
+  background: #296d41 !important;
+  color: #fff !important;
+  box-shadow: 0 5px 0 #17452a !important;
+}
+.ride-rosenbaum .kbtn.alt {
+  background: var(--st-purple) !important;
+  color: #fff !important;
+  box-shadow: 0 5px 0 #000 !important;
+}
+.ride-rosenbaum .spk {
+  border-radius: 50% !important;
+  background: var(--st-gold) !important;
+}
+/* Fit the race and the finish line on one screen. */
+@media (min-width: 900px) and (max-height: 860px) {
+  .ride-rosenbaum .race-stage {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+  .ride-rosenbaum .horse-pace-note {
+    margin: 2px 0 !important;
+    padding: 2px 0 !important;
+    font-size: 13px !important;
+  }
+  .ride-rosenbaum .race-hud {
+    margin: 2px 0 !important;
+  }
+  .ride-rosenbaum .race-stage .track2 {
+    height: clamp(220px, calc(100dvh - 430px), 360px) !important;
+  }
+  .ride-rosenbaum .race-stage .qcard {
+    min-height: 0 !important;
+    margin-top: 8px !important;
+    padding: 8px 16px !important;
+  }
+  .ride-rosenbaum .club-stage {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  .ride-rosenbaum .club-heading {
+    margin-bottom: 8px !important;
+  }
+  .ride-rosenbaum .finish-card {
+    min-height: 0 !important;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr) !important;
+    align-items: start !important;
+    gap: 18px !important;
+    padding: 14px 18px !important;
+  }
+  .ride-rosenbaum .finish-results {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    column-gap: 16px;
+    align-items: start;
+  }
+  .ride-rosenbaum .finish-results > * {
+    grid-column: 1;
+  }
+  .ride-rosenbaum .finish-results > .reward-finish {
+    grid-column: 2;
+    grid-row: 1 / span 8;
+    margin: 0 !important;
+  }
+  .ride-rosenbaum .finish-results h2 {
+    font-size: clamp(22px, 3.4vh, 30px) !important;
+    margin: 2px 0 !important;
+  }
+  .ride-rosenbaum .finish-results .club-copy {
+    font-size: 15px !important;
+    margin: 4px 0 !important;
+  }
+  .ride-rosenbaum .paddock-art {
+    height: clamp(170px, calc(100dvh - 520px), 280px) !important;
+  }
+}
+.ride-rosenbaum .race-stage .ansbox {
+  background: #fff !important;
+}
+@media (min-width: 900px) {
+  .ride-rosenbaum body:has(.race-time-bar) .race-heading {
+    padding-right: clamp(345px, 26vw, 370px);
+  }
+}
+.student-ride .wu-card .iq-equation {
+  font-family: var(--st-display);
+  font-weight: 400;
+  color: var(--st-purple);
+}
+.student-ride .wu-card .iq-pad [data-erase],
+.student-ride .wu-card .iq-pad [data-check] {
+  background: var(--st-purple);
+  color: #fff;
+}
+

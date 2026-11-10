@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const arcade=fs.readFileSync('dist/arcade.css','utf8'),entry=fs.readFileSync('dist/number-entry.css','utf8'),castle=fs.readFileSync('dist/castle/index.html','utf8');
+const phone=arcade.slice(arcade.lastIndexOf('@media(max-width:690px)'));
+assert(phone.includes('.arcadeHome #homeScreen .gallery .playButton'),'phone rules target every primary game action');
+assert(phone.includes('min-height:44px!important'),'primary game actions meet the 44px phone target');
+assert(phone.includes('.arcadeHome #homeScreen .gallery .tileTools button'),'phone rules target every demo and video action');
+assert(phone.includes('min-height:40px'),'demo and video actions meet the 40px phone target');
+assert(phone.includes('grid-template-columns:1fr!important'),'phone actions receive their own full-width rows');
+assert(entry.includes('--arc-key-height:42px'),'phone number keys use a 42px shared height');
+assert(entry.includes('--arc-answer-height:174px'),'phone answer dock reserves space for taller keys');
+assert(entry.includes('--arc-build-dock:380px'),'phone build games reserve space for the taller answer dock');
+assert(castle.includes('<link rel="preload" as="image" href="island-castle-hd-poster.jpg">'),'Castle preloads its existing poster');
+assert(castle.includes('id="castleLoading" class="castleLoading" role="status"'),'Castle has an immediate loading state');
+assert(castle.includes('function hideCastleLoading()'),'Castle clears the loading state once usable media arrives');
+console.log('PASS phone touch targets: 44px play, 40px demo/video, 42px number keys, reserved docks, Castle first-paint poster');

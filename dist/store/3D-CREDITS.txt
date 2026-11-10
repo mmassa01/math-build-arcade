@@ -1,0 +1,5 @@
+Live collectible previews use Three.js r180, MIT license, Copyright Three.js Authors. See vendor/THREE-LICENSE.txt.
+Rocket GT, Neptune X and Moon Walker display meshes and showroom code were created for this arcade.
+Golden Champion display uses a recolored horse base mesh from the Three.js Horse.glb example, credited there to Mirada from ROME, with custom racing saddle, rider and gear added for this showroom.
+Horse source: https://threejs.org/examples/models/gltf/Horse.glb
+Original example and attribution: https://threejs.org/examples/webgl_morphtargets_horse.html

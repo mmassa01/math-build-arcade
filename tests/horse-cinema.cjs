@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+let frame,images=[],paused=false,draws=0;
+const makeContext=()=>({drawImage(){draws++},getImageData:()=>({data:new Uint8ClampedArray(8*4*4).fill(180)}),putImageData(){},clearRect(){},save(){},restore(){},translate(){},scale(){},beginPath(){},ellipse(){},fill(){}});
+function node(){return{style:{setProperty(k,v){this[k]=v}},dataset:{},classList:{contains:()=>true,add(){},toggle(){}},setAttribute(){},append(){},querySelector:()=>null};}
+const runners={};for(const id of ['me','gh']){const svg=node();const n=node();n.querySelector=s=>s==='svg.mascot'?svg:null;runners[id]=n;}
+const track=node(),layers={};track.prepend=n=>track.scene=n;track.querySelector=s=>s==='.cinema-scene'?track.scene:s==='.course-sign'?node():null;
+const scope={URL:{createObjectURL:()=> 'blob:course'},window:{HorseRaceStatus:()=>({paused})},document:{hidden:false,getElementById:id=>runners[id],querySelector:s=>s==='.track2'?track:null,createElement(tag){if(tag==='canvas')return{...node(),width:8,height:4,getContext:makeContext,toBlob:f=>f({})};const n=node();n.clientHeight=400;n.querySelector=s=>layers[s]??=node();return n;}},stableOf:()=>({coat:'#B5651D',silk:'#F2B705'}),gearFor:()=>({}),K:{sid:'test',stage:'race',R:{finished:false,res:[]}},Image:class{constructor(){images.push(this);this.naturalWidth=8;this.naturalHeight=4;}},matchMedia:()=>({matches:false}),requestAnimationFrame:f=>frame=f,Math,Map,JSON,Uint8ClampedArray};
+vm.createContext(scope);vm.runInContext(fs.readFileSync('dist/races/horse-cinema.js','utf8'),scope);
+const art=scope.window.HorseRaceCinema;assert.equal(art.frames,8);for(let i=0;i<8;i++)assert.equal(art.frameAt((i+.2)/8),i);assert.equal(art.frameAt(1),0);assert.equal(art.frameAt(-.01),7);
+const old=[100,60,30,255];const gold=art.tintPixel(...old,.7,.5,{coat:'#E0B45C'});assert(gold[0]>old[0]);assert.equal(gold[3],255);assert.deepEqual(Array.from(art.tintPixel(255,255,255,0,.5,.5,{coat:'#ffffff'})),[255,255,255,0]);
+images.find(i=>i.src.includes('gallop')).onload();assert(art.loaded);images.find(i=>i.src.includes('course')).onload();assert(art.seamlessCourse,'a reflected panorama removes mismatched repeating edges');frame(1000);assert.equal(track.scene.dataset.course,'blob:course');assert(runners.me.classList);const before=JSON.stringify(scope.K),afterDraws=draws;frame(1100);assert(draws>afterDraws);assert.equal(JSON.stringify(scope.K),before,'art renderer never changes answers, race positions, coins or timing');
+paused=true;const atPause=draws;frame(1200);frame(1300);assert.equal(draws,atPause,'paused actors are frozen and do not repaint');
+assert(layers['.cinema-dirt'].style.backgroundPositionX);assert(layers['.cinema-distance-marker'].style.left);
+for(const f of ['gallop-hd-v37.webp','championship-course-v37.webp'])assert(fs.statSync('dist/races/horse-art/'+f).size>10000);
+const html=fs.readFileSync('dist/races/horse.html','utf8');assert(html.includes('horse-cinema.js?v=review-56'));assert(html.includes('horse-cinematic'));
+console.log('PASS horse cinema: eight-frame cycle, coat mapping, transparent alpha, runtime rendering, pause freeze, moving track layers, unchanged game state and integrated assets.');

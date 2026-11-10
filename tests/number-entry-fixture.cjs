@@ -1,0 +1,5 @@
+// Engine-runtime tests use a small widget double. Real DOM input is exercised by
+// dist/typing-qa.html; digit completion itself is tested by number-entry.cjs.
+const {Buffer,wrong,motion}=require('../dist/number-entry.js');exports.wrong=wrong;exports.motion=motion;
+exports.mount=(host,options={})=>{const widget={buffer:new Buffer(),cleared:0,practice:0,remaining:3,set(q,cb){this.question=q;this.resolved=false;this.buffer.reset(q?.answer??null);this.callback=cb||options.onAnswer;},setEnabled(on){this.enabled=!!on;},setRemaining(seconds){this.remaining=seconds;},resolve(correct,options={}){if(this.resolved)return;this.resolved=true;this.lastResult={correct,...options};if(correct)this.cleared++;else this.practice++;},reset(){this.cleared=this.practice=0;this.resolved=false;this.remaining=3;},showDemo(value){this.demoValue=value;},key(k){if(!this.enabled||options.canAnswer&&!options.canAnswer())return;const result=this.buffer.key(k);if(result){this.enabled=false;this.callback(result.value);}}};host.numberEntry=widget;return widget;};
+exports.vertical=(el,text)=>{el.textContent=text;};

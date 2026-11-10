@@ -1,0 +1,9 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const prefix=fs.readFileSync('tests/timed-rounds.cjs','utf8').split('(async()=>')[0],scope={require,console};vm.createContext(scope);vm.runInContext(prefix+';this.makeHarness=harness;',scope);
+for(const name of ['dirt','wave'])for(const frameMs of [100,250,750])for(const stallMs of [0,2000]){
+ const h=scope.makeHarness(name);h.run(`start(true);var demoLog=[];var demoDrain=race.drain.bind(race);race.drain=function(){const out=demoDrain();for(const e of out)demoLog.push({...e,at:race.elapsed});return out;};`);
+ h.step(3.01);assert.equal(h.run('mode'),'racing');assert.equal(h.run('race.questionElapsed'),0);if(stallMs)h.step(stallMs/1000);
+ let wall=stallMs/1000;while(h.run('mode')!=='results'&&wall<90){h.step(frameMs/1000);wall+=frameMs/1000;}
+ assert.equal(h.run('mode'),'results',name+' completes demo at '+frameMs+'ms frames, stall '+stallMs);assert.equal(h.run('race.won'),true);assert.equal(h.run('race.correct'),24);assert.equal(h.run('botTurns'),28,'twenty-four correct plus four intentional misses');assert.equal(h.run("demoLog.filter(e=>e.type==='wrong'&&e.timeout).length"),0,'render stalls cannot create accidental demo timeouts');assert.equal(h.run("demoLog.filter(e=>e.type==='wrong').length"),4);assert(h.run("demoLog.filter(e=>e.type==='correct'&&e.power).length")>=3,'demo still shows repeated power boosts');assert(h.run('race.elapsed')<72,'demo catches and beats the honest pace');assert.equal(h.messages.filter(m=>m.type==='arcade-reward'||m.type==='arcade-complete').length,0,'demo never writes wallet rewards or completion');
+}
+console.log('PASS Dirt/Wave actual demo runtime at100/250/750ms frames and initial2s render stalls: wins,24correct,4intentionalmisses,zeroaccidentaltimeouts,repeatedboosts,zerosavedrewards');

@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+let clock=500000;const nodes={},listeners={},parent={postMessage(){}};
+const node=id=>nodes[id]??={children:[],style:{},classList:{add(){},remove(){}},value:id==='operation'?'mixed':'',replaceChildren(){},getBoundingClientRect:()=>({width:390,height:430})};
+const s={window:{Skyrail3D:{create:()=>({resize(){},event(){},update(){}})},addEventListener:(name,fn)=>listeners[name]=fn},parent,location:{origin:'https://arcade.test'},document:{getElementById:node,addEventListener(){}},Image:function(){},performance:{now:()=>clock},requestAnimationFrame(){},setTimeout(){},clearTimeout(){},SubwayEngine:require('../dist/subway/engine.js'),ArcadeNumberEntry:require('./number-entry-fixture.cjs'),Math};
+vm.createContext(s);vm.runInContext(fs.readFileSync('dist/subway/game.js','utf8').replace('const engine=new SubwayEngine.Engine','const engine=window.testEngine=new SubwayEngine.Engine'),s);
+const launch=()=>listeners.message({origin:'https://arcade.test',source:parent,data:{type:'arcade-command',action:'play'}}),typeCorrect=()=>{for(const n of String(s.window.testEngine.card.answer))node('choices').numberEntry.key(n);};
+launch();clock+=25;typeCorrect();assert.equal(s.window.testEngine.phase,'moving','first correct answer before any RAF ignores the prelaunch loading gap');
+clock=800000;launch();clock+=2999;typeCorrect();assert.equal(s.window.testEngine.phase,'moving','fresh launch has a full three-second answer window');
+clock=1000000;launch();clock+=3000;typeCorrect();assert.equal(s.window.testEngine.phase,'miss','exact deadline still rejects input even without a RAF');assert.equal(s.window.testEngine.coins,0);
+console.log('PASS Subway startup clock: stale loading/RAF gaps do not consume fresh card time, 2999ms accepted and 3000ms rejected before next frame');

@@ -1,0 +1,1 @@
+(()=>{'use strict';let category='all';const E=window.ArcadeEconomy;function message(t){document.getElementById('store-status').textContent=t}function render(){document.getElementById('shopCoins').textContent=E.getState().coins.toLocaleString();window.ArcadeShop.render(category,c=>{category=c;render()},render,message)}render()})();

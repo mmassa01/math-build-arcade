@@ -1,0 +1,65 @@
+/* This theme is scoped to the standalone horse game, not the store or other races. */
+html:has(.horse-cinematic),body.horse-cinematic{height:100%;overflow:hidden!important}
+body.horse-cinematic{display:flex;flex-direction:column;background:#102f2a!important;color:#fff5d9!important;--st-purple:#173f36;--st-panel-2:#214a40;--st-line:#7a9b7b44;--st-gold:#f3cb77}
+.horse-cinematic #app{flex:1;min-height:0;height:auto!important;overflow:hidden}
+.horse-cinematic .horse-controls{position:relative!important;inset:auto!important;margin:0!important;max-width:none;width:100%;min-height:53px;flex-shrink:0;justify-content:flex-end;padding:8px 18px;background:#0a211f;border-bottom:1px solid #91ad8c33;gap:7px;box-sizing:border-box}
+.horse-cinematic .horse-controls::before{content:'TIGER DOWNS / RACE DAY';margin-right:auto;color:#e9c67e;font:800 11px system-ui;letter-spacing:1.8px}
+.horse-cinematic .horse-controls button,.horse-cinematic .horse-controls select{font:750 12px system-ui;border:1px solid #c7d0aa33;border-radius:9px;background:#25463b;color:#fff3d5;min-height:34px;padding:6px 10px;cursor:pointer}
+.horse-cinematic .horse-controls button:hover{background:#3a6755}
+.horse-cinematic .horse-controls .roundChoice{background:transparent;color:#bed0ba;font-size:11px;padding:0}
+.horse-cinematic .horse-controls .roundChoice select{background:#eee8d1;color:#234338}
+.horse-cinematic .horse-controls .roundClock{background:#debe72;color:#17372b;border:0;min-width:70px;text-align:center}
+.horse-cinematic .roundClock::before{color:inherit}
+.horse-cinematic .roundClock[hidden]{display:none!important}
+.horse-cinematic .race-stage{height:100%!important;min-height:0;padding:10px 18px 14px!important;box-sizing:border-box;background:radial-gradient(ellipse at 45% 0,#2e5740,#102e29 75%)!important}
+.horse-cinematic .race-wrap{height:100%;min-height:0;max-width:1600px;margin:auto;display:flex;flex-direction:column}
+.horse-cinematic .race-heading{flex-shrink:0;height:auto;min-height:43px;margin:0 0 6px!important;align-items:center;padding:0!important}
+.horse-cinematic .race-heading h1{font-size:clamp(22px,3.5vh,34px)!important;color:#fff3d2!important;letter-spacing:.05em!important}
+.horse-cinematic .race-eyebrow{font:750 9px system-ui;letter-spacing:1.7px;color:#ccbe91!important}
+.horse-cinematic .race-skill{border:1px solid #cfc49b55!important;background:#0d2729aa!important;color:#e6d8ab!important;font:650 12px system-ui;min-width:180px;text-align:center}
+.horse-cinematic .race-hud{flex-shrink:0;margin:0 0 7px!important;gap:7px;min-height:28px;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+.horse-cinematic .chip2{font:650 11px system-ui;padding:5px 9px!important;border-width:1px!important}
+.horse-cinematic .chip2.hot{background:#6a5729!important;color:#ffe39f!important}
+.horse-cinematic .race-read{margin-left:auto}.horse-cinematic .race-read .spk{background:#315846!important;border:0!important;width:30px!important;min-width:30px!important;height:28px!important;min-height:28px!important;padding:0!important;line-height:28px;font-size:14px;border-radius:8px!important}
+.horse-cinematic .track2{flex:1;min-height:170px!important;height:auto!important;isolation:isolate;border:1px solid #dfc98c77!important;border-radius:17px!important;box-shadow:0 12px 30px #001a1b77,inset 0 0 0 1px #ffffff25!important;background:#bf9459}
+.horse-cinematic .championship-track .festival-scene{visibility:hidden}
+.cinema-scene{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:#bd854b}
+.cinema-panorama{position:absolute;inset:0;background:var(--horse-course,url(horse-art/championship-course-v37.webp)) left top/auto 100% repeat-x}
+.cinema-dirt{position:absolute;inset:56% 0 0;background:var(--horse-course,url(horse-art/championship-course-v37.webp)) left bottom/auto 227.27% repeat-x;box-shadow:inset 0 20px 28px -28px #553817}
+.cinema-scene::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#07434e0a 35%,transparent 65%,#5a321525);box-shadow:inset 0 0 45px #64452c25}
+.cinema-near-rail{position:absolute;inset:auto 0 1.5%;height:28px;background:repeating-linear-gradient(90deg,transparent 0 168px,#f1ecd3 168px 176px,transparent 176px 180px);border-top:5px solid #f4efd8;box-shadow:0 -1px 0 #937a4c,0 4px 0 #dfd7b6;opacity:.8;z-index:5}
+.cinema-distance-marker{position:absolute;left:80%;top:48%;height:25px;color:#fff6d2;font:800 10px system-ui;z-index:1}
+.cinema-distance-marker b{border:2px solid #eee5c9;border-radius:3px;background:#234e40;padding:4px 8px}.cinema-distance-marker span{display:block;height:18px;width:4px;background:#ede5d1;margin:auto}
+.horse-cinematic .track2 .course-sign{z-index:5;top:12px;left:14px;right:auto!important;width:max-content;max-width:70%;padding:8px 13px;border-radius:9px;background:#0b332ad9!important;border:1px solid #f2d29a66!important;color:#ffe8ad;box-shadow:0 4px 12px #0002;font-size:14px;letter-spacing:1.2px}
+.horse-cinematic .course-sign small{font:600 8px system-ui;letter-spacing:1.8px;color:#e7dbbd}
+.horse-cinematic .track2 .dmark,.horse-cinematic .track2 .finish2{display:none}
+.horse-cinematic .track2 .lane2{left:15%;right:15%;width:auto;height:0;bottom:auto;background:none;overflow:visible;pointer-events:none}
+.horse-cinematic .track2 .lane2.l1{top:88%;z-index:4}.horse-cinematic .track2 .lane2.l2{top:65%;z-index:3}
+.horse-cinematic .track2 .runner2{bottom:0;top:auto;transform:translateX(-50%);width:clamp(190px,28vw,350px);transition:none!important;will-change:left}
+.horse-cinematic .track2 #gh{width:clamp(175px,25vw,315px)}
+.horse-cinematic .track2 .runner2 .mascot{width:100%;height:auto}
+.horse-cinematic .cinema-racer>svg.mascot,.horse-cinematic .cinema-racer>.horse-hoof-dust,.horse-cinematic .cinema-racer>.trail{display:none!important}
+.horse-film{display:block;width:100%;height:auto;filter:drop-shadow(0 1px 1px #3a27152a)}
+.horse-cinematic .track2 .tag2{position:absolute;top:auto;bottom:97%;left:50%;transform:translateX(-50%);padding:3px 10px;z-index:5;max-width:none;white-space:nowrap;font:800 10px system-ui;letter-spacing:.09em;border-radius:20px;background:#214a61f2!important;color:#fff3d2!important;border:1px solid #ccdeeb88;box-shadow:0 2px 7px #152e2b30}
+.horse-cinematic .track2 .tag2.you{background:#ffdc79!important;color:#273b26!important;border:1px solid #fff0b3}
+.horse-cinematic .cinema-surge .tag2.you{box-shadow:0 0 0 4px #ffe6a238,0 0 22px #ffcf5a77}
+.horse-cinematic .qcard{flex-shrink:0!important;display:grid!important;grid-template-columns:minmax(160px,.6fr) minmax(0,1.4fr)!important;grid-template-rows:auto!important;align-items:center;gap:4px 20px;min-height:105px!important;padding:12px 20px!important;margin:10px 0 0!important;background:#faf5e5!important;border-radius:16px!important;box-shadow:0 4px 0 #021d1b44!important}
+.horse-cinematic .qvis{grid-column:1;grid-row:1/3;min-height:0!important;padding:0!important}.horse-cinematic .qvis .eq{font-size:clamp(30px,4vw,48px)!important;color:#193f34!important;white-space:nowrap}
+.horse-cinematic .qtext:empty{display:none}.horse-cinematic .qtext:not(:empty){grid-column:1;grid-row:2;font:750 12px system-ui;color:#b14434}
+.horse-cinematic .answer{grid-column:2;grid-row:1/3;min-width:0;padding:0!important;justify-content:center}
+.horse-cinematic .choicebar{width:100%!important;max-width:800px;gap:10px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.horse-cinematic .cbtn{min-height:61px!important;border:1px solid #bdac6c!important;border-bottom:4px solid #baa45e!important;border-radius:12px!important;background:linear-gradient(#ffe9a9,#efd17f)!important;color:#203c2d!important;font-size:30px!important;box-shadow:none!important;transition:transform .12s,filter .12s}
+.horse-cinematic .cbtn:hover{transform:translateY(-2px);filter:brightness(1.05)}.horse-cinematic .cbtn:active{transform:translateY(2px)}.horse-cinematic .cbtn:focus-visible{outline:3px solid #18866e;outline-offset:3px}
+.horse-cinematic .submit,.horse-cinematic .pie{display:none!important}
+body.horse-cinematic.ride-rosenbaum .race-stage .track2{border:1px solid #dfc98c77!important;border-radius:17px!important}
+body.horse-cinematic.ride-rosenbaum .race-stage .qcard{background:#faf5e5!important;border-radius:16px!important;box-shadow:0 4px 0 #021d1b44!important}
+@media(max-width:700px){
+ .horse-cinematic .horse-controls{gap:5px;padding:7px 9px;justify-content:center}.horse-cinematic .horse-controls::before{width:100%;text-align:left;font-size:9px;letter-spacing:1.5px}
+ .horse-cinematic .horse-controls button,.horse-cinematic .horse-controls select{min-height:32px;padding:5px 7px;font-size:11px}.horse-cinematic .horse-controls>select{max-width:115px}.horse-cinematic .horse-controls .roundChoice{font-size:0;gap:0}.horse-cinematic .horse-controls .roundClock{min-width:54px;padding:6px;font-size:13px}
+ .horse-cinematic .horse-controls #horseDemo,.horse-cinematic .horse-controls #horsePause{width:44px;min-width:0;padding:4px;font-size:10px}.horse-cinematic .horse-controls .roundChoice select{width:81px;font-size:10px;padding:4px}.horse-cinematic .horse-controls>select{width:100px;font-size:10px;padding:4px}.horse-cinematic .horse-controls .roundClock{min-width:50px;padding:5px;font-size:12px}
+ .horse-cinematic .race-stage{padding:7px 9px 10px!important}.horse-cinematic .race-heading{min-height:39px;gap:5px;padding:0!important}.horse-cinematic .race-heading h1{font-size:21px!important}.horse-cinematic .race-eyebrow{font-size:7px;letter-spacing:.6px}.horse-cinematic .race-skill{min-width:0;max-width:150px;padding:5px 8px;font-size:9px}.horse-cinematic .best-chip{display:none}.horse-cinematic .chip2{font-size:10px;padding:4px 7px!important}.horse-cinematic .race-hud{margin:0 0 5px!important;min-height:27px}
+ .horse-cinematic .track2{border-radius:12px!important;min-height:150px!important}.horse-cinematic .track2 .runner2{width:clamp(150px,48vw,230px)}.horse-cinematic .track2 #gh{width:clamp(140px,44vw,210px)}.horse-cinematic .track2 .lane2.l1{top:89%}.horse-cinematic .track2 .lane2.l2{top:64%}.horse-cinematic .track2 .course-sign{top:9px;left:9px;font-size:10px;padding:6px 8px}.horse-cinematic .course-sign small{font-size:6px;letter-spacing:1px}.horse-cinematic .track2 .tag2{font-size:8px;padding:3px 7px;bottom:95%}
+ .horse-cinematic .qcard{display:flex!important;flex-direction:column;gap:4px;min-height:0!important;padding:9px!important;margin-top:7px!important}.horse-cinematic .qvis{width:100%;text-align:center}.horse-cinematic .qvis .eq{font-size:33px!important;line-height:1.1}.horse-cinematic .answer{width:100%}.horse-cinematic .choicebar{gap:6px!important}.horse-cinematic .cbtn{min-height:49px!important;font-size:25px!important;border-radius:10px!important}.horse-cinematic .qtext:not(:empty){order:3;font-size:11px}
+}
+@media(max-height:550px) and (min-width:701px){.horse-cinematic .race-heading{display:none}.horse-cinematic .race-stage{padding:6px 12px!important}.horse-cinematic .horse-controls{min-height:43px;padding:4px 12px}.horse-cinematic .qcard{min-height:75px!important;margin-top:6px!important;padding:6px 14px!important}.horse-cinematic .cbtn{min-height:49px!important}.horse-cinematic .track2 .runner2{width:clamp(150px,42vh,220px)}.horse-cinematic .track2 #gh{width:clamp(140px,38vh,205px)}}
+@media(prefers-reduced-motion:reduce){.horse-cinematic *{animation:none!important;transition:none!important}}
