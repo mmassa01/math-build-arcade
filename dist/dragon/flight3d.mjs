@@ -20,7 +20,7 @@ export class FjordFlight{
   this.background();this.buildLandscape();this.buildWater();this.addMist();this.resize();
  }
  background(){
-  const g=new T.PlaneGeometry(1400,933),mat=new T.MeshBasicMaterial({color:'#ffffff',fog:false,depthWrite:false,toneMapped:false});this.plate=new T.Mesh(g,mat);this.plate.position.set(0,100,650);this.plate.rotation.y=Math.PI;this.plate.renderOrder=-10;this.scene.add(this.plate);
+  const g=new T.PlaneGeometry(1400,933),mat=new T.MeshBasicMaterial({color:'#ffffff',fog:false,depthWrite:false,toneMapped:false});this.plate=new T.Mesh(g,mat);this.plate.position.set(0,100,650);this.plate.rotation.y=Math.PI;this.plate.renderOrder=-10;this.scene.add(this.plate);if(this.camera){const s=Math.max(1,this.camera.aspect/1.85);this.plate.scale.set(s,s,1);this.plate.position.y=100-(s-1)*168;}
   new T.TextureLoader().load(new URL('./art/fjord-v45.webp',import.meta.url).href,t=>{t.colorSpace=T.SRGBColorSpace;t.anisotropy=Math.min(16,this.renderer.capabilities.getMaxAnisotropy());t.magFilter=T.LinearFilter;mat.map=t;mat.needsUpdate=true;this.pano=t;this.artLoaded=true;});
  }
  buildLandscape(){this.coast=new CoastWorld(this.scene);}
@@ -41,7 +41,7 @@ export class FjordFlight{
   const c=document.createElement('canvas');c.width=128;c.height=64;const x=c.getContext('2d'),g=x.createRadialGradient(64,32,2,64,32,64);g.addColorStop(0,'#e2eeed88');g.addColorStop(1,'#e2eeed00');x.fillStyle=g;x.fillRect(0,0,128,64);const tex=new T.CanvasTexture(c);this.mists=[];
   for(let i=0;i<9;i++){const m=new T.Mesh(new T.PlaneGeometry(80,12),new T.MeshBasicMaterial({map:tex,transparent:true,opacity:.28,depthWrite:false,side:T.DoubleSide}));m.position.set((i%2?1:-1)*28,1,40+i*36);m.rotation.y=Math.PI;this.scene.add(m);this.mists.push(m);}
  }
- resize(){const r=this.canvas.getBoundingClientRect();if(r.width===this.width&&r.height===this.height)return;this.width=r.width;this.height=r.height;this.renderer.setSize(Math.max(1,r.width),Math.max(1,r.height),false);this.reflection?.setSize(Math.min(2048,Math.ceil(r.width*Math.min(devicePixelRatio||1,2))),Math.min(1536,Math.ceil(r.height*Math.min(devicePixelRatio||1,2))));this.camera.aspect=Math.max(.2,r.width/Math.max(1,r.height));this.camera.fov=this.camera.aspect<.85?65:57;this.camera.updateProjectionMatrix();}
+ resize(){const r=this.canvas.getBoundingClientRect();if(r.width===this.width&&r.height===this.height)return;this.width=r.width;this.height=r.height;this.renderer.setSize(Math.max(1,r.width),Math.max(1,r.height),false);this.reflection?.setSize(Math.max(1,Math.min(2048,Math.ceil(r.width*Math.min(devicePixelRatio||1,2)))),Math.max(1,Math.min(1536,Math.ceil(r.height*Math.min(devicePixelRatio||1,2)))));this.camera.aspect=Math.max(.2,r.width/Math.max(1,r.height));this.camera.fov=this.camera.aspect<.85?65:57;this.camera.updateProjectionMatrix();if(this.plate){const s=Math.max(1,this.camera.aspect/1.85);this.plate.scale.set(s,s,1);this.plate.position.y=100-(s-1)*168;}}
  project(s,point,size=6){const p=point.clone().project(this.camera),distance=Math.max(1,point.distanceTo(this.camera.position)),scale=s.h/(2*Math.tan(T.MathUtils.degToRad(this.camera.fov/2))*distance);return{x:(p.x*.5+.5)*s.w,y:(-.5*p.y+.5)*s.h,size:size*scale};}
  target(s,x,z){const e=s.game?.enemies.find(e=>Math.abs(e.x-x)<.001&&Math.abs(e.z-z)<.002);return this.project(s,e?rivalPosition(e,s.time,s.game.enemies.indexOf(e)):new T.Vector3((x-.5)*24,8,27),9);}
  update(s){
