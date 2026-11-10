@@ -169,4 +169,12 @@ test('Build games draw a 36-card build and tell the engine when each card is sho
   assert.equal(l.api.checkStatus().elapsedMs,1200+4*1600,'the time between pre-drawn cards counts as play');
 });
 
+test('the check result is announced once, is not buried by coin toasts, and a miss shows no tick',()=>{
+  const ui=fs.readFileSync('dist/pathway-ui.js','utf8'),shell=fs.readFileSync('dist/arcade.js','utf8');
+  assert(ui.includes('announced.has(today.id)'),'each check id is announced once across pathway switches');
+  assert(ui.includes('window.arcadeToastHold=Date.now()+2600')&&shell.includes('Date.now()>=(window.arcadeToastHold||0)'),'coin toasts wait while the result shows');
+  assert(ui.includes("(today&&today.passed?' done':'')")&&ui.includes("(today.passed?'✓ ':'')"),'only a passed check gets the tick');
+  assert(fs.readFileSync('dist/arcade.css','utf8').includes('@media(max-width:620px){.roomCheck{'),'the chip is compact on phones');
+});
+
 console.log('PASS in-game check: '+tests+' checks');

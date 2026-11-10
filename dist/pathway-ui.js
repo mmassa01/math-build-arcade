@@ -2,6 +2,7 @@
   'use strict';
   const P=window.ArcadePractice,$=id=>document.getElementById(id),symbols={add:'+',sub:'−',mul:'×',div:'÷',mixed:'✦'};
   let active=null,question=null,tick=null,afterCheck=null,startedAt=0,announced=null;
+  const narrow=()=>typeof matchMedia==='function'&&matchMedia('(max-width:620px)').matches;
   const title=p=>P.names[p];
   function meter(p,example=false){
     const current=!example&&p.id===P.getPathway(),c=p.checks,n=Math.min(3,c.passes),retention=c.nextEligible?' · retention check on or after '+c.nextEligible:'';
@@ -18,8 +19,10 @@
     $('checkButton').textContent=today?'Try another 90-second check':'Start today’s 90-second check';
     const status=P.checkStatus();
     $('todayCheck').textContent=today?(today.passed?'Today’s check: passed':'Today’s check: keep practicing')+' · '+today.correct+' correct · '+Math.round(today.accuracy*100)+'% accuracy. The rest of today is practice.':status.elapsedMs?'Today’s check is under way: '+Math.ceil(status.remainingMs/1000)+' seconds of play to go.':'The first 90 seconds you play today is your check. Just pick a game.';
-    const chip=$('roomCheck'),left=Math.ceil(status.remainingMs/1000);chip.hidden=typeof mode!=='undefined'&&mode!=='play';chip.className='roomCheck'+(today?' done':'');chip.textContent=today?'✓ Check: '+today.correct+' correct · '+Math.round(today.accuracy*100)+'%':'Check '+Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
-    const key=selected.id+':'+(today?today.id:'');if(announced!==null&&today&&announced!==key&&today.source==='game')notify(today.passed?'✓ Today’s check passed: '+today.correct+' correct · '+Math.round(today.accuracy*100)+'%':'Today’s check: '+today.correct+' correct · '+Math.round(today.accuracy*100)+'%. Keep playing to practice.');announced=key;
+    const chip=$('roomCheck'),left=Math.ceil(status.remainingMs/1000);chip.hidden=typeof mode!=='undefined'&&mode!=='play';const small=narrow(),percent=today?Math.round(today.accuracy*100)+'%':'';chip.className='roomCheck'+(today&&today.passed?' done':'');chip.textContent=today?(today.passed?'✓ ':'')+(small?today.correct+' · '+percent:'Check: '+today.correct+' correct · '+percent):(small?'⏱ ':'Check ')+Math.floor(left/60)+':'+String(left%60).padStart(2,'0');chip.setAttribute?.('aria-label',today?'Today’s check: '+today.correct+' correct, '+percent+(today.passed?', passed':''):'Check time left '+left+' seconds');
+    // Announce each finished check once; checks from before this page load stay quiet.
+    if(announced===null)announced=new Set(paths.map(p=>p.checks.today&&p.checks.today.id).filter(Boolean));
+    if(today&&!announced.has(today.id)){announced.add(today.id);if(today.source==='game'){notify(today.passed?'✓ Today’s check passed: '+today.correct+' correct · '+Math.round(today.accuracy*100)+'%':'Today’s check: '+today.correct+' correct · '+Math.round(today.accuracy*100)+'%. Keep playing to practice.');window.arcadeToastHold=Date.now()+2600;}}
     $('storageNotice').hidden=P.storageAvailable;
     $('pathCards').querySelectorAll('[data-choose-path]').forEach(b=>b.onclick=()=>{if(typeof selected!=='undefined'&&!$('room').hidden)home();P.setPathway(b.dataset.choosePath);render();});
   }
