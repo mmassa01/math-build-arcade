@@ -142,4 +142,31 @@ test('games ask for the endless deck and no separate check stands in front of Pl
   assert(page.includes('id="roomCheck"'),'the room shows the check countdown');
 });
 
+test('Pong: a correct answer brings the next card quickly, and the answer window stays three seconds',()=>{
+  const {Match}=require('../dist/pong/engine.js');
+  const match=new Match({random:()=>.4});
+  let cards=0,ms=0,since=0;
+  while(ms<90000&&match.phase!=='finished'){
+    if(['serve','flight'].includes(match.phase)&&match.turn===0&&!match.reply){since+=10;if(since>=1200){assert(match.answer(0,match.question.answer).accepted);cards++;since=0;}}
+    match.update(10);ms+=10;
+  }
+  assert(cards>=30,'30 or more answers fit in 90 seconds at a 1.2 second pace, got '+cards);
+  const slow=new Match({random:()=>.4});slow.answer(0,slow.question.answer);slow.update(1050);
+  slow.update(2990);assert.equal(slow.phase,'flight','an unanswered ball still takes the full three seconds');
+  assert.equal(slow.answer(0,slow.question.answer).correct,true);
+});
+
+test('Build games draw a 36-card build and tell the engine when each card is shown',()=>{
+  for(const game of ['castle','seed','hangar']){
+    const source=fs.readFileSync('dist/'+game+'/index.html','utf8');
+    assert(source.includes('for(let i=0;i<36;i++){const q=window.ArcadeLearning.next();'),game+' build is 36 cards');
+    assert(source.includes('window.ArcadeLearning?.shown?.(current.question)'),game+' reports when a card appears');
+  }
+  const l=learner('add'),run=l.api.begin({endless:true}),deck=[];
+  for(let i=0;i<36;i++)deck.push(run.next());
+  assert(deck.every(Boolean)&&new Set(deck.map(q=>q.id)).size===36,'36 different cards are available up front');
+  for(const q of deck.slice(0,5)){l.advance(400);run.shown(q);l.advance(1200);run.record(q,true,1200);}
+  assert.equal(l.api.checkStatus().elapsedMs,1200+4*1600,'the time between pre-drawn cards counts as play');
+});
+
 console.log('PASS in-game check: '+tests+' checks');
