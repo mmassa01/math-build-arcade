@@ -1,7 +1,7 @@
 /* This theme is scoped to the standalone horse game, not the store or other races. */
 html:has(.horse-cinematic),body.horse-cinematic{height:100%;overflow:hidden!important}
 body.horse-cinematic{display:flex;flex-direction:column;background:#102f2a!important;color:#fff5d9!important;--st-purple:#173f36;--st-panel-2:#214a40;--st-line:#7a9b7b44;--st-gold:#f3cb77}
-.horse-cinematic #app{flex:1;min-height:0;height:auto!important;overflow:hidden}
+.horse-cinematic #app{flex:1;min-height:0;height:auto!important;overflow-x:hidden;overflow-y:auto}
 .horse-cinematic .horse-controls{position:relative!important;inset:auto!important;margin:0!important;max-width:none;width:100%;min-height:53px;flex-shrink:0;justify-content:flex-end;padding:8px 18px;background:#0a211f;border-bottom:1px solid #91ad8c33;gap:7px;box-sizing:border-box}
 .horse-cinematic .horse-controls::before{content:'TIGER DOWNS / RACE DAY';margin-right:auto;color:#e9c67e;font:800 11px system-ui;letter-spacing:1.8px}
 .horse-cinematic .horse-controls button,.horse-cinematic .horse-controls select{font:750 12px system-ui;border:1px solid #c7d0aa33;border-radius:9px;background:#25463b;color:#fff3d5;min-height:34px;padding:6px 10px;cursor:pointer}

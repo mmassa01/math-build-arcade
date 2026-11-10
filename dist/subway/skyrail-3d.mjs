@@ -15,6 +15,7 @@ export class SkyrailScene{
   this.coingeo=new T.CylinderGeometry(.38,.38,.105,24);this.coingeo.rotateX(Math.PI/2);this.ringGeo=new T.TorusGeometry(.26,.025,6,24);this.starGeo=new T.OctahedronGeometry(.135,0);this.coinMat=material('#ffc83c',.7,.22);this.coinFace=material('#ffe491',.35,.3);
   this.dotgeo=new T.SphereGeometry(.055,6,5);this.dotmat=new T.MeshBasicMaterial({color:'#ffe39b'});this.resize();
   this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();document.getElementById('hint').textContent='Graphics paused. Reload to restart your run.';window.dispatchEvent(new Event('skyrail-context-lost'));});
+  this.canvas.addEventListener('webglcontextrestored',()=>window.dispatchEvent(new Event('skyrail-context-restored')));
  }
  environment(){
   const c=document.createElement('canvas');c.width=512;c.height=256;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,'#327eb8');g.addColorStop(.48,'#a7d7e7');g.addColorStop(.53,'#edcda1');g.addColorStop(1,'#293842');x.fillStyle=g;x.fillRect(0,0,512,256);const sun=x.createRadialGradient(80,100,0,80,100,50);sun.addColorStop(0,'#fff5dd');sun.addColorStop(.2,'#fff5dd');sun.addColorStop(1,'#fff5dd00');x.fillStyle=sun;x.fillRect(0,0,512,256);const tex=new T.CanvasTexture(c);tex.mapping=T.EquirectangularReflectionMapping;tex.colorSpace=T.SRGBColorSpace;const pm=new T.PMREMGenerator(this.renderer);this.scene.environment=pm.fromEquirectangular(tex).texture;this.scene.environmentIntensity=.45;tex.dispose();pm.dispose();
