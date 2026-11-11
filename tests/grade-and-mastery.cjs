@@ -129,4 +129,30 @@ test('the landing page offers a grade picker that hides when the platform sets t
   assert(ui.includes("' of '+paths.length+' trophies earned'"));
 });
 
+test('the record keeps a daily log, a miss count and first day per fact, and the facts missed in each check',()=>{
+  const l=learner(3);l.api.setPathway('add');
+  let run=l.api.begin({endless:true});const seen=[];
+  for(let i=0;i<20;i++){const q=run.next();seen.push(q.id);l.advance(1200);run.record(q,i%4!==0,i===1?3000:1200,{timeout:i===1});}
+  let record=l.api.exportRecord();const today=Object.keys(record.days)[0];
+  assert.equal(Object.keys(record.days).length,1);
+  assert.equal(record.days[today].cards,20);assert.equal(record.days[today].correct,14);
+  assert.equal(record.days[today].ms,19*1200+3000,'answer time, capped at three seconds a card');
+  assert(record.days[today].steps>0&&record.days[today].confirmed===0);
+  const missedId=seen[0],fact=record.facts[missedId];
+  assert(fact.misses>=1&&fact.first===today,'misses are counted and the first day is kept');
+  assert.equal(record.facts[seen[2]].misses,0);
+  l.setDay(1);run=l.api.begin({endless:true});for(let i=0;i<81;i++){const q=run.next();l.advance(900);run.record(q,true,900);}
+  l.setDay(2);run=l.api.begin({endless:true});for(let i=0;i<81;i++){const q=run.next();l.advance(900);run.record(q,true,900);}
+  record=l.api.exportRecord();const days=Object.keys(record.days).sort();
+  assert.equal(days.length,3);assert(record.days[days[2]].confirmed>0,'the running total of confirmed facts is logged each day');
+  assert.equal(record.facts[missedId].first,today,'the first day never moves');
+  const c=learner(3);c.api.setPathway('add');const r=c.api.begin({endless:true});const wrong=[];
+  for(let i=0;i<70&&!c.api.checkStatus().official;i++){const q=r.next();c.advance(1400);const miss=i===3||i===8;if(miss)wrong.push(q.id);r.record(q,!miss,1400);}
+  assert.deepEqual([...c.api.checkStatus().official.missed].sort(),[...new Set(wrong)].sort(),'the check lists the facts that were missed');
+  const demo=learner(3),before=JSON.stringify(demo.api.exportRecord().days);const d=demo.api.begin({demo:true,endless:true});d.record(d.next(),true,900);
+  assert.equal(JSON.stringify(demo.api.exportRecord().days),before,'demo play is never logged');
+  const damaged=learner(3,new Map([['mathArcadePathways.v2',JSON.stringify({version:2,pathway:'add',facts:{'add:2:5':{stage:1,misses:'x',first:7}},checks:[],trophies:{},days:{'bad':{cards:5},'2026-11-01':{cards:-4,correct:'y'},'2026-11-02':7}})]]));
+  assert.deepEqual(damaged.api.exportRecord().days,{'2026-11-01':{cards:0,correct:0,ms:0,steps:0,confirmed:0}},'damaged log entries are cleaned');
+});
+
 console.log('PASS grade and mastery: '+tests+' checks');
