@@ -162,7 +162,7 @@ test('the check result is announced once, is not buried by coin toasts, and a mi
   assert(ui.includes('announced.has(today.id)'),'each check id is announced once across pathway switches');
   assert(ui.includes('window.arcadeToastHold=Date.now()+2600')&&shell.includes('Date.now()>=(window.arcadeToastHold||0)'),'coin toasts wait while the result shows');
   assert(ui.includes("(today&&today.passed?' done':'')")&&ui.includes("(today.passed?'✓ ':'')"),'only a passed check gets the tick');
-  assert(fs.readFileSync('dist/arcade.css','utf8').includes('@media(max-width:620px){.roomCheck{'),'the chip is compact on phones');
+  assert(fs.readFileSync('dist/arcade.css','utf8').includes('@media(max-width:620px){.roomCheck{padding:2px 4px'),'the chip is compact on phones');
 });
 
 test('Pong: a miss starts a new rally instead of ending the game, until the round clock ends it',()=>{
@@ -181,6 +181,7 @@ test('Pong: a miss starts a new rally instead of ending the game, until the roun
   const game=fs.readFileSync('dist/pong/game.js','utf8'),page=fs.readFileSync('dist/pong/index.html','utf8');
   assert(game.includes("continuous:!isDemo&&!!round?.enabled")&&game.includes("if(round?.tick(rawDt/1000,match.phase!=='finished'))match.finish();"));
   assert(page.includes('round-timer.js'));
+  assert(fs.readFileSync('dist/round-timer.css','utf8').includes('.roundClock[hidden]{display:none!important}'),'the clock is hidden in demo');
 });
 
 console.log('PASS in-game check: '+tests+' checks');

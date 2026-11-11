@@ -97,4 +97,4 @@ html:has(#room:not([hidden])),body.arcadeHome:has(#room:not([hidden])){overflow:
 body:has(#room:not([hidden])) .toast{bottom:auto;top:56px;transform:translate(-50%,-20px)}body:has(#room:not([hidden])) .toast.show{transform:translate(-50%,0)}
 
 .roomCheck{flex:none;border:1px solid #ffe07766;border-radius:999px;padding:3px 10px;background:#251442cc;color:#ffe9a8;font:800 12px system-ui;letter-spacing:.4px;white-space:nowrap}.roomCheck.done{border-color:#7be0a066;color:#b9f5cd}
-@media(max-width:620px){.roomCheck{padding:2px 6px;font-size:10px;letter-spacing:0}}
+@media(max-width:620px){.roomCheck{padding:2px 4px;font-size:10px;letter-spacing:0}}
