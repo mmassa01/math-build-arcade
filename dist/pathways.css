@@ -19,3 +19,5 @@ body.arcadeHome{height:auto!important;overflow:auto!important}.arcadeHome #homeS
 
 /* Short screens: keep the whole 90-second check keypad visible without scrolling. */
 @media(max-height:560px){.checkDialog{padding:12px 16px}.checkDialog h2{font-size:20px;margin:2px 0 6px}#checkRunning:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:center}#checkRunning>*{grid-column:1}#checkRunning .checkPad{grid-column:2;grid-row:1/span 5;margin:0;gap:6px}#checkRunning .checkPad button{min-height:40px}#checkRunning .checkQuestion{margin:6px 0;font-size:30px}}
+
+.gradePick{display:inline-flex;align-items:center;gap:7px;font:800 13px system-ui;color:#fff4cb}.gradePick select{font:800 14px system-ui;min-height:40px;border:1px solid #a998d077;border-radius:10px;padding:5px 8px;background:#fff7df;color:#302047;cursor:pointer}.gradePick[hidden]{display:none}

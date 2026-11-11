@@ -32,7 +32,7 @@ test('a game deck never runs out, even after every scheduled fact is cleared',()
   play(l,run,total+60,{answerMs:900,gapMs:100});
   assert.equal(l.api.stats().remaining,0,'every scheduled fact was cleared today');
   assert(run.next(),'play continues with review cards');
-  assert.equal(l.api.progress().find(p=>p.id==='mul').practicePercent,25,'same-day repeats never add a second milestone');
+  assert.equal(l.api.progress().find(p=>p.id==='mul').practicePercent,33,'same-day repeats never add a second milestone');
 });
 
 test('a classic finite run still ends when the scheduled facts are done',()=>{

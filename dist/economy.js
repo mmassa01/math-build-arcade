@@ -1,7 +1,7 @@
 (function (root, factory) {
   'use strict';
   var storage = null;
-  try { storage = root && root.localStorage; } catch (e) {}
+  try { storage = root && (root.ArcadeStorage || root.localStorage); } catch (e) {}
   var api = factory(storage);
   if (typeof module === 'object' && module.exports) { module.exports = api; module.exports.create = factory; }
   if (root) root.ArcadeEconomy = api;
