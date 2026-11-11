@@ -1,73 +1,79 @@
-# Fluency Arcade educator module
+# Report pages: integration note for the platform team
 
-Working HTML/CSS/JavaScript reporting preview, prepared for later MTSS integration. No MTSS deployment, database migration, account connection, or production record import has occurred. The public preview must remain fictional-data-only.
+The teacher report (`educators/index.html`) and district report (`district.html`) in this repository run on **fictional sample data only**. They never read a student's browser save. This note says what a host platform must supply to run the same reports on real students, and what the numbers mean.
 
-## Run the integration kit
+## Input: one roster row and one stored record per student
 
-Extract `integration-kit.zip`, serve its `dist` directory with any static web server, and open `/educators/`. Run `node tests/educator-dashboard.mjs` from the extracted root for model checks. The package includes the HTML template, styles, ES modules, TypeScript data contract, synthetic data generator, SQL starter and tests. It does not require the arcade game assets. The Back to arcade links are optional host navigation and should be replaced when embedded.
+**Roster row** (from the platform):
 
-## Files and host mounting
+| Field | Meaning |
+| --- | --- |
+| `id` | Opaque student id. Never shown. |
+| `name` | Display name. |
+| `grade` | 1–12. Decides the fact set; it overrides any grade inside the record. |
+| `school`, `classId`, `className`, `teacher` | Used for grouping and labels only. |
 
-`index.html` is the reusable accessible template. `dashboard.css` provides the responsive design. `dashboard.mjs` exports `mountDashboard(root, {adapter, initialRole})` and returns `{destroy()}` after loading. `bootstrap.mjs` explicitly selects the sample adapter. The report model is independent of DOM and networking. No third-party runtime libraries or build tools are required.
+**Stored record**: the JSON the game keeps under `mathArcadePathways.v2`, also returned by `ArcadePractice.exportRecord()`. The reports rely on exactly these fields:
 
-Copy this folder into a host route or render the template inside an isolated page/shadow root. For an isolated root, include dashboard.css inside that root. For MTSS SPA integration, namespace the CSS or isolate it; do not apply its global body/heading styles across the MTSS shell. Preserve the element IDs within one module instance. Mount once and call destroy() on route teardown. This preview does not prove compatibility with an unseen MTSS codebase.
+| Field | Used for |
+| --- | --- |
+| `facts["<op>:<a>:<b>"].stage` (0–4), `.refresh` (0–2) | Confirmed = `stage >= 3` and `refresh` is 0. Steps = `min(3, stage)`. |
+| `facts[...].misses`, `.attempts`, `.failedDay`, `.lastSuccess`, `.first` | Stuck facts and their miss counts; first day seen. |
+| `checks[]`: `pathway`, `day`, `official`, `valid`, `passed`, `correct`, `attempts`, `accuracy`, `balanced`, `byOperation`, `missed` | Check days passed per pathway, check history, facts missed in each check. |
+| `trophies[pathway]` = day earned | Trophies earned, Finished. |
+| `days["YYYY-MM-DD"]`: `cards`, `correct`, `ms`, `steps`, `confirmed` | First and last day played, minutes, accuracy, growth, pace, projection. |
+
+**The server must keep** `days`, `facts[].misses`, `facts[].first` and `checks[].missed`; without them there is no time on task, growth, pace or "what to teach next". `checks[].responses` is not used by the reports and may be discarded, **but** the game itself drops any stored check that has no `responses` array when it loads a record, so return `responses: []` (not a missing field) when handing a record back to the game. `facts[].cleared`, `facts[].due`, `activity` and `gameChecks` are not used by the reports.
+
+## Summary module: `reporting/summary.js`
+
+Load `practice-pathways.js` first; the module asks the engine for each grade's fact bank and rules, so totals cannot drift. In the browser it is `window.ArcadeReporting`; in Node, `require('./reporting/summary.js')`. It never touches browser storage. (The report pages load `reporting/isolate.js` before the engine so the engine does not open a local player save either; a host that already scopes `ArcadeStorage` to the signed-in user should not load the engine's default instance on a staff page.)
 
 ```js
-import {mountDashboard} from './dashboard.mjs';
-import {httpAdapter} from './adapter.mjs';
-const instance = await mountDashboard(document, {
-  adapter: httpAdapter('/api/fluency/reporting'),
-  initialRole: 'teacher'
-});
-// On route teardown: instance.destroy();
+const summary = ArcadeReporting.summarize(record, rosterRow, { today: '2027-02-01' });
+// options: today (YYYY-MM-DD, default the local date), milestone ('2027-05-10'), target ('2027-04-26'),
+//          onPaceRatio (0.9), behindRatio (0.6), graceDays (3), projectionDays (14)
 ```
 
-`httpAdapter` only permits same-origin endpoints and uses the host's configured same-origin session. There is no endpoint implemented by this demo. Do not replace sample data with real students on this public static site.
+`summary` contains: `student`, `grade`, `operationList`, `pathwayList`, `facts {total, confirmed, percent, steps, stepsTotal, started, notStarted}`, `operations[op] {total, confirmed, percent, steps, started, notStarted, stuck}`, `checks {byPathway[p] {passes, needed, spanMet, complete, taken, last, nextEligible}, history[], passedDays, neededDays}`, `trophies {earned[], count, possible, won, wonDay}`, `stuck[] {id, text, answer, misses, attempts, reason}`, `notStarted[]`, `activity {firstDay, lastDay, daysSinceLast, playedLast7, minutesThisWeek, minutesLastWeek, cardsThisWeek, accuracyThisWeek, ...}`, `series[] {day, confirmed, minutes, cards, correct, steps}` and `pace`.
 
-## ReportingDataset v1.0 contract
+Group helpers, all taking an array of summaries:
 
-All arrays are normalized and linked by stable IDs. All dates are ISO school-local calendar dates (YYYY-MM-DD), calculated server-side in the district's timezone. Event timestamps should additionally retain UTC instants in storage. Never derive school days by slicing UTC timestamps around midnight.
+- `aggregate(list)`: counts by pace status, on-pace share, median % confirmed, played in the last 7 days, trophies earned and possible, students who have won, minutes per student this week and last week, totals per operation.
+- `mostMissed(list, {limit, minStudents, op})`: the facts the most students are stuck on, each with its students and miss counts.
+- `weeklySeries(list, {today, weeks})`: confirmed facts, minutes and active students per week.
+- `groupBy(list, fn)`, `byAttention` (sort: needs attention first), `csv(rows)`, `gradeInfo(grade)`.
 
-| Collection | Required record shape |
+"This week" is the seven days ending today; "last week" is the seven before. Minutes are answer time only (`days[].ms`, at most three seconds per card), not time in the game.
+
+## The pace rule
+
+A straight line from the student's **first day played** to **every fact of their grade confirmed by the target day**, two weeks before the district milestone (target 2027-04-26, milestone 2027-05-10; both are options).
+
+`expected = clamp((today − firstDay) / (target − firstDay), 0, 1) × total facts`
+
+| Status | Rule |
 | --- | --- |
-| meta | mode, asOf, district, timezone, rulesVersion, responseLimitMs |
-| schools | id, name |
-| classes | id, schoolId, grade, name, teacher |
-| students | id, schoolId, classId, grade, name |
-| facts | id, op, a, b, answer, text |
-| factStates | studentId, factId, stage (0–4), refresh (0–2), due, lastSuccess, rulesVersion |
-| checks | id, studentId, pathway, date, durationSeconds (90), correct, incorrect, timeouts, attempted, official, valid, rulesVersion |
-| sessions | id, studentId, date, game, demo, practiceMs |
-| responses | id, studentId, factId, date, game, outcome, elapsedMs (0–3000), assisted, demo |
-| snapshots | studentId, pathway, date, fullSetConfirmed, rulesVersion |
+| Finished | Every trophy for the grade is earned (3 in grades 1–2, 5 from grade 3). |
+| Not started | No day of practice recorded. |
+| On pace | Confirmed ≥ 90% of expected, or within the first 3 days, when nothing can be confirmed yet. |
+| Behind | 60% to under 90% of expected. |
+| At risk | Under 60% of expected. |
 
-The sample generator contains 72 fictional students, 6 classrooms and 3 schools, with full assigned fact-state records across all four operations. It includes missing checks, practice gaps, retention refreshes, wrong answers, timeouts, and a short cross-game response history. The snapshots and fact states are independently authored fixtures, not reconstructed from that short response sample. No fixtures are actual district results.
+`pace.projection` is the day every fact would be confirmed at the student's rate over the last 14 days, or `null` when nothing was confirmed in that time.
 
-## Facts, stages and denominator rules
+## Who may see what
 
-The fact catalog matches the current arcade foundation: addition with sums through 20 (121), nonnegative subtraction with starting numbers through 20 (231), multiplication 0 through 12 (91), related division by 1 through 12 with quotients 0 through 12 (156). Total 599. Addition and multiplication reversals share canonical IDs; subtraction and division retain direction. Mixed reuses those 599 records and never duplicates them.
+Authorization is the host's job; these pages render whatever they are given.
 
-The dashboard consumes authoritative recorded states; it never awards milestones. Map stage 0 or refresh>0 to Learning, 1–2 to Strengthening, 3 to Provisional, and 4 without refresh to Confirmed. These are reporting labels for current pilot stages, not a new mastery policy or validated benchmark. A correct card can clear today's immediate practice without establishing retained mastery. The current source engine also carries its own policy version and eligibility limit; reconcile policy versions and timing eligibility explicitly during integration rather than inferring mastery from the three-second display alone.
+- **Teacher**: only the students on that teacher's own roster. The class picker on the sample page stands in for "the signed-in teacher's class". Build the page's data from the teacher's roster on the server; do not send other classes to the browser.
+- **District**: aggregates by grade and class, with drill-down to a class and then a student for staff allowed to see student-level data. The district page links to `educators/index.html?class=<classId>&student=<studentId>&from=district`.
+- Replace the sample loader (`reporting/sample.js` and `reporting/sample-data.js`) with the host's data and remove the "Sample data · fictional students" label only when the page shows real, authorized data.
 
-Confirmed fact rate = confirmed student-fact records / all assigned student-fact records in scope. Full-set retention = students whose entire selected assigned set is currently confirmed / rostered students. Retention growth uses stored snapshots with the same students at both endpoints. Never relabel fact percent as percent of students. In production, assignment denominators must come from versioned student assignments, not a globally assumed bank. Stage-zero assigned states must be supplied so unseen facts are not dropped from the denominator.
+## Not recorded
 
-Practice participation means at least one non-demo session in the latest 7 calendar days, regardless of the check review window. Checks use only the latest valid official 90-second check per student and selected pathway within the window. All operations selects the Mixed check; it does not combine four unrelated operation checks. Missing checks are excluded from score medians and shown in coverage. Incorrect and timeouts are distinct, mutually exclusive outcomes; attempted = correct + incorrect + timeouts. Medians are calculated per student, not from raw school answer totals. No game wins, coins, activity duration or cosmetics count as fluency mastery.
+The game does not record which game was played, the wrong answer a student typed, or how fast each answer was outside the 90-second checks. A stuck fact tells a teacher *which* fact and how often it was missed, not what the student answered.
 
-## Security and production adapter checklist
+## Sample data
 
-1. Authenticate through existing MTSS sessions. Resolve tenant and role on the server, never from query strings, client buttons, or request-supplied student IDs alone.
-2. Teacher queries join authorized teacher-to-class assignments; principal queries join authorized school memberships; district queries require the appropriate district grant. Apply the same checks to detail, export and ingestion routes. This demo's Teacher/School/District controls are preview navigation only, not authorization.
-3. Authorize every roster lookup, scope database queries before fetching records, minimize names in district responses, log access, use no-store responses for sensitive reports, and use the host's approved retention and deletion policies. Do not ship all student data to a teacher and rely on browser filtering.
-4. Use a reviewed host adapter to map existing IDs and schemas. Use parameterized queries with tenant + student scope. Do not create a competing student identity system.
-5. Ingest practice events using an idempotency key, preserve exact outcome and rule version, and update authoritative projections transactionally using the arcade's policy engine. Exclude demos from academic records. Do not trust client-supplied mastery, identity or school IDs.
-6. Record original evidence, rules versions, delayed-review dates, official check status and assignment catalog versions. Support interrupted/invalid checks without awarding official passes. Mixed operation-balance thresholds require operation-level check evidence beyond the summary contract; extend the API before using it to verify trophies.
-7. Review `schema.sql` as a portable SQLite/D1 starter, not a migration to execute blindly. Integrate with existing roster tables and institutional security controls. There is no production API, token handling, enrollment editing, or tier assignment in this module.
-8. For large rosters, use scoped server-side aggregates and pagination. The all-record in-memory adapter is intentionally limited to this sample. Historical roster transfers and assignment changes require explicit cohort membership handling.
-
-## UI behavior
-
-Teacher: actionable fact groups, individual roster, student operation breakdown, per-fact history, and official check evidence. School: classroom aggregates with teacher drill-down. District: school aggregates with school/class drill-down. Filters, missing-data states, measure definitions and CSV export all work on the same normalized dataset. Suggested fact groups are teacher-review prompts, not automatic MTSS tier, disability, eligibility or intervention decisions.
-
-Exports reflect current filters and fact groups. CSV cells are quoted and spreadsheet formula prefixes escaped. Sample exports retain fictional-data labels. Production exports must be authorized and audited server-side. All text from records is HTML escaped in the UI.
-
-The template is a preparation artifact, not a claim of a deployed MTSS integration. Keep live records out of this public preview.
+`reporting/sample-data.js` is generated by `node tools/generate-report-sample.cjs` (about one to two minutes), which plays the real practice engine for about 300 invented students on a simulated calendar ending 2027-02-01. Every school, class, teacher and student in it is invented.

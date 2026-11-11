@@ -32,6 +32,7 @@ The gate checks all top-level regression suites, production JavaScript syntax, i
 
 - `dist/`: production website and all media assets
 - `tests/`: deterministic regression and release tests
+- `tools/`: developer scripts (`generate-report-sample.cjs` rebuilds the fictional report data in `dist/reporting/sample-data.js`)
 - `notes/`: design and engineering review notes
 - `.github/workflows/pages.yml`: validation and GitHub Pages deployment
 - `.github/workflows/ci.yml`: pull-request validation

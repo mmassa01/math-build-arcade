@@ -155,4 +155,11 @@ test('the record keeps a daily log, a miss count and first day per fact, and the
   assert.deepEqual(damaged.api.exportRecord().days,{'2026-11-01':{cards:0,correct:0,ms:0,steps:0,confirmed:0}},'damaged log entries are cleaned');
 });
 
+test('checks saved without their answer list (as a server stores them) still count',()=>{
+  const check={id:'check:game:1',rulesVersion:'pilot-1',source:'game',pathway:'add',day:'2026-11-09',duration:90000,valid:true,official:true,demo:false,correct:40,attempts:40,accuracy:1,balanced:true,passed:true,byOperation:{}};
+  const l=learner(3,new Map([['mathArcadePathways.v2',JSON.stringify({version:2,pathway:'add',grade:3,facts:{},checks:[check],trophies:{}})]]));
+  assert.equal(l.api.progress().find(p=>p.id==='add').checks.passes,1);
+  assert.deepEqual(l.api.exportRecord().checks[0].responses,[]);
+});
+
 console.log('PASS grade and mastery: '+tests+' checks');

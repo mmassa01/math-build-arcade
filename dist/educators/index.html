@@ -1,14 +1,43 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Fluency Arcade educator reporting preview with fictional data"><title>Educator Studio · Fluency Arcade</title><link rel="stylesheet" href="dashboard.css?v=54"></head>
-<body><aside class="sidebar"><a class="brand" href="../">✦ <span>Fluency<br>Arcade</span></a><p class="nav-caption">EDUCATOR STUDIO</p><nav aria-label="Dashboard view"><button data-role="teacher" aria-pressed="true"><span>▦</span> Teacher</button><button data-role="school" aria-pressed="false"><span>⌂</span> School</button><button data-role="district" aria-pressed="false"><span>◈</span> District</button></nav><div class="sidebar-bottom"><p>One learning record.<br>Every adventure.</p><a href="integration-kit.zip" download>Download code + template ↓</a><a href="integration.md">MTSS integration guide ↗</a><a href="../">← Back to arcade</a></div></aside>
-<main><header><div><p class="eyebrow" id="scope">CLASSROOM INSIGHT</p><h1 id="title">What should I teach next?</h1><p class="subtitle" id="subtitle">Loading sample records…</p></div><div class="header-tools"><span class="sample">PREVIEW · FICTIONAL DATA</span><button id="export" class="outline" disabled>Export this view ↓</button></div></header>
-<div class="notice"><span>◉</span><p><strong>A working preview, not live district reporting.</strong> All records are fictional. This module does not read player saves or connect to MTSS. <span id="asof"></span></p><button id="definitions" class="text-button">How measures work</button></div>
-<form class="filters" id="filters"><label>School<select id="school"></select></label><label>Classroom<select id="class"></select></label><label>Grade<select id="grade"><option value="all">All grades</option></select></label><label>Pathway<select id="operation"><option value="add">Addition</option><option value="sub">Subtraction</option><option value="mul" selected>Multiplication</option><option value="div">Division</option><option value="all">All operations / Mixed check</option></select></label><label>Review window<select id="window"><option value="28">Last 28 days</option><option value="14">Last 14 days</option></select></label><label class="search">Find a student<input id="search" type="search" placeholder="Search sample names"></label></form>
-<section id="metrics" class="metrics" aria-label="Summary"></section><p id="status" role="status" aria-live="polite">Loading records…</p>
-<div class="grid"><section class="panel priority-panel"><div class="section-heading"><div><p class="eyebrow" id="priority-label">INSTRUCTION FIRST</p><h2 id="priority-title">Your next small group</h2></div><span class="pill">SHARED FACT HISTORY</span></div><div id="priorities"></div></section><section class="panel growth-panel"><p class="eyebrow">RETENTION, NOT JUST ACTIVITY</p><h2>Is the learning sticking?</h2><div id="growth"></div></section></div>
-<section class="panel roster-panel"><div class="section-heading"><div><p class="eyebrow" id="table-label">ONE RECORD ACROSS EVERY GAME</p><h2 id="table-title">Your classroom</h2></div><button id="clear-group" class="outline" hidden>Clear fact group</button><span id="table-count" class="pill"></span></div><div class="table-scroll"><table><thead id="table-head"></thead><tbody id="table-body"></tbody></table></div><p class="caption" id="table-caption"></p></section>
-<div class="grid bottom-grid"><section class="panel"><p class="eyebrow">CONTINUOUS LEARNING</p><h2>Every fact has a history.</h2><div id="pools" class="pools"></div><p class="caption">These are student-fact records, not counts of unique problems. Confirmed means the current spaced-review criteria were met and no refresh is required.</p></section><section class="panel"><p class="eyebrow">COMMON 90-SECOND CHECK</p><h2>A separate checkpoint.</h2><div id="check-summary"></div><p class="caption">Latest valid official check per student within the selected window. Missing checks are excluded from scores, never treated as zero.</p></section></div>
-<footer>Fluency Arcade · MTSS-ready reporting module v1 · Sample date is fixed for reproducible review. <a href="integration.md">Data contract and integration notes</a></footer></main>
-<dialog id="detail" aria-labelledby="detail-title"><div class="dialog-header"><span class="sample">SAMPLE STUDENT RECORD</span><button id="close-detail" class="outline">Close ✕</button></div><div id="detail-body"></div></dialog>
-<dialog id="measure-dialog" aria-labelledby="measure-title"><div class="dialog-header"><h2 id="measure-title">Clear measures. Clear decisions.</h2><button id="close-measures" class="outline">Close ✕</button></div><p><strong>Three seconds per practice card.</strong> Typed answers check automatically. Timeout and incorrect answers are distinct outcomes. A single success can clear today's card without confirming long-term mastery.</p><p><strong>Current pilot milestones:</strong> success, another day at least 1 day later, another at least 3 days later, then another at least 7 days later. Confirmed facts return for maintenance after 14 days. A missed confirmed fact requires refreshing. This dashboard reads recorded stages; it never promotes a fact itself.</p><p>Learning = stage 0 or needs refresh. Strengthening = stages 1–2. Provisional = stage 3. Confirmed = stage 4 without refresh. Never-seen facts are included in Learning, not described as incorrect.</p><p><strong>Confirmed fact rate:</strong> confirmed student-fact records divided by assigned student-fact records. <strong>Full-set retention:</strong> students with every assigned fact in the selected pathway currently confirmed, divided by rostered students.</p><p><strong>90-second checks:</strong> median correct count and median accuracy from each student's latest valid official check. The two medians may represent different students. Incorrect and timeout totals describe only those checks, not all practice.</p><p><strong>Coverage:</strong> students with a current valid official check divided by the filtered roster. Practice participation means at least one non-demo session in the last seven calendar days.</p><p>Growth uses stored snapshots for students present at both endpoints of the selected window. Intermediate points appear only with complete data for that matched cohort. Pilot criteria are not a validated state proficiency measure. Instructional groups are suggestions for teacher review, not automatic MTSS tier or eligibility decisions.</p><p>This public preview contains synthetic data only. Production permissions must be enforced by MTSS on the server. The view buttons are not authentication.</p></dialog>
-<script type="module" src="bootstrap.mjs?v=54"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teacher report · Math Build Arcade (sample data)</title>
+<link rel="stylesheet" href="../reporting/reports.css?v=reports-1">
+</head>
+<body class="report">
+<a class="skip" href="#main">Skip to the report</a>
+<header class="top">
+  <a class="brandMark" href="../">MATH BUILD <span>ARCADE</span></a>
+  <nav aria-label="Reports">
+    <a href="./" aria-current="page">Teacher report</a>
+    <a href="../district.html">District report</a>
+    <a href="../">Back to the arcade</a>
+  </nav>
+</header>
+<div class="sampleBar" role="note" id="sampleLabel"><strong>Sample data · fictional students</strong><span>Every school, class, teacher and student here is invented. This preview is not connected to any student's saved game or to district records.</span></div>
+<main id="main">
+  <div class="pageHead">
+    <div>
+      <p class="eyebrow">Teacher report</p>
+      <h1>What should I teach next?</h1>
+      <p class="asOf" id="asOf"></p>
+    </div>
+    <div class="controls">
+      <label class="field">Class <select id="classPicker"></select></label>
+    </div>
+  </div>
+  <div id="view" style="display:contents"></div>
+  <noscript><p class="empty">This report needs JavaScript to draw the sample class.</p></noscript>
+  <footer class="foot"><strong>Sample data · fictional students.</strong> Every school, class, teacher and student in these reports is invented, and the pages are not connected to any student's saved game or to district records. Platform team: see the <a href="integration.md">integration note</a>.</footer>
+</main>
+<script src="../reporting/isolate.js?v=reports-1"></script>
+<script src="../practice-pathways.js?v=reports-1"></script>
+<script src="../reporting/summary.js?v=reports-1"></script>
+<script src="../reporting/sample-data.js?v=reports-1"></script>
+<script src="../reporting/sample.js?v=reports-1"></script>
+<script src="../reporting/ui.js?v=reports-1"></script>
+<script src="teacher.js?v=reports-1"></script>
+</body>
+</html>
