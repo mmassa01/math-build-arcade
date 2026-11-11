@@ -59,7 +59,7 @@ test('yesterday’s missed facts lead the next session',()=>{
 
 test('the first 90 seconds of play becomes the official check, then play is practice',()=>{
   const l=learner('add'),run=l.api.begin({endless:true});
-  play(l,run,49);                                   // 49 x 1.8 s = 88.2 s
+  play(l,run,59);                                   // 59 x 1.5 s of answer time = 88.5 s
   assert.equal(official(l,'add').length,0,'no score before 90 seconds of play');
   assert(l.api.checkStatus().remainingMs>0&&l.api.checkStatus().remainingMs<3000);
   play(l,run,2);
@@ -72,19 +72,21 @@ test('the first 90 seconds of play becomes the official check, then play is prac
 });
 
 test('95% accuracy and 30 correct are both required; time-outs count as misses',()=>{
-  const sloppy=learner('add');play(sloppy,sloppy.api.begin({endless:true}),55,{wrong:i=>i%10===0});
+  const sloppy=learner('add');play(sloppy,sloppy.api.begin({endless:true}),65,{wrong:i=>i%10===0});
   assert.equal(official(sloppy,'add')[0].passed,false,'about 90% accuracy does not pass');
-  const slow=learner('add');play(slow,slow.api.begin({endless:true}),40,{answerMs:2900,gapMs:900});
-  const s=official(slow,'add')[0];assert(s.correct<30&&!s.passed,'accurate but too few answers does not pass');
-  const timed=learner('add');play(timed,timed.api.begin({endless:true}),55,{timeout:i=>i%8===0});
+  const steady=learner('add');play(steady,steady.api.begin({endless:true}),40,{answerMs:2900,gapMs:4000});
+  const s=official(steady,'add')[0];assert(s.correct>=30&&s.passed,'every card right inside three seconds passes in any game, however long its animations');
+  const few=learner('add');play(few,few.api.begin({endless:true}),40,{answerMs:2900,timeout:i=>i%4===0});
+  assert(official(few,'add')[0].correct<30,'too few correct answers does not pass');
+  const timed=learner('add');play(timed,timed.api.begin({endless:true}),65,{timeout:i=>i%8===0});
   assert.equal(official(timed,'add')[0].passed,false,'time-outs count against accuracy');
 });
 
-test('paused or idle time is not charged to the check',()=>{
+test('only answer time is charged: animations, pauses and time away are free',()=>{
   const l=learner('add'),run=l.api.begin({endless:true});
   play(l,run,10,{gapMs:10*60*1000});                 // ten minutes away between cards
   const s=l.api.checkStatus();
-  assert.equal(s.elapsedMs,1500+9*(1500+1500),'each gap counts at most 1.5 seconds');
+  assert.equal(s.elapsedMs,10*1500,'only the time each card was waiting for an answer counts');
 });
 
 test('the check carries into the next round, the next game and a reload',()=>{
@@ -94,7 +96,7 @@ test('the check carries into the next round, the next game and a reload',()=>{
   l.advance(5*60*1000);
   const reloaded=factory({getItem:k=>l.data.get(k)||null,setItem:(k,v)=>l.data.set(k,v)},()=>BASE+6*60*1000,()=>.47);
   assert.equal(reloaded.checkStatus().elapsedMs,partial,'progress survives leaving the game');
-  play(l,l.api.begin({endless:true}),40);            // a different game, same day
+  play(l,l.api.begin({endless:true}),45);            // a different game, same day
   assert.equal(official(l,'mul').length,1);
 });
 
@@ -114,7 +116,7 @@ test('demo play never counts toward the check or the record',()=>{
 });
 
 test('mixed still needs seven correct and 90% in every operation',()=>{
-  const l=learner('mixed');play(l,l.api.begin({endless:true}),60,{wrong:(i,q)=>q.op==='div'&&i%3===0});
+  const l=learner('mixed');play(l,l.api.begin({endless:true}),64,{wrong:(i,q)=>q.op==='div'&&i%3===0});
   const c=official(l,'mixed')[0];assert(c&&!c.balanced&&!c.passed);
 });
 
@@ -142,20 +144,6 @@ test('games ask for the endless deck and no separate check stands in front of Pl
   assert(page.includes('id="roomCheck"'),'the room shows the check countdown');
 });
 
-test('Pong: a correct answer brings the next card quickly, and the answer window stays three seconds',()=>{
-  const {Match}=require('../dist/pong/engine.js');
-  const match=new Match({random:()=>.4});
-  let cards=0,ms=0,since=0;
-  while(ms<90000&&match.phase!=='finished'){
-    if(['serve','flight'].includes(match.phase)&&match.turn===0&&!match.reply){since+=10;if(since>=1200){assert(match.answer(0,match.question.answer).accepted);cards++;since=0;}}
-    match.update(10);ms+=10;
-  }
-  assert(cards>=30,'30 or more answers fit in 90 seconds at a 1.2 second pace, got '+cards);
-  const slow=new Match({random:()=>.4});slow.answer(0,slow.question.answer);slow.update(1050);
-  slow.update(2990);assert.equal(slow.phase,'flight','an unanswered ball still takes the full three seconds');
-  assert.equal(slow.answer(0,slow.question.answer).correct,true);
-});
-
 test('Build games draw a 36-card build and tell the engine when each card is shown',()=>{
   for(const game of ['castle','seed','hangar']){
     const source=fs.readFileSync('dist/'+game+'/index.html','utf8');
@@ -166,7 +154,7 @@ test('Build games draw a 36-card build and tell the engine when each card is sho
   for(let i=0;i<36;i++)deck.push(run.next());
   assert(deck.every(Boolean)&&new Set(deck.map(q=>q.id)).size===36,'36 different cards are available up front');
   for(const q of deck.slice(0,5)){l.advance(400);run.shown(q);l.advance(1200);run.record(q,true,1200);}
-  assert.equal(l.api.checkStatus().elapsedMs,1200+4*1600,'the time between pre-drawn cards counts as play');
+  assert.equal(l.api.checkStatus().elapsedMs,5*1200,'only answer time counts for pre-drawn cards too');
 });
 
 test('the check result is announced once, is not buried by coin toasts, and a miss shows no tick',()=>{

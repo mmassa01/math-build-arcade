@@ -8,7 +8,7 @@
 })(typeof window!=='undefined'?window:null,function create(storage,clock=Date.now,random=Math.random){
   const KEY='mathArcadePathways.v2',OPS=['add','sub','mul','div'],PATHS=[...OPS,'mixed'];
   const names={add:'Addition',sub:'Subtraction',mul:'Multiplication',div:'Division',mixed:'Mixed'};
-  const rules=Object.freeze({version:'pilot-1',seconds:90,minCorrect:30,minAccuracy:.95,mixedMinCorrect:7,mixedMinAccuracy:.9,checkDays:3,retentionDays:7,gapMs:1500,limitMs:3000,intervals:[1,3,7,14]});
+  const rules=Object.freeze({version:'pilot-1',seconds:90,minCorrect:30,minAccuracy:.95,mixedMinCorrect:7,mixedMinAccuracy:.9,checkDays:3,retentionDays:7,gapMs:0,limitMs:3000,intervals:[1,3,7,14]});
   const clone=v=>JSON.parse(JSON.stringify(v));
   const day=()=>{const d=new Date(clock());return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
   const plus=(s,n)=>{const d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
