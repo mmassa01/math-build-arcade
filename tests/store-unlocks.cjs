@@ -92,4 +92,21 @@ test('the shell shows one results screen and no longer opens the Store by itself
   assert(ui.includes('lockText(E.unlockInfo(i.id))')&&!ui.includes('more earned coins to unlock'));
 });
 
+test('results screen stays short, Escape keeps the student in the room, and late coins are still paid',()=>{
+  const shell=fs.readFileSync('dist/arcade.js','utf8');
+  assert(shell.includes("!$('resultsDialog').open&&!$('room').hidden)home()"),'Escape on the results screen does not leave the game');
+  assert(shell.includes("opened.slice(0,2)"),'many unlocks are summarised in one line');
+  const {Match}=require('../dist/pong/engine.js');
+  const match=new Match({random:()=>.4,continuous:true});
+  match.answer(0,match.question.answer);match.drain();
+  let guard=0;while(!(match.phase==='flight'&&match.turn===0)&&guard++<1000)match.update(10);
+  match.drain();match.answer(0,match.question.answer);const before=match.coins[0];
+  match.finish();
+  assert.equal(match.coins[0],before+10,'a correct answer still in flight when the clock ends is paid');
+  assert.equal(match.drain().filter(e=>e.type==='earn').length,1);
+  for(const game of ['castle','seed','hangar'])assert(!fs.readFileSync('dist/'+game+'/index.html','utf8').includes('earned+=reward;awardMastered(card)'),game+' counts each card once');
+  const cinema=fs.readFileSync('dist/dragon/cinema.js','utf8');
+  assert(!cinema.includes("'+25'")&&!cinema.includes("'+50'"),'dragon shows the amount it pays');
+});
+
 console.log('PASS store unlocks: '+tests+' checks');

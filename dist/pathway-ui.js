@@ -12,7 +12,7 @@
     const paths=P.progress(),selected=paths.find(p=>p.id===P.getPathway()),earned=paths.filter(p=>p.earned).length;
     $('pathCards').innerHTML=paths.map(p=>meter(p)).join('');
     $('trophyCount').textContent=earned+' of '+paths.length+' trophies earned';
-    const pick=$('gradeSelect');if(pick){if(!pick.options?.length&&pick.append)for(let g=1;g<=12;g++){const o=document.createElement('option');o.value=g;o.textContent=g;pick.append(o);}pick.value=String(P.getGrade());$('gradePick').hidden=P.gradeLocked;pick.onchange=()=>{if(typeof selected!=='undefined'&&!$('room').hidden)home();P.setGrade(Number(pick.value));render();};}
+    const pick=$('gradeSelect');if(pick){if(!pick.options?.length&&pick.append)for(let g=1;g<=12;g++){const o=document.createElement('option');o.value=g;o.textContent=g;pick.append(o);}pick.value=String(P.getGrade());$('gradePick').hidden=P.gradeLocked;pick.onchange=()=>{if(typeof selected!=='undefined'&&!$('room').hidden)home();P.setGrade(Number(pick.value));if(typeof sync==='function')sync();else render();};}
     $('trophyRibbon').innerHTML=paths.map(p=>`<span class="${p.earned?'lit':''}" title="${p.name}: ${p.earned?'earned':'in progress'}"><b>${p.earned?'🏆':symbols[p.id]}</b>${p.name}</span>`).join('');
     $('selectedPathLabel').textContent=selected.name+' pathway';
     $('pathStatus').textContent=selected.remaining?selected.remaining+' facts ready today. Choose any game below.':'Today’s scheduled facts are clear. Games keep going with review of the facts you know least.';
