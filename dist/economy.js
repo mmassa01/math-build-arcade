@@ -27,13 +27,23 @@
   if(!restored && typeof require==='function')try{restored=require('./store/catalog.js')}catch(e){}
   if(restored)catalog=restored.map(function(v){return Object.freeze(v)});
   Object.freeze(catalog);
+  // Learning unlocks an item; coins buy it. Each paid item opens at a share of
+  // the student's own facts confirmed, spread evenly across the journey. The
+  // top-priced items open when the whole game is won.
+  var WIN = 101, TOP = catalog.reduce(function (m, v) { return Math.max(m, v.price || 0); }, 0), gate = {};
+  var ladder = catalog.filter(function (v) { return v.price && v.price < TOP; }).sort(function (a, b) { return a.price - b.price || catalog.indexOf(a) - catalog.indexOf(b); });
+  ladder.forEach(function (v, i) { gate[v.id] = Math.round(3 + 92 * i / Math.max(1, ladder.length - 1)); });
+  catalog.forEach(function (v) { if (v.price && v.price >= TOP) gate[v.id] = WIN; });
   function safeInt(n) { return Number.isSafeInteger(n) && n >= 0 ? n : 0; }
   function copy(v) { return JSON.parse(JSON.stringify(v)); }
   function item(id) { return catalog.find(function (v) { return v.id === id; }); }
   function fresh() { return {version:1, coins:0, lifetimeEarned:0, owned:catalog.filter(function(v){return !v.price;}).map(function(v){return v.id;}), loadout:{}, equipped:{dragon:'dragon-0',car:'car-0',horse:'horse-0',jetski:'jetski-0',subway:'subway-0'}, rewardIds:[], trophies:[], pendingUnlocks:[]}; }
   function clean(raw) {
     var out = fresh();
+    out.journey = {confirmed:0, total:0, won:false}; out.unlockedIds = [];
     if (!raw || raw.version !== 1) return out;
+    if (raw.journey && typeof raw.journey === 'object') out.journey = {confirmed:safeInt(raw.journey.confirmed), total:safeInt(raw.journey.total), won:raw.journey.won === true};
+    if (Array.isArray(raw.unlockedIds)) out.unlockedIds = Array.from(new Set(raw.unlockedIds.filter(function (id) { var v = item(id); return v && v.price; })));
     out.coins = safeInt(raw.coins);
     out.lifetimeEarned = Math.max(safeInt(raw.lifetimeEarned), out.coins);
     if (Array.isArray(raw.owned)) raw.owned.forEach(function(id){if(item(id) && out.owned.indexOf(id)<0) out.owned.push(id);});
@@ -41,27 +51,49 @@
     if(raw.loadout)Object.keys(raw.loadout).forEach(function(key){var v=item(raw.loadout[key]);if(v && v.slot!=='skin' && key===v.category+':'+v.slot && out.owned.indexOf(v.id)>=0)out.loadout[key]=v.id;});
     if(Array.isArray(raw.rewardIds)) out.rewardIds=Array.from(new Set(raw.rewardIds.filter(function(v){return typeof v==='string' && v.length>0 && v.length<=200;})));
     if(Array.isArray(raw.trophies)) out.trophies=Array.from(new Set(raw.trophies.filter(function(v){return typeof v==='string' && v.length>0 && v.length<=100;})));
-    if(Array.isArray(raw.pendingUnlocks)) out.pendingUnlocks=Array.from(new Set(raw.pendingUnlocks.filter(function(id){var v=item(id);return v && v.price && v.unlockAt<=out.lifetimeEarned && out.owned.indexOf(id)<0;})));
+    if(Array.isArray(raw.pendingUnlocks)) out.pendingUnlocks=Array.from(new Set(raw.pendingUnlocks.filter(function(id){var v=item(id);return v && v.price && out.unlockedIds.indexOf(id)>=0 && out.owned.indexOf(id)<0;})));
     return out;
   }
   var state;
-  try {state=clean(JSON.parse(storage && storage.getItem(KEY)));} catch (e) {state=fresh();}
+  try {state=clean(JSON.parse(storage && storage.getItem(KEY)));} catch (e) {state=clean(null);}
   function save() {try {if(storage) storage.setItem(KEY,JSON.stringify(state));} catch(e) {} }
+  function isUnlocked(v) { return !v.price || state.owned.indexOf(v.id) >= 0 || state.unlockedIds.indexOf(v.id) >= 0; }
+  function factsFor(v) { return Math.max(1, Math.ceil(gate[v.id] / 100 * state.journey.total)); }
+  function setJourney(confirmed, total, won) {
+    confirmed = safeInt(confirmed); total = safeInt(total); won = won === true;
+    var changed = state.journey.confirmed !== confirmed || state.journey.total !== total || state.journey.won !== won, opened = [];
+    state.journey = {confirmed:confirmed, total:total, won:won};
+    if (total > 0) catalog.forEach(function (v) {
+      if (isUnlocked(v)) return;
+      if (gate[v.id] === WIN ? won : confirmed >= factsFor(v)) { state.unlockedIds.push(v.id); opened.push(v.id); if (state.pendingUnlocks.indexOf(v.id) < 0) state.pendingUnlocks.push(v.id); }
+    });
+    if (changed || opened.length) save();
+    return opened;
+  }
+  function unlockInfo(id) {
+    var v = item(id); if (!v) return null;
+    if (isUnlocked(v)) return {unlocked:true};
+    if (gate[v.id] === WIN) return {unlocked:false, win:true, factsNeeded:null};
+    return {unlocked:false, win:false, percent:gate[v.id], factsNeeded:state.journey.total ? Math.max(1, factsFor(v) - state.journey.confirmed) : null};
+  }
+  function nextUnlock() {
+    var v = catalog.filter(function (x) { return !isUnlocked(x); }).sort(function (a, b) { return gate[a.id] - gate[b.id] || a.price - b.price; })[0];
+    if (!v) return null;
+    var info = unlockInfo(v.id); info.id = v.id; info.name = v.name; info.category = v.storeCategory || v.category; return info;
+  }
   function getState() {
     var result=copy(state);
-    result.unlocked=catalog.filter(function(v){return v.unlockAt<=state.lifetimeEarned;}).map(function(v){return v.id;});
+    result.unlocked=catalog.filter(isUnlocked).map(function(v){return v.id;});
     return result;
   }
   function reward(amount,id) {
     if(!Number.isSafeInteger(amount) || amount<=0 || typeof id!=='string' || !id.length || id.length>200) return {ok:false,reason:'invalid-reward',state:getState(),unlocked:[]};
     if(state.rewardIds.indexOf(id)>=0) return {ok:false,reason:'duplicate',state:getState(),unlocked:[]};
     if(!Number.isSafeInteger(state.coins+amount) || !Number.isSafeInteger(state.lifetimeEarned+amount)) return {ok:false,reason:'invalid-reward',state:getState(),unlocked:[]};
-    var before=state.lifetimeEarned;
     state.coins+=amount; state.lifetimeEarned+=amount; state.rewardIds.push(id);
     // Reward ids are unique per play session; keep the save bounded.
     if(state.rewardIds.length>5000) state.rewardIds=state.rewardIds.slice(-2500);
-    var unlocked=catalog.filter(function(v){return v.price && v.unlockAt>before && v.unlockAt<=state.lifetimeEarned && state.owned.indexOf(v.id)<0;}).map(function(v){return v.id;});
-    unlocked.forEach(function(id){if(state.pendingUnlocks.indexOf(id)<0) state.pendingUnlocks.push(id);});
+    var unlocked=[];
     save(); return {ok:true,amount:amount,unlocked:unlocked,state:getState()};
   }
   function complete(game) {
@@ -94,7 +126,7 @@
     var v=item(id);
     if(!v) return {ok:false,reason:'unknown-item',state:getState()};
     if(state.owned.indexOf(id)>=0) return {ok:false,reason:'already-owned',state:getState()};
-    if(v.unlockAt>state.lifetimeEarned) return {ok:false,reason:'locked',state:getState()};
+    if(!isUnlocked(v)) return {ok:false,reason:'locked',state:getState()};
     if(v.price>state.coins) return {ok:false,reason:'insufficient-coins',state:getState()};
     state.coins-=v.price; state.owned.push(id); equipItem(v);
     state.pendingUnlocks=state.pendingUnlocks.filter(function(x){return x!==id;}); save();
@@ -115,5 +147,5 @@
     if(e.key!==KEY && e.key!==null) return;
     try {state=clean(JSON.parse(storage && storage.getItem(KEY)));} catch (x) {}
   });
-  return {catalog:catalog,gear:gear,getState:getState,reward:reward,complete:complete,purchase:purchase,equip:equip,acknowledgeUnlocks:acknowledgeUnlocks};
+  return {catalog:catalog,gear:gear,getState:getState,reward:reward,complete:complete,purchase:purchase,equip:equip,acknowledgeUnlocks:acknowledgeUnlocks,setJourney:setJourney,unlockInfo:unlockInfo,nextUnlock:nextUnlock};
 }));
