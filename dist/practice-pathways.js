@@ -4,7 +4,7 @@
   const api=factory(storage);
   api.create=factory;
   // A hosting platform supplies the signed-in student's grade; it cannot then be changed here.
-  if(root&&Number.isInteger(root.ArcadeGrade))api.setGrade(root.ArcadeGrade,{locked:true});
+  if(root&&root.ArcadeGrade!=null&&root.ArcadeGrade!==""&&Number.isInteger(Number(root.ArcadeGrade)))api.setGrade(Number(root.ArcadeGrade),{locked:true});
   if(root)root.ArcadePractice=api;
   if(typeof module==='object'&&module.exports){module.exports=api;module.exports.create=factory;}
 })(typeof window!=='undefined'?window:null,function create(storage,clock=Date.now,random=Math.random){

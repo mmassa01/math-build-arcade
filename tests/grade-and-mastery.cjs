@@ -113,6 +113,7 @@ test('a hosting platform can supply storage and a locked grade; standalone uses 
   hosted.ArcadePractice.setGrade(9);assert.equal(hosted.ArcadePractice.getGrade(),1,'a student cannot change a platform grade');
   hosted.ArcadePractice.setPathway('sub');
   assert(platformData.has('mathArcadePathways.v2')&&!browserData.has('mathArcadePathways.v2'),'saved to the platform, not the browser');
+  assert.equal(run({localStorage:store(new Map()),ArcadeGrade:'2'}).ArcadePractice.getGrade(),2,'a grade passed as text is accepted');
   const alone=run({localStorage:store(browserData)});
   assert.equal(alone.ArcadePractice.gradeLocked,false);alone.ArcadePractice.setGrade(5);
   assert(browserData.has('mathArcadePathways.v2'),'standalone saves in the browser');
@@ -123,6 +124,7 @@ test('a hosting platform can supply storage and a locked grade; standalone uses 
 test('the landing page offers a grade picker that hides when the platform sets the grade',()=>{
   const page=fs.readFileSync('dist/index.html','utf8'),ui=fs.readFileSync('dist/pathway-ui.js','utf8');
   assert(page.includes('id="gradeSelect"'));
+  assert(!/[Ff]ive (pathways|trophies|fluency)/.test(page),'no fixed count of pathways in the page copy');
   assert(ui.includes("$('gradePick').hidden=P.gradeLocked")&&ui.includes('P.setGrade(Number(pick.value))'));
   assert(ui.includes("' of '+paths.length+' trophies earned'"));
 });
