@@ -165,4 +165,22 @@ test('the check result is announced once, is not buried by coin toasts, and a mi
   assert(fs.readFileSync('dist/arcade.css','utf8').includes('@media(max-width:620px){.roomCheck{'),'the chip is compact on phones');
 });
 
+test('Pong: a miss starts a new rally instead of ending the game, until the round clock ends it',()=>{
+  const {Match}=require('../dist/pong/engine.js');
+  const match=new Match({random:()=>.4,continuous:true});
+  assert(match.answer(0,match.question.answer).correct);
+  let guard=0;while(!(match.phase==='flight'&&match.turn===0)&&guard++<1000)match.update(10);
+  match.answer(0,match.question.answer+1);
+  guard=0;while(match.phase==='flight'&&guard++<1000)match.update(10);
+  assert.equal(match.phase,'point','the miss is shown, the game is not over');
+  guard=0;while(match.phase==='point'&&guard++<1000)match.update(10);
+  assert.equal(match.phase,'serve');assert.equal(match.turn,0,'the student serves the new rally');
+  assert(match.answer(0,match.question.answer).correct,'the new rally is playable');
+  match.finish();assert.equal(match.phase,'finished');
+  assert.equal(match.drain().filter(e=>e.type==='finish').length,1);match.finish();assert.equal(match.drain().length,0,'finishing twice is harmless');
+  const game=fs.readFileSync('dist/pong/game.js','utf8'),page=fs.readFileSync('dist/pong/index.html','utf8');
+  assert(game.includes("continuous:!isDemo&&!!round?.enabled")&&game.includes("if(round?.tick(rawDt/1000,match.phase!=='finished'))match.finish();"));
+  assert(page.includes('round-timer.js'));
+});
+
 console.log('PASS in-game check: '+tests+' checks');
