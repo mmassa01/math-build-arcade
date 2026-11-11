@@ -14,7 +14,7 @@ function record(grade,n,firstDay,extra={}){
   const facts={};for(const f of bank(grade).slice(0,n))facts[f.id]=confirmed();
   return{version:2,grade,pathway:'mixed',facts,checks:[],trophies:{},days:firstDay?{[firstDay]:{cards:10,correct:8,ms:20000,steps:8,confirmed:0}}:{},...extra};
 }
-const sum=(rec,grade,options={})=>R.summarize(rec,{id:'s1',name:'Ada B.',grade,school:'Example Elementary',classId:'c1',className:'Class',teacher:'Ms. Alder'},{today:TODAY,...options});
+const sum=(rec,grade,options={})=>R.summarize(rec,{id:'s1',name:'Ada B.',grade,school:'Example Elementary',classId:'c1',className:'Class',teacher:'Ms. Alder'},{today:TODAY,graceDays:0,...options});
 const check=(pathway,day,passed,missed=[])=>({id:pathway+day,source:'game',pathway,day,duration:90000,valid:true,official:true,correct:passed?40:20,attempts:passed?41:30,accuracy:passed?40/41:20/30,balanced:true,passed,byOperation:{},missed});
 
 test('fact totals come from the engine: 61 in grade 1, 271 in grade 2, 469 from grade 3',()=>{
@@ -86,9 +86,13 @@ test('pace: a straight line from the first day to every fact by the target, with
   assert.equal(sum(record(3,0,first),3,{target,onPaceRatio:0}).pace.status,'onPace','the band edges are parameters');
 });
 
-test('pace: the first three days are on pace, no days logged is Not started',()=>{
-  for(const [first,status,grace]of [['2027-02-01','onPace',true],['2027-01-31','onPace',true],['2027-01-30','onPace',true],['2027-01-29','atRisk',false]]){
-    const p=sum(record(3,0,first),3).pace;assert.equal(p.status,status,first);assert.equal(p.grace,grace);}
+test('pace: the first days actually played are on pace, no days logged is Not started',()=>{
+  for(const [first,status,grace]of [['2027-02-01','onPace',true],['2027-01-31','onPace',true],['2027-01-30','onPace',true],['2027-01-29','onPace',true]]){
+    const p=sum(record(3,0,first),3,{graceDays:3}).pace;assert.equal(p.status,status,first);assert.equal(p.grace,grace);}
+  const three=record(3,0,'2027-01-22');for(const d of ['2027-01-25','2027-01-26'])three.days[d]={cards:10,correct:8,ms:20000,steps:8,confirmed:0};
+  const out=sum(three,3,{graceDays:3}).pace;assert.equal(out.grace,false);assert.equal(out.status,'atRisk','after three days played with nothing confirmed, grace is over');
+  const weekend=record(3,0,'2027-01-22');weekend.days={'2027-01-22':{cards:10,correct:8,ms:20000,steps:8,confirmed:0}};
+  assert.equal(sum(weekend,3,{graceDays:3}).pace.grace,true,'ten calendar days but one day played is still in grace');
   const none=sum(record(3,0,null),3);assert.equal(none.pace.status,'notStarted');assert.equal(none.pace.label,'Not started');assert.equal(none.pace.projection,null);assert.equal(none.activity.lastDay,null);assert.equal(none.activity.playedLast7,false);
   for(const junk of [null,undefined,{},{facts:'x',checks:'y',days:[],trophies:7},'text',42]){const s=sum(junk,3);assert.equal(s.pace.status,'notStarted');assert.equal(s.facts.confirmed,0);assert.equal(s.facts.total,469);}
   const future=sum(record(3,0,'2027-02-09'),3);assert.equal(future.pace.status,'notStarted','days after today are ignored');
@@ -116,7 +120,7 @@ test('projection: the day every fact is confirmed at the rate of the last 14 day
 });
 
 // ---- groups
-const student=(id,name,grade,classId,rec)=>R.summarize(rec,{id,name,grade,classId},{today:TODAY,target:'2027-03-23'});
+const student=(id,name,grade,classId,rec)=>R.summarize(rec,{id,name,grade,classId},{today:TODAY,target:'2027-03-23',graceDays:0});
 const stuckOn=(rec,id,misses)=>{rec.facts[id]={stage:1,attempts:misses+1,misses,first:'2027-01-11',lastSuccess:null,failedDay:'2027-01-28',refresh:0};return rec;};
 const group=[
   student('a','Ada B.',3,'c1',stuckOn(stuckOn(record(3,300,'2026-12-13'),'mul:7:8',5),'mul:6:7',1)),          // on pace

@@ -137,7 +137,9 @@
     if(firstDay){
       const elapsed=dayDiff(firstDay,today),span=dayDiff(firstDay,target),fraction=span<=0?1:clamp(elapsed/span,0,1);
       base.expected=fraction*total;base.expectedPercent=round1(fraction*100);base.ratio=base.expected>0?confirmed/base.expected:null;
-      base.grace=elapsed<o.graceDays;
+      // Grace counts days actually played: nothing can be confirmed before the third day of play.
+      const played=(series||[]).filter(d=>d&&d.day<=today&&d.cards>0).length;
+      base.grace=(played||elapsed+1)<o.graceDays;
       base.status=base.grace||base.expected<=0||base.ratio>=o.onPaceRatio?'onPace':base.ratio>=o.behindRatio?'behind':'atRisk';
       base.projection=projection({confirmed,total,today,series,days:o.projectionDays,target,milestone});
     }
