@@ -184,4 +184,38 @@ test('Pong: a miss starts a new rally instead of ending the game, until the roun
   assert(fs.readFileSync('dist/round-timer.css','utf8').includes('.roundClock[hidden]{display:none!important}'),'the clock is hidden in demo');
 });
 
+test('no card adds, subtracts, multiplies or divides by 0 or 1',()=>{
+  const l=learner('mixed'),bank=l.api.getBank('mixed');
+  assert.equal(bank.length,469);
+  for(const q of bank){
+    if(q.op==='add'||q.op==='mul')assert(q.a>=2&&q.b>=2,q.text);
+    if(q.op==='sub')assert(q.b>=2,q.text);
+    if(q.op==='div')assert(q.b>=2&&q.a>0,q.text);
+  }
+  assert(bank.some(q=>q.text==='7 − 7'),'a difference of zero is still a real fact');
+  const old=new Map([['mathArcadePathways.v2',JSON.stringify({version:2,pathway:'add',facts:{'add:0:5':{stage:4},'add:1:5':{stage:2}},checks:[],trophies:{},gameChecks:{add:{day:'2026-11-10',elapsed:3000,started:1,responses:[{id:'add:0:5',correct:true,ms:900},{id:'add:2:5',correct:true,ms:900}]}}})]]);
+  const saved=learner('add',old);
+  assert.equal(saved.api.stats().mastered,0,'progress on removed cards no longer counts');
+  assert.equal(saved.api.checkStatus().attempts,1,'removed cards drop out of a saved partial check');
+});
+
+test('a first game is a straight shuffle; later games shuffle with missed facts up front',()=>{
+  let seed=7;const random=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const data=new Map();let now=BASE;
+  const storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};
+  const api=factory(storage,()=>now,random);api.setPathway('add');
+  const first=api.begin({endless:true}),order=[];
+  for(let i=0;i<24;i++){const q=first.next();order.push(q);}
+  const bankOrder=api.getBank('add').slice(0,24).map(q=>q.id);
+  assert.notDeepEqual(order.map(q=>q.id),bankOrder,'not served in list order');
+  assert(new Set(order.map(q=>q.a)).size>4,'small and large numbers are mixed from the first card');
+  const missed=order.slice(0,5).map(q=>q.id);
+  order.forEach((q,i)=>{now+=1000;first.record(q,i>=5,1000);});
+  const again=api.begin({endless:true}).next();const other=api.begin({endless:true}).next();
+  now=BASE+DAY;
+  const runs=[0,1,2].map(()=>{const run=api.begin({endless:true}),ids=[];for(let i=0;i<8;i++)ids.push(run.next().id);return ids;});
+  for(const ids of runs)assert.deepEqual(ids.slice(0,5).sort(),[...missed].sort(),'the missed facts open the game');
+  assert(new Set(runs.map(ids=>ids.join())).size>1,'the order is reshuffled each game');
+});
+
 console.log('PASS in-game check: '+tests+' checks');
