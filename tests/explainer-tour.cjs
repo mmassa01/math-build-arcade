@@ -12,22 +12,37 @@ const audio=path.join(root,'dist/explainer/fluency-arcade-podcast.mp3');
 assert.match(index,/id="openExplainer"/);
 assert.match(index,/id="explainerDialog"/);
 assert.match(index,/id="explainerAudio"[^>]+explainer\/fluency-arcade-podcast\.mp3/);
-assert.match(index,/explainer\.js\?v=explainer-9/);
-assert.match(index,/explainer\.css\?v=explainer-9/);
+assert.match(index,/explainer\.js\?v=explainer-12/);
+assert.match(index,/explainer\.css\?v=explainer-12/);
 assert.match(index,/id="explainerStageNext"/);
 assert.ok(fs.statSync(audio).size>20_000_000,'podcast audio should be the complete episode');
 
-for(const name of ['Dragon Sky Quest','Skyrail Subway Run','Ping-Pong Rally','Seed of Genius','Teacher report','Student detail','District report']){
+for(const name of ['Horse Race','Wave Riders Ignition','Skyrail Subway Run','Dirt Track Championship','Castle in the Clouds','Seed of Genius','Neon Auto Shop','Ping-Pong Rally','Star Defenders','Dragon Sky Quest','Teacher report','Student detail','District report']){
   assert.ok(script.includes(name),'missing tour chapter: '+name);
 }
-for(const route of ['dragon/index.html','races/subway.html','pong/index.html','seed/index.html','educators/','district.html']){
+const gameRoutes=['races/horse.html','wave/index.html','races/subway.html','dirt/index.html','castle/index.html','seed/index.html','hangar/index.html','pong/index.html','invaders/index.html','dragon/index.html'];
+for(const route of [...gameRoutes,'educators/','district.html']){
   assert.ok(script.includes(route),'missing tour route: '+route);
 }
+for(const route of gameRoutes.filter(route=>!['races/horse.html','seed/index.html'].includes(route))){
+  assert.equal(script.split(route).length-1,1,'gameplay route should appear once in the tour: '+route);
+}
+assert.equal(script.split('races/horse.html').length-1,2,'Horse Race returns when the closing narration returns to Maya at Tiger Downs');
+assert.equal(script.split('seed/index.html').length-1,2,'Seed appears twice because both gameplay and growth footage are shown');
 assert.match(script,/action:'#demo'/);
+assert.match(script,/action:'#horseDemo'/);
 assert.match(script,/action:'#previewVideo'/);
-assert.match(script,/at:300[^\n]+pong\/index\.html[^\n]+continuation:true/);
-assert.match(script,/at:322[^\n]+seed\/index\.html[^\n]+continuation:true/);
-assert.match(script,/at:370[^\n]+races\/subway\.html[^\n]+continuation:true/);
+assert.match(script,/title:'Student detail'[^\n]+focus:'#studentTitle'/);
+assert.match(script,/target\.closest\('\.card'\)/);
+assert.match(script,/doc\.querySelector\('\.sampleLabel'\)/);
+assert.match(script,/frame\.contentWindow\.scrollTo/);
+assert.match(script,/focusScene\(focus,activeStage\)/);
+assert.match(script,/at:300[^\n]+wave\/index\.html[^\n]+continuation:true/);
+assert.match(script,/at:322[^\n]+castle\/index\.html[^\n]+continuation:true/);
+assert.match(script,/at:346[^\n]+hangar\/index\.html[^\n]+continuation:true/);
+assert.match(script,/at:370[^\n]+invaders\/index\.html[^\n]+continuation:true/);
+assert.match(script,/at:811[^\n]+races\/horse\.html[^\n]+action:'#horseDemo'[^\n]+continuation:true/);
+assert.match(script,/at:900[^\n]+tourStage=1[^\n]+continuation:true/);
 assert.match(script,/chapterCount=scenes\.reduce/);
 assert.match(script,/chapterFor\(index\)/);
 assert.match(script,/params\.get\('tourStage'\)==='1'/);
