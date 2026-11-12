@@ -12,8 +12,8 @@ const audio=path.join(root,'dist/explainer/fluency-arcade-podcast.mp3');
 assert.match(index,/id="openExplainer"/);
 assert.match(index,/id="explainerDialog"/);
 assert.match(index,/id="explainerAudio"[^>]+explainer\/fluency-arcade-podcast\.mp3/);
-assert.match(index,/explainer\.js\?v=explainer-8/);
-assert.match(index,/explainer\.css\?v=explainer-8/);
+assert.match(index,/explainer\.js\?v=explainer-9/);
+assert.match(index,/explainer\.css\?v=explainer-9/);
 assert.match(index,/id="explainerStageNext"/);
 assert.ok(fs.statSync(audio).size>20_000_000,'podcast audio should be the complete episode');
 
@@ -25,6 +25,11 @@ for(const route of ['dragon/index.html','races/subway.html','pong/index.html','s
 }
 assert.match(script,/action:'#demo'/);
 assert.match(script,/action:'#previewVideo'/);
+assert.match(script,/at:300[^\n]+pong\/index\.html[^\n]+continuation:true/);
+assert.match(script,/at:322[^\n]+seed\/index\.html[^\n]+continuation:true/);
+assert.match(script,/at:370[^\n]+races\/subway\.html[^\n]+continuation:true/);
+assert.match(script,/chapterCount=scenes\.reduce/);
+assert.match(script,/chapterFor\(index\)/);
 assert.match(script,/params\.get\('tourStage'\)==='1'/);
 assert.match(script,/audio\.play\(\)/);
 assert.match(script,/audio\.pause\(\)/);

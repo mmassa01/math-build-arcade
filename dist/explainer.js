@@ -34,6 +34,9 @@
     {at:183,title:'Five connected pathways',copy:'Addition, Subtraction, Multiplication, Division, and Mixed all use one shared learner record.',src:'./?tourStage=1'},
     {at:220,title:'The working hand',copy:'No more than 24 due cards stay in play, with cleared facts and practice facts visible.',src:'seed/index.html?v=review-56',action:'#demo'},
     {at:279,title:'Three seconds for fluent recall',copy:'The same rule drives the fire strike, the paddle return, and the growing seed.',src:'dragon/index.html?v=review-56',action:'#demo'},
+    {at:300,title:'Three seconds in every game',copy:'The same fluent-recall rule now moves from the Dragon fire strike to Ping-Pong Rally.',src:'pong/index.html?v=review-56',action:'#demo',continuation:true},
+    {at:322,title:'Three seconds in every game',copy:'The same timed response now drives the growing seed.',src:'seed/index.html?v=review-56',action:'#demo',continuation:true},
+    {at:370,title:'Three seconds in every game',copy:'Skyrail closes the sequence with the same three-second recall window in a different world.',src:'races/subway.html?v=review-56',action:'#demo',continuation:true},
     {at:396,title:'Growth across time',copy:'Confirmed facts return after fourteen days so durable recall matters more than one strong session.',src:'seed/index.html?v=review-56',action:'#previewVideo'},
     {at:448,title:'The daily check',copy:'A 90-second check uses the same timed facts and remains separate from coins and game rewards.',src:'./?tourStage=1'},
     {at:504,title:'One playable learning event',copy:'Maya sees a short game round while the system records due facts, timing, practice, and checks.',src:'races/subway.html?v=review-56',action:'#demo'},
@@ -50,8 +53,10 @@
   let stageActionTimer=0;
   let stageLoadToken=0;
   let pendingStageSrc='';
+  const chapterCount=scenes.reduce((count,scene)=>count+(scene.continuation?0:1),0);
   function format(value){const seconds=Math.max(0,Math.floor(Number(value)||0)),m=Math.floor(seconds/60),s=seconds%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
   function indexFor(value){let result=0;const position=Number(value||0)+0.35;for(let i=1;i<scenes.length;i++){if(position>=scenes[i].at)result=i;else break;}return result;}
+  function chapterFor(index){let chapter=0;for(let i=0;i<=index;i++)if(!scenes[i].continuation)chapter++;return chapter;}
   function runAction(selector,frame=activeStage){
     if(!selector)return;
     try{
@@ -81,7 +86,7 @@
   }
   function showScene(index,force){
     const next=scenes[Math.max(0,Math.min(scenes.length-1,index))];
-    chapterNumber.textContent='Chapter '+(index+1)+' of '+scenes.length;
+    chapterNumber.textContent='Chapter '+chapterFor(index)+' of '+chapterCount;
     chapterTitle.textContent=next.title;
     chapterCopy.textContent=next.copy;
     if(!force&&sceneIndex===index)return;
