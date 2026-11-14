@@ -5,3 +5,5 @@
 @media(max-height:560px) and (orientation:landscape){.explainerHead{padding:6px 10px}.explainerHead h2{font-size:17px}.explainerEyebrow{display:none}.explainerControls{padding:6px 9px}.explainerCaption{bottom:7px;padding:7px 11px}.explainerCaption strong{font-size:17px}.explainerCaption p{display:none}}
 @media(prefers-reduced-motion:reduce){.explainerLoading{transition:none}}
 .explainerLoading{background:#071320b8;pointer-events:none}
+.explainerStage{position:absolute;inset:0;opacity:1}.explainerStage.is-incoming{z-index:2;animation:explainerFadeIn .45s ease both}.explainerStage.is-outgoing{z-index:1;animation:explainerFadeOut .45s ease both}.explainerLoading{z-index:3}@keyframes explainerFadeIn{from{opacity:0}to{opacity:1}}@keyframes explainerFadeOut{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.explainerStage.is-incoming,.explainerStage.is-outgoing{animation:none}}
