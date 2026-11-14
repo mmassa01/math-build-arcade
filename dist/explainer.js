@@ -19,6 +19,7 @@
   const play=document.getElementById('explainerPlay');
   const seek=document.getElementById('explainerSeek');
   const time=document.getElementById('explainerTime');
+  const duration=document.getElementById('explainerDuration');
   const chapterNumber=document.getElementById('explainerChapterNumber');
   const chapterTitle=document.getElementById('explainerChapterTitle');
   const chapterCopy=document.getElementById('explainerChapterCopy');
@@ -176,7 +177,7 @@
     audio.addEventListener('play',sync);
     audio.addEventListener('pause',sync);
     audio.addEventListener('ended',()=>{audio.currentTime=0;sync();});
-    audio.addEventListener('loadedmetadata',()=>{seek.max=String(audio.duration||524.856);sync();});
+    audio.addEventListener('loadedmetadata',()=>{const total=audio.duration||524.856;seek.max=String(total);duration.textContent=format(Math.ceil(total));sync();});
   }
   if(isLoopback)window.__FluencyExplainerQA={showScene};
   if(Number.isInteger(qaScene)&&qaScene>=0&&qaScene<scenes.length){dialog.showModal();document.documentElement.style.overflow='hidden';showScene(qaScene,true);}

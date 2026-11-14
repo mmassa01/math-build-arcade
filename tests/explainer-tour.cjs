@@ -12,9 +12,12 @@ const audio=path.join(root,'dist/explainer/fluency-arcade-podcast.mp3');
 assert.match(index,/id="openExplainer"/);
 assert.match(index,/id="explainerDialog"/);
 assert.match(index,/id="explainerAudio"[^>]+explainer\/fluency-arcade-podcast\.mp3\?v=explainer-14/);
-assert.match(index,/explainer\.js\?v=explainer-13/);
+assert.match(index,/explainer\.js\?v=explainer-14/);
 assert.match(index,/explainer\.css\?v=explainer-13/);
 assert.match(index,/id="explainerStageNext"/);
+assert.match(index,/id="explainerSeek"[^>]+max="524\.856"/);
+assert.match(index,/id="explainerDuration">08:45/);
+assert.doesNotMatch(index,/15:09|909\.072/);
 assert.ok(fs.statSync(audio).size>10_000_000,'podcast audio should be the complete episode');
 
 for(const name of ['Horse Race','Wave Riders Ignition','Skyrail Subway Run','Dirt Track Championship','Castle in the Clouds','Seed of Genius','Neon Auto Shop','Ping-Pong Rally','Star Defenders','Dragon Sky Quest','What should I teach next?','What does Maya need?','A district view of growth']){
@@ -55,6 +58,7 @@ assert.match(script,/function settleTransition\(\)/);
 assert.match(script,/transition==='fade'/);
 assert.match(script,/prefers-reduced-motion: reduce/);
 assert.match(script,/audio\.duration\|\|524\.856/);
+assert.match(script,/duration\.textContent=format\(Math\.ceil\(total\)\)/);
 assert.match(script,/location\.hostname==='127\.0\.0\.1'/);
 assert.match(script,/params\.has\('tourScene'\)/);
 assert.match(index,/Live demos, fictional reports, no progress saved/);
