@@ -11,7 +11,7 @@ const audio=path.join(root,'dist/explainer/fluency-arcade-podcast.mp3');
 
 assert.match(index,/id="openExplainer"/);
 assert.match(index,/id="explainerDialog"/);
-assert.match(index,/id="explainerAudio"[^>]+explainer\/fluency-arcade-podcast\.mp3/);
+assert.match(index,/id="explainerAudio"[^>]+explainer\/fluency-arcade-podcast\.mp3\?v=explainer-14/);
 assert.match(index,/explainer\.js\?v=explainer-13/);
 assert.match(index,/explainer\.css\?v=explainer-13/);
 assert.match(index,/id="explainerStageNext"/);
