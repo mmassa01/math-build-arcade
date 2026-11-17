@@ -27,39 +27,46 @@
   const scenes=[
     {at:0,title:'What if every student were fluent?',copy:'Imagine the mathematics McIntosh County students could reach when basic fact recall no longer stands in the way.',src:'./?tourStage=1'},
     {at:56,title:'Meet Maya',copy:'A fictional third grader helps us follow one continuous learning record across the real system.',src:'./?tourStage=1'},
-    {at:83,title:'Dragon Sky Quest',copy:'A fluent answer lands the fire strike while demo mode protects coins and progress.',src:'dragon/index.html?v=review-56',action:'#demo'},
-    {at:90,title:'Skyrail Subway Run',copy:'The runner follows the golden trail and answers the same timed facts.',src:'races/subway.html?v=review-56',action:'#demo',continuation:true},
-    {at:95,title:'Ping-Pong Rally',copy:'Correct answers move the paddle and charge a power shot.',src:'pong/index.html?v=review-56',action:'#demo',continuation:true},
-    {at:100,title:'Seed of Genius',copy:'Real growth footage makes learning across time visible.',src:'seed/index.html?v=review-56',action:'#previewVideo',continuation:true},
-    {at:110,title:'Horse Race',copy:'Cleared and practice facts drive the pace horse around Tiger Downs.',src:'races/horse.html?v=review-56',action:'#horseDemo',continuation:true},
-    {at:114,title:'Dirt Track Championship',copy:'Correct answers charge the nitro while the student chases the gold pace car.',src:'dirt/index.html?v=review-56',action:'#demo',continuation:true},
-    {at:117,title:'Wave Riders Ignition',copy:'Fluent recall powers a hydro boost across the coastal course.',src:'wave/index.html?v=review-56',action:'#demo',continuation:true},
-    {at:121,title:'Castle in the Clouds',copy:'Each cleared fact adds visible progress to a floating kingdom.',src:'castle/index.html?v=review-56',action:'#demo',continuation:true},
-    {at:124,title:'Neon Auto Shop',copy:'Students power up a dream racer while the same facts move between cleared and practice.',src:'hangar/index.html?v=review-56',action:'#demo',continuation:true},
-    {at:128,title:'Star Defenders',copy:'Fast facts fire the ship, charge the super laser, and protect the galaxy.',src:'invaders/index.html?v=review-56',action:'#demo',continuation:true},
-    {at:136,title:'Five connected pathways',copy:'Addition, Subtraction, Multiplication, Division, and Mixed all use one shared learner record.',src:'./?tourStage=1',transition:'fade'},
-    {at:143,title:'A working hand, not the whole deck',copy:'Maya receives 24 due cards selected from missed, practice, and cleared facts.',src:'races/horse.html?v=review-56',action:'#horseDemo'},
-    {at:177,title:'What the system measures',copy:'Only answer time counts. Accuracy, speed, and repeated success determine whether a fact advances.',src:'races/horse.html?v=review-56'},
-    {at:218,title:'Evidence that lasts',copy:'Confirmed facts return after fourteen days so durable recall matters more than one strong session.',src:'seed/index.html?v=review-56',action:'#previewVideo',transition:'fade'},
-    {at:229,title:'The daily check',copy:'A 90-second check uses the same timed facts and stays separate from coins and game rewards.',src:'./?tourStage=1',transition:'fade'},
-    {at:277,title:'Trophies represent evidence',copy:'Operation trophies require confirmed facts and repeated passing checks across different days.',src:'./?tourStage=1',action:'#exampleButton'},
-    {at:288,title:'Rewards support the journey',copy:'Coins and gear make progress visible, but demo mode never changes a student record.',src:'store.html?v=dragons-33'},
-    {at:303,title:'What should I teach next?',copy:'The teacher report ranks facts, identifies exact students, and creates practical instructional groups.',src:'educators/',focus:'#teachTitle',transition:'fade'},
-    {at:359,title:'What does Maya need?',copy:'The student report separates coverage, fluent recall, and retention, then shows the evidence behind each conclusion.',src:'educators/?class=g3a&student=s0053',focus:'#studentTitle',transition:'fade'},
-    {at:423,title:'A district view of growth',copy:'Leaders can compare grades and classes while keeping participation separate from demonstrated fluency.',src:'district.html',transition:'fade'},
-    {at:465,title:'Back to Tiger Downs',copy:'The closing returns to Horse Race because gameplay and the learning record are one connected experience.',src:'races/horse.html?v=review-56',action:'#horseDemo',transition:'fade'},
-    {at:488,title:'One continuous learning story',copy:'The games motivate practice while reports turn each answer into useful instructional evidence.',src:'./?tourStage=1',transition:'fade'},
-    {at:518,title:'Fluency is built, not guessed',copy:'Ten adventures, one continuous learning story, and a stronger mathematical foundation for McIntosh County.',src:'./?tourStage=1',continuation:true}
+    {at:82,title:'Dragon Sky Quest',copy:'A fluent answer lands the fire strike while demo mode protects coins and progress.',src:'dragon/index.html?v=review-56',command:'demo',transition:'fade'},
+    {at:90,title:'Skyrail Subway Run',copy:'The runner follows the golden trail and answers the same timed facts.',src:'races/subway.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:96,title:'Ping-Pong Rally',copy:'Correct answers move the paddle and charge a power shot.',src:'pong/index.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:102,title:'Seed of Genius',copy:'Real growth footage makes learning across time visible.',src:'seed/index.html?v=review-56',command:'video',transition:'fade',continuation:true},
+    {at:114,title:'Horse Race',copy:'Cleared and practice facts drive the pace horse around Tiger Downs.',src:'races/horse.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:120,title:'Dirt Track Championship',copy:'Correct answers charge the nitro while the student chases the gold pace car.',src:'dirt/index.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:125,title:'Wave Riders Ignition',copy:'Fluent recall powers a hydro boost across the coastal course.',src:'wave/index.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:131,title:'Castle in the Clouds',copy:'Each cleared fact adds visible progress to a floating kingdom.',src:'castle/index.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:136,title:'Neon Auto Shop',copy:'Students power up a dream racer while the same facts move between cleared and practice.',src:'hangar/index.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:142,title:'Star Defenders',copy:'Fast facts fire the ship, charge the super laser, and protect the galaxy.',src:'invaders/index.html?v=review-56',command:'demo',transition:'fade',continuation:true},
+    {at:152,title:'Five connected pathways',copy:'Addition, Subtraction, Multiplication, Division, and Mixed all use one shared learner record.',src:'./?tourStage=1',transition:'fade'},
+    {at:176,title:'A working hand, not the whole deck',copy:'Maya receives 24 due cards selected from missed, practice, and cleared facts.',src:'dragon/index.html?v=review-56',command:'demo',transition:'fade'},
+    {at:205,title:'What the system measures',copy:'Only answer time counts. Accuracy, speed, and repeated success determine whether a fact advances.',src:'races/subway.html?v=review-56',command:'demo',transition:'fade'},
+    {at:234,title:'Evidence that lasts',copy:'Confirmed facts return after fourteen days so durable recall matters more than one strong session.',src:'seed/index.html?v=review-56',command:'video',transition:'fade'},
+    {at:245,title:'The daily check',copy:'A 90-second check uses the same timed facts and stays separate from coins and game rewards.',src:'./?tourStage=1',transition:'fade'},
+    {at:293,title:'Trophies represent evidence',copy:'Operation trophies require confirmed facts and repeated passing checks across different days.',src:'./?tourStage=1',action:'#exampleButton'},
+    {at:304,title:'Rewards support the journey',copy:'Coins and gear make progress visible, but demo mode never changes a student record.',src:'store.html?v=dragons-33'},
+    {at:319,title:'What should I teach next?',copy:'The teacher report ranks facts, identifies exact students, and creates practical instructional groups.',src:'educators/',focus:'#teachTitle',transition:'fade'},
+    {at:375,title:'What does Maya need?',copy:'The student report separates coverage, fluent recall, and retention, then shows the evidence behind each conclusion.',src:'educators/?class=g3a&student=s0053',focus:'#studentTitle',transition:'fade'},
+    {at:439,title:'A district view of growth',copy:'Leaders can compare grades and classes while keeping participation separate from demonstrated fluency.',src:'district.html',transition:'fade'},
+    {at:481,title:'Back to Tiger Downs',copy:'The closing returns to Horse Race because gameplay and the learning record are one connected experience.',src:'races/horse.html?v=review-56',command:'demo',transition:'fade'},
+    {at:492,title:'Tiger Downs stays in motion',copy:'Maya keeps answering while the pace horse remains part of the action.',src:'races/horse.html?v=review-56',command:'demo',continuation:true},
+    {at:504,title:'One continuous learning story',copy:'The games motivate practice while reports turn each answer into useful instructional evidence.',src:'./?tourStage=1',transition:'fade'},
+    {at:534,title:'Fluency is built, not guessed',copy:'Ten adventures, one continuous learning story, and a stronger mathematical foundation for McIntosh County.',src:'./?tourStage=1',continuation:true}
   ];
   let sceneIndex=-1;
   let pendingAction='';
   let pendingFocus='';
+  let pendingCommand='';
   let stageLoadTimer=0;
+  let stageLoadingTimer=0;
   let stageActionTimer=0;
+  let stageRevealTimer=0;
+  let stagePrimeTimer=0;
   let stageTransitionTimer=0;
   let stageLoadToken=0;
   let pendingStageSrc='';
   let pendingTransition='';
+  let pendingReadyFrame=null;
+  let pendingReadyPrime=null;
   const chapterCount=scenes.reduce((count,scene)=>count+(scene.continuation?0:1),0);
   function format(value){const seconds=Math.max(0,Math.floor(Number(value)||0)),m=Math.floor(seconds/60),s=seconds%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
   function indexFor(value){let result=0;const position=Number(value||0)+0.35;for(let i=1;i<scenes.length;i++){if(position>=scenes[i].at)result=i;else break;}return result;}
@@ -71,6 +78,11 @@
       const target=doc&&doc.querySelector(selector);
       if(target&&!target.disabled)target.click();
     }catch(error){console.info('Explainer scene action was not available.',error);}
+  }
+  function runCommand(command,frame=activeStage){
+    if(!command)return;
+    try{frame.contentWindow.postMessage({type:'arcade-command',action:command},location.origin);}
+    catch(error){console.info('Explainer scene command was not available.',error);}
   }
   function focusScene(selector,frame=activeStage){
     if(!selector)return;
@@ -94,32 +106,60 @@
     clearTimeout(stageTransitionTimer);
     activeStage.hidden=false;
     standbyStage.hidden=true;
-    for(const frame of [activeStage,standbyStage])frame.classList.remove('is-incoming','is-outgoing');
+    for(const frame of [activeStage,standbyStage])frame.classList.remove('is-preparing','is-incoming','is-outgoing');
   }
   function finishStageLoad(token,frame){
     if(token!==stageLoadToken||frame!==standbyStage||!pendingStageSrc||frame.getAttribute('src')!==pendingStageSrc||!frameReady(frame))return;
     clearTimeout(stageLoadTimer);
+    clearTimeout(stageLoadingTimer);
+    clearTimeout(stagePrimeTimer);
     const previous=activeStage;
     frame.hidden=false;
-    activeStage=frame;
-    standbyStage=previous;
-    loading.hidden=true;
+    frame.classList.add('is-preparing');
     const action=pendingAction;
     const focus=pendingFocus;
+    const command=pendingCommand;
     const transition=pendingTransition;
     pendingAction='';
     pendingFocus='';
+    pendingCommand='';
     pendingStageSrc='';
     pendingTransition='';
-    if(transition==='fade'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      activeStage.classList.add('is-incoming');
-      standbyStage.classList.add('is-outgoing');
-      stageTransitionTimer=setTimeout(settleTransition,480);
-    }else{
-      settleTransition();
-    }
     clearTimeout(stageActionTimer);
-    if(action||focus)stageActionTimer=setTimeout(()=>{runAction(action,activeStage);focusScene(focus,activeStage);},450);
+    clearTimeout(stageRevealTimer);
+    const reveal=()=>{
+      if(token!==stageLoadToken||frame!==standbyStage)return;
+      clearTimeout(stagePrimeTimer);
+      if(pendingReadyFrame===frame){pendingReadyFrame=null;pendingReadyPrime=null;}
+      frame.classList.remove('is-preparing');
+      activeStage=frame;
+      standbyStage=previous;
+      loading.hidden=true;
+      if(transition==='fade'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        activeStage.classList.add('is-incoming');
+        standbyStage.classList.add('is-outgoing');
+        stageTransitionTimer=setTimeout(settleTransition,680);
+      }else{
+        settleTransition();
+      }
+      if(action||focus)stageActionTimer=setTimeout(()=>{runAction(action,activeStage);focusScene(focus,activeStage);},120);
+    };
+    if(command){
+      const prime=()=>{
+        if(token!==stageLoadToken||frame!==standbyStage)return;
+        clearTimeout(stagePrimeTimer);
+        pendingReadyFrame=null;
+        pendingReadyPrime=null;
+        runCommand(command,frame);
+        clearTimeout(stageRevealTimer);
+        stageRevealTimer=setTimeout(reveal,600);
+      };
+      pendingReadyFrame=frame;
+      pendingReadyPrime=prime;
+      runCommand(command,frame);
+      stagePrimeTimer=setTimeout(prime,500);
+      stageRevealTimer=setTimeout(reveal,1100);
+    }else stageRevealTimer=setTimeout(reveal,0);
   }
   function showScene(index,force){
     const next=scenes[Math.max(0,Math.min(scenes.length-1,index))];
@@ -131,17 +171,24 @@
     sceneIndex=index;
     pendingAction=next.action||'';
     pendingFocus=next.focus||'';
+    pendingCommand=next.command||'';
     pendingTransition=next.transition||'';
     const token=++stageLoadToken;
     clearTimeout(stageLoadTimer);
+    clearTimeout(stageLoadingTimer);
     clearTimeout(stageActionTimer);
-    loading.hidden=false;
+    clearTimeout(stageRevealTimer);
+    clearTimeout(stagePrimeTimer);
+    pendingReadyFrame=null;
+    pendingReadyPrime=null;
+    loading.hidden=true;
     loading.textContent='Opening '+next.title+'...';
     const current=activeStage.getAttribute('src')||'';
-    if(current===next.src){loading.hidden=true;pendingAction='';pendingFocus='';pendingStageSrc='';pendingTransition='';runAction(next.action||'',activeStage);focusScene(next.focus||'',activeStage);return;}
+    if(current===next.src){pendingAction='';pendingFocus='';pendingCommand='';pendingStageSrc='';pendingTransition='';runCommand(next.command||'',activeStage);runAction(next.action||'',activeStage);focusScene(next.focus||'',activeStage);return;}
     pendingStageSrc=next.src;
     standbyStage.hidden=true;
     standbyStage.setAttribute('src',next.src);
+    stageLoadingTimer=setTimeout(()=>{if(token===stageLoadToken&&!frameReady(standbyStage))loading.hidden=false;},1200);
     stageLoadTimer=setTimeout(()=>{
       if(frameReady(standbyStage))finishStageLoad(token,standbyStage);
       else loading.hidden=true;
@@ -149,6 +196,10 @@
   }
   activeStage.addEventListener('load',event=>finishStageLoad(stageLoadToken,event.currentTarget));
   standbyStage.addEventListener('load',event=>finishStageLoad(stageLoadToken,event.currentTarget));
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin||!event.data||event.data.type!=='arcade-ready'||!pendingReadyFrame||event.source!==pendingReadyFrame.contentWindow||!pendingReadyPrime)return;
+    pendingReadyPrime();
+  });
   function sync(){
     const current=Number(audio.currentTime)||0;
     seek.value=String(current);
@@ -163,7 +214,7 @@
     const request=audio.play();
     if(request&&request.catch)request.catch(()=>{play.textContent='Play';});
   }
-  function close(){audio.pause();clearTimeout(stageLoadTimer);clearTimeout(stageActionTimer);settleTransition();stageLoadToken++;pendingAction='';pendingFocus='';pendingStageSrc='';pendingTransition='';loading.hidden=true;sceneIndex=-1;for(const frame of [activeStage,standbyStage]){try{frame.contentWindow.postMessage({type:'arcade-pause'},location.origin);}catch(error){console.info('Explainer scene pause was not available.',error);}}if(dialog.open)dialog.close();document.documentElement.style.overflow='';}
+  function close(){audio.pause();clearTimeout(stageLoadTimer);clearTimeout(stageLoadingTimer);clearTimeout(stageActionTimer);clearTimeout(stageRevealTimer);clearTimeout(stagePrimeTimer);pendingReadyFrame=null;pendingReadyPrime=null;settleTransition();stageLoadToken++;pendingAction='';pendingFocus='';pendingCommand='';pendingStageSrc='';pendingTransition='';loading.hidden=true;sceneIndex=-1;for(const frame of [activeStage,standbyStage]){try{frame.contentWindow.postMessage({type:'arcade-pause'},location.origin);}catch(error){console.info('Explainer scene pause was not available.',error);}}if(dialog.open)dialog.close();document.documentElement.style.overflow='';}
   openButton.addEventListener('click',start);
   document.getElementById('closeExplainer').addEventListener('click',close);
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
@@ -177,7 +228,7 @@
     audio.addEventListener('play',sync);
     audio.addEventListener('pause',sync);
     audio.addEventListener('ended',()=>{audio.currentTime=0;sync();});
-    audio.addEventListener('loadedmetadata',()=>{const total=audio.duration||524.856;seek.max=String(total);duration.textContent=format(Math.ceil(total));sync();});
+    audio.addEventListener('loadedmetadata',()=>{const total=audio.duration||540.864;seek.max=String(total);duration.textContent=format(Math.ceil(total));sync();});
   }
   if(isLoopback)window.__FluencyExplainerQA={showScene};
   if(Number.isInteger(qaScene)&&qaScene>=0&&qaScene<scenes.length){dialog.showModal();document.documentElement.style.overflow='hidden';showScene(qaScene,true);}
