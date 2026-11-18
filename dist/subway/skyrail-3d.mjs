@@ -1,5 +1,5 @@
 import * as T from '../store/vendor/three.module.min.js';
-import {box,sphere,cylinder,material,labelTexture,createTrain,createRunner,poseRunner,batchStatic,worldZ,worldX,LANE_WIDTH,ROOF_HEIGHT} from './models.mjs?v=review-56';
+import {box,sphere,cylinder,material,labelTexture,createTrain,createRunner,poseRunner,batchStatic,worldZ,worldX,LANE_WIDTH,ROOF_HEIGHT} from './models.mjs?v=review-57';
 
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),mod=(x,n)=>((x%n)+n)%n;
 export class SkyrailScene{
@@ -107,5 +107,5 @@ export class SkyrailScene{
 
 if(typeof window!=='undefined'){
  window.Skyrail3D={create(canvas){try{const target=canvas.cloneNode(false),view=new SkyrailScene(target);canvas.replaceWith(target);view.resize();if(typeof ResizeObserver!=="undefined"){view.observer=new ResizeObserver(()=>view.resize());view.observer.observe(target)}document.querySelector('.liveTag').textContent='HARBOR LINE ● LIVE 3D';window.SkyrailDebug={view,snapshot:()=>({renderer:'webgl-3d',drawCalls:view.renderer.info.render.calls,triangles:view.renderer.info.render.triangles,trains:view.trainViews.size,coins:view.coinViews.size})};return view}catch(error){document.querySelector('.liveTag').textContent='COMPATIBILITY VIEW';console.warn('Skyrail 3D unavailable; using the compatible 2D view.',error);return null}}};
- await import('./game.js?v=review-56');
+ await import('./game.js?v=review-57');
 }

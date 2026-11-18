@@ -12,5 +12,5 @@ images.find(i=>i.src.includes('gallop')).onload();assert(art.loaded);images.find
 paused=true;const atPause=draws;frame(1200);frame(1300);assert.equal(draws,atPause,'paused actors are frozen and do not repaint');
 assert(layers['.cinema-dirt'].style.backgroundPositionX);assert(layers['.cinema-distance-marker'].style.left);
 for(const f of ['gallop-hd-v37.webp','championship-course-v37.webp'])assert(fs.statSync('dist/races/horse-art/'+f).size>10000);
-const html=fs.readFileSync('dist/races/horse.html','utf8');assert(html.includes('horse-cinema.js?v=review-56'));assert(html.includes('horse-cinematic'));
+const html=fs.readFileSync('dist/races/horse.html','utf8');assert(html.includes('horse-cinema.js?v=review-57'));assert(html.includes('horse-cinematic'));
 console.log('PASS horse cinema: eight-frame cycle, coat mapping, transparent alpha, runtime rendering, pause freeze, moving track layers, unchanged game state and integrated assets.');
