@@ -198,3 +198,19 @@ main:has(.flashcard-workbench) .garden{flex:1 1 0!important;min-height:0!importa
  .card-console-card:has(.number-division),.numeric-host.three-pile-host .card-console-card:has(.number-division){--div-top:13px;--div-bottom:9px;--div-font:21px;--div-input:20px;--div-input-font:17px;--div-input-gap:1px;--div-house-pad:1px}
  .card-console-card:has(.number-division) .card-console-timer{bottom:5px}
 }
+/* Stacked fact clearance. On the 82px phone card and the 72px short-landscape card a stacked
+   +, − or × fact (top number, operator row, answer rule) was taller than the space between the
+   card tag and the 3-second bar, so it ran under both. Like division above, the card reserves
+   a clear band and the stack is sized to fit it. Desktop and tablet cards already clear. */
+@media(max-width:650px){
+ .card-console-card:has(.number-problem:not(.number-division)),.numeric-host.three-pile-host .card-console-card:has(.number-problem:not(.number-division)){--stack-top:15px;--stack-bottom:11px;--stack-font:24px;--stack-rule-gap:2px;justify-content:center!important;padding:var(--stack-top) 0 var(--stack-bottom)!important}
+ .card-console-card:has(.number-problem:not(.number-division)) .card-console-timer{bottom:6px}
+ .card-console-card .number-problem:not(.number-division),.numeric-host.three-pile-host .card-console-card .number-problem:not(.number-division){font-size:var(--stack-font)!important;line-height:1!important;padding:0 5px!important;margin:0 auto!important}
+ .card-console-card .number-problem:not(.number-division) .number-bottom{padding-bottom:var(--stack-rule-gap)}
+}
+@media(max-height:600px) and (min-width:650px){
+ .card-console-card:has(.number-problem:not(.number-division)),.numeric-host.three-pile-host .card-console-card:has(.number-problem:not(.number-division)){--stack-top:13px;--stack-bottom:9px;--stack-font:21px;--stack-rule-gap:1px;justify-content:center!important;padding:var(--stack-top) 0 var(--stack-bottom)!important}
+ .card-console-card:has(.number-problem:not(.number-division)) .card-console-timer{bottom:5px}
+ .card-console-card .number-problem:not(.number-division),.numeric-host.three-pile-host .card-console-card .number-problem:not(.number-division){font-size:var(--stack-font)!important;line-height:1!important;padding:0 5px!important;margin:0 auto!important}
+ .card-console-card .number-problem:not(.number-division) .number-bottom{padding-bottom:var(--stack-rule-gap)}
+}
