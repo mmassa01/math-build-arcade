@@ -21,3 +21,8 @@ body.arcadeHome{height:auto!important;overflow:auto!important}.arcadeHome #homeS
 @media(max-height:560px){.checkDialog{padding:12px 16px}.checkDialog h2{font-size:20px;margin:2px 0 6px}#checkRunning:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:center}#checkRunning>*{grid-column:1}#checkRunning .checkPad{grid-column:2;grid-row:1/span 5;margin:0;gap:6px}#checkRunning .checkPad button{min-height:40px}#checkRunning .checkQuestion{margin:6px 0;font-size:30px}}
 
 .gradePick{display:inline-flex;align-items:center;gap:7px;font:800 13px system-ui;color:#fff4cb}.gradePick select{font:800 14px system-ui;min-height:40px;border:1px solid #a998d077;border-radius:10px;padding:5px 8px;background:#fff7df;color:#302047;cursor:pointer}.gradePick[hidden]{display:none}
+
+/* Room skill picker: the live pathway, readable and switchable inside every game. */
+.roomSkill{flex:none;display:inline-flex;align-items:center;gap:6px;font:800 13px system-ui;color:#fff4cb;white-space:nowrap}.roomSkill select{font:800 14px system-ui;min-height:36px;border:1px solid #ffe07799;border-radius:999px;padding:4px 10px;background:#fff7df;color:#302047;cursor:pointer}.roomSkill select:focus-visible{outline:3px solid #ffe07a;outline-offset:2px}.roomSkill[hidden]{display:none}
+@media(max-width:899px){.roomSkill{font-size:12px;gap:4px}.roomSkill select{padding:4px 8px}}
+@media(max-width:620px){.roomnav{flex-wrap:wrap;row-gap:4px}.roomSkill{order:10;flex:1 0 100%;justify-content:center;font-size:14px}.roomSkill select{font-size:16px;min-height:32px;padding:2px 10px}}
