@@ -17,14 +17,14 @@ function record(grade,n,firstDay,extra={}){
 const sum=(rec,grade,options={})=>R.summarize(rec,{id:'s1',name:'Ada B.',grade,school:'Example Elementary',classId:'c1',className:'Class',teacher:'Ms. Alder'},{today:TODAY,graceDays:0,...options});
 const check=(pathway,day,passed,missed=[])=>({id:pathway+day,source:'game',pathway,day,duration:90000,valid:true,official:true,correct:passed?40:20,attempts:passed?41:30,accuracy:passed?40/41:20/30,balanced:true,passed,byOperation:{},missed});
 
-test('fact totals come from the engine: 61 in grade 1, 271 in grade 2, 469 from grade 3',()=>{
-  for(const [grade,total,parts,trophies]of [[1,61,{add:16,sub:45},3],[2,271,{add:81,sub:190},3],[3,469,{add:81,sub:190,mul:66,div:132},5],[12,469,{add:81,sub:190,mul:66,div:132},5]]){
+test('fact totals come from the engine: 52 in grade 1, 252 in grade 2, 439 from grade 3 (no n − n or n ÷ n)',()=>{
+  for(const [grade,total,parts,trophies]of [[1,52,{add:16,sub:36},3],[2,252,{add:81,sub:171},3],[3,439,{add:81,sub:171,mul:66,div:121},5],[12,439,{add:81,sub:171,mul:66,div:121},5]]){
     const info=R.gradeInfo(grade),engine=practice.create(null);engine.setGrade(grade);
     assert.equal(info.total,total);assert.deepEqual(info.totals,parts);assert.equal(info.trophiesPossible,trophies);
     assert.deepEqual(info.facts.map(f=>f.id),engine.getBank().map(f=>f.id));assert.deepEqual(info.pathways,engine.pathways);
     for(const f of info.facts)assert(![0,1].includes(f.b)&&(f.op==='div'||![0,1].includes(f.a)),'no fact works with 0 or 1: '+f.id);
   }
-  assert.equal(R.gradeInfo('7').total,469);assert.equal(R.gradeInfo(99).grade,3);
+  assert.equal(R.gradeInfo('7').total,439);assert.equal(R.gradeInfo(99).grade,3);
 });
 
 test('a fact is confirmed at stage 3 or more with no refresh flag, and only the grade’s facts count',()=>{
@@ -34,10 +34,10 @@ test('a fact is confirmed at stage 3 or more with no refresh flag, and only the 
   rec.facts[ids[12]]={...confirmed(),stage:2};
   rec.facts['mul:6:7']=confirmed();rec.facts['add:9:9']=confirmed(); // not grade 1 facts
   const s=sum(rec,1);
-  assert.equal(s.facts.total,61);assert.equal(s.facts.confirmed,11);assert.equal(s.facts.steps,11*3+3+2);assert.equal(s.facts.started,13);assert.equal(s.facts.notStarted,48);assert.equal(s.notStarted.length,48);
+  assert.equal(s.facts.total,52);assert.equal(s.facts.confirmed,11);assert.equal(s.facts.steps,11*3+3+2);assert.equal(s.facts.started,13);assert.equal(s.facts.notStarted,39);assert.equal(s.notStarted.length,39);
   assert.deepEqual(s.operationList,['add','sub']);assert.equal(s.operations.add.total,16);assert.equal(s.operations.add.confirmed+s.operations.sub.confirmed,11);assert.equal(s.operations.mul,undefined);
   assert.equal(s.trophies.possible,3);assert.equal(sum(record(3,0,null),3).trophies.possible,5);
-  assert.equal(sum({...rec,grade:1},3).facts.total,469,'the roster grade decides the fact set');
+  assert.equal(sum({...rec,grade:1},3).facts.total,439,'the roster grade decides the fact set');
 });
 
 test('stuck facts are the ones missed last time or needing re-confirmation, most-missed first',()=>{
@@ -65,24 +65,24 @@ test('checks count distinct passing days per pathway and need a seven-day span',
 });
 
 test('trophies: three possible in grades 1–2, five from grade 3; all of them means Finished',()=>{
-  const g1=sum(record(1,61,'2027-01-04',{trophies:{add:'2027-01-20',sub:'2027-01-22',mixed:'2027-01-25',mul:'2027-01-25'}}),1);
+  const g1=sum(record(1,52,'2027-01-04',{trophies:{add:'2027-01-20',sub:'2027-01-22',mixed:'2027-01-25',mul:'2027-01-25'}}),1);
   assert.equal(g1.trophies.count,3);assert.equal(g1.trophies.possible,3);assert.equal(g1.trophies.won,true);assert.equal(g1.trophies.wonDay,'2027-01-25');assert.equal(g1.pace.status,'finished');assert.equal(g1.pace.label,'Finished');
-  const g3=sum(record(3,469,'2027-01-04',{trophies:{add:'2027-01-20',sub:'2027-01-22',mixed:'bad'}}),3);
+  const g3=sum(record(3,439,'2027-01-04',{trophies:{add:'2027-01-20',sub:'2027-01-22',mixed:'bad'}}),3);
   assert.equal(g3.trophies.count,2);assert.equal(g3.trophies.possible,5);assert.equal(g3.trophies.won,false);assert.equal(g3.pace.status,'onPace','every fact confirmed but trophies outstanding is on pace, not finished');
 });
 
 test('pace: a straight line from the first day to every fact by the target, with bands at 90% and 60%',()=>{
-  const first='2026-12-13',target='2027-03-23';                 // 100 days; today is day 50, so half of 469 = 234.5 expected
+  const first='2026-12-13',target='2027-03-23';                 // 100 days; today is day 50, so half of 439 = 219.5 expected
   assert.equal(R.dayDiff(first,TODAY),50);assert.equal(R.dayDiff(first,target),100);
   const at=n=>sum(record(3,n,first),3,{target}).pace;
-  assert.equal(at(212).expected,234.5);assert.equal(at(212).expectedPercent,50);
-  assert.equal(at(212).status,'onPace');assert.equal(at(211).status,'behind');   // 90% of 234.5 = 211.05
-  assert.equal(at(141).status,'behind');assert.equal(at(140).status,'atRisk');   // 60% of 234.5 = 140.7
-  assert.equal(at(0).status,'atRisk');assert.equal(at(469).status,'onPace');
-  assert.equal(at(141).label,'Behind');assert.equal(at(140).label,'At risk');assert.equal(at(212).label,'On pace');
+  assert.equal(at(198).expected,219.5);assert.equal(at(198).expectedPercent,50);
+  assert.equal(at(198).status,'onPace');assert.equal(at(197).status,'behind');   // 90% of 219.5 = 197.55
+  assert.equal(at(132).status,'behind');assert.equal(at(131).status,'atRisk');   // 60% of 219.5 = 131.7
+  assert.equal(at(0).status,'atRisk');assert.equal(at(439).status,'onPace');
+  assert.equal(at(132).label,'Behind');assert.equal(at(131).label,'At risk');assert.equal(at(198).label,'On pace');
   const usual=sum(record(3,0,first),3).pace;assert.equal(usual.target,'2027-04-26');assert.equal(usual.milestone,'2027-05-10');assert.equal(usual.daysToMilestone,98);
-  assert.equal(sum(record(3,400,'2026-11-01'),3,{today:'2027-06-01'}).pace.expected,469,'after the target the line stays at every fact');
-  assert.equal(sum(record(3,400,'2026-11-01'),3,{today:'2027-06-01'}).pace.status,'behind');
+  assert.equal(sum(record(3,380,'2026-11-01'),3,{today:'2027-06-01'}).pace.expected,439,'after the target the line stays at every fact');
+  assert.equal(sum(record(3,380,'2026-11-01'),3,{today:'2027-06-01'}).pace.status,'behind');
   assert.equal(sum(record(3,0,first),3,{target,onPaceRatio:0}).pace.status,'onPace','the band edges are parameters');
 });
 
@@ -94,7 +94,7 @@ test('pace: the first days actually played are on pace, no days logged is Not st
   const weekend=record(3,0,'2027-01-22');weekend.days={'2027-01-22':{cards:10,correct:8,ms:20000,steps:8,confirmed:0}};
   assert.equal(sum(weekend,3,{graceDays:3}).pace.grace,true,'ten calendar days but one day played is still in grace');
   const none=sum(record(3,0,null),3);assert.equal(none.pace.status,'notStarted');assert.equal(none.pace.label,'Not started');assert.equal(none.pace.projection,null);assert.equal(none.activity.lastDay,null);assert.equal(none.activity.playedLast7,false);
-  for(const junk of [null,undefined,{},{facts:'x',checks:'y',days:[],trophies:7},'text',42]){const s=sum(junk,3);assert.equal(s.pace.status,'notStarted');assert.equal(s.facts.confirmed,0);assert.equal(s.facts.total,469);}
+  for(const junk of [null,undefined,{},{facts:'x',checks:'y',days:[],trophies:7},'text',42]){const s=sum(junk,3);assert.equal(s.pace.status,'notStarted');assert.equal(s.facts.confirmed,0);assert.equal(s.facts.total,439);}
   const future=sum(record(3,0,'2027-02-09'),3);assert.equal(future.pace.status,'notStarted','days after today are ignored');
   const legacy=record(3,5,null);assert.equal(sum(legacy,3).pace.firstDay,'2027-01-10','a record without a daily log falls back to the first day a fact was seen');
 });
@@ -112,30 +112,30 @@ test('time on task, cards and accuracy use rolling seven-day weeks ending today'
 
 test('projection: the day every fact is confirmed at the rate of the last 14 days',()=>{
   const rec=record(3,170,'2026-12-01');rec.days={'2026-12-01':{cards:1,correct:1,ms:1,steps:1,confirmed:0},'2027-01-15':{cards:1,correct:1,ms:1,steps:1,confirmed:100},'2027-01-30':{cards:1,correct:1,ms:1,steps:1,confirmed:170}};
-  const p=sum(rec,3).pace.projection;                           // 100 on Jan 18 (14 days ago), 170 now: 5 a day, 299 to go
-  assert.equal(p.perDay,5);assert.equal(p.perWeek,35);assert.equal(p.remaining,299);assert.equal(p.date,R.addDays(TODAY,60));assert.equal(p.byTarget,true);assert.equal(p.byMilestone,true);
-  rec.days['2027-01-15'].confirmed=163;const slow=sum(rec,3).pace.projection;assert.equal(slow.perDay,.5);assert.equal(slow.date,R.addDays(TODAY,598));assert.equal(slow.byMilestone,false);
+  const p=sum(rec,3).pace.projection;                           // 100 on Jan 18 (14 days ago), 170 now: 5 a day, 269 to go
+  assert.equal(p.perDay,5);assert.equal(p.perWeek,35);assert.equal(p.remaining,269);assert.equal(p.date,R.addDays(TODAY,54));assert.equal(p.byTarget,true);assert.equal(p.byMilestone,true);
+  rec.days['2027-01-15'].confirmed=163;const slow=sum(rec,3).pace.projection;assert.equal(slow.perDay,.5);assert.equal(slow.date,R.addDays(TODAY,538));assert.equal(slow.byMilestone,false);
   rec.days['2027-01-15'].confirmed=170;assert.equal(sum(rec,3).pace.projection,null,'no growth, no projection');
-  const done=sum(record(1,61,'2027-01-04'),1).pace.projection;assert.equal(done.date,TODAY);assert.equal(done.remaining,0);
+  const done=sum(record(1,52,'2027-01-04'),1).pace.projection;assert.equal(done.date,TODAY);assert.equal(done.remaining,0);
 });
 
 // ---- groups
 const student=(id,name,grade,classId,rec)=>R.summarize(rec,{id,name,grade,classId},{today:TODAY,target:'2027-03-23',graceDays:0});
 const stuckOn=(rec,id,misses)=>{rec.facts[id]={stage:1,attempts:misses+1,misses,first:'2027-01-11',lastSuccess:null,failedDay:'2027-01-28',refresh:0};return rec;};
 const group=[
-  student('a','Ada B.',3,'c1',stuckOn(stuckOn(record(3,300,'2026-12-13'),'mul:7:8',5),'mul:6:7',1)),          // on pace
-  student('b','Ben C.',3,'c1',stuckOn(record(3,200,'2026-12-13'),'mul:7:8',2)),                                 // behind
+  student('a','Ada B.',3,'c1',stuckOn(stuckOn(record(3,280,'2026-12-13'),'mul:7:8',5),'mul:6:7',1)),          // on pace
+  student('b','Ben C.',3,'c1',stuckOn(record(3,180,'2026-12-13'),'mul:7:8',2)),                                 // behind
   student('c','Cora D.',3,'c1',stuckOn(stuckOn(record(3,20,'2026-12-13'),'mul:6:7',9),'div:56:7',4)),           // at risk
   student('d','Dev E.',3,'c2',record(3,0,null)),                                                               // not started
-  student('e','Elle F.',1,'c3',record(1,61,'2026-12-13',{trophies:{add:'2027-01-20',sub:'2027-01-22',mixed:'2027-01-25'}})) // finished
+  student('e','Elle F.',1,'c3',record(1,52,'2026-12-13',{trophies:{add:'2027-01-20',sub:'2027-01-22',mixed:'2027-01-25'}})) // finished
 ];
 
 test('aggregate: counts by pace status, median confirmed, participation, trophies and minutes',()=>{
   const a=R.aggregate(group);
   assert.deepEqual(a.pace,{finished:1,onPace:1,behind:1,atRisk:1,notStarted:1});assert.equal(a.students,5);assert.equal(a.started,4);assert.equal(a.onPace,2);assert.equal(a.onPacePercent,40);assert.equal(a.needSupport,2);
-  assert.equal(a.medianPercent,R.median(group.map(s=>s.facts.percent)));assert.equal(a.medianPercent,42.6);
+  assert.equal(a.medianPercent,R.median(group.map(s=>s.facts.percent)));assert.equal(a.medianPercent,41);
   assert.deepEqual(a.trophies,{earned:3,possible:23,percent:13});assert.equal(a.won,1);assert.equal(a.playedLast7,0);assert.equal(a.playedLast7Percent,0);
-  assert.equal(a.confirmed,581);assert.equal(a.total,469*4+61);assert.equal(a.operations.mul.students,4);assert.equal(a.operations.add.students,5);
+  assert.equal(a.confirmed,532);assert.equal(a.total,439*4+52);assert.equal(a.operations.mul.students,4);assert.equal(a.operations.add.students,5);
   const played=[student('x','X',3,'c',record(3,0,TODAY)),student('y','Y',3,'c',record(3,0,R.addDays(TODAY,-8))),student('z','Z',3,'c',record(3,0,null))];
   const p=R.aggregate(played);assert.equal(p.playedLast7,1);assert.equal(p.playedLast7Percent,33.3);assert.equal(p.minutesThisWeek,.3);assert.equal(p.avgMinutesThisWeek,.1,'averaged over every rostered student');assert.equal(p.avgMinutesLastWeek,.1);
   const empty=R.aggregate([]);assert.equal(empty.students,0);assert.equal(empty.medianPercent,null);assert.equal(empty.onPacePercent,0);assert.equal(empty.accuracyThisWeek,null);
@@ -155,12 +155,12 @@ test('most-missed facts: ordered by students stuck, then misses, with the small 
 
 test('weekly series: confirmed total and practice per rolling week',()=>{
   const day=(n,ms,done)=>[R.addDays(TODAY,-n),{cards:10,correct:9,ms,steps:1,confirmed:done}];
-  const one=student('a','A',1,'c',record(1,0,null,{days:Object.fromEntries([day(15,60000,10),day(8,120000,30),day(1,180000,61)])}));
+  const one=student('a','A',1,'c',record(1,0,null,{days:Object.fromEntries([day(15,60000,10),day(8,120000,30),day(1,180000,52)])}));
   const two=student('b','B',1,'c',record(1,0,null));
   const weeks=R.weeklySeries([one,two],{today:TODAY,weeks:3});
   assert.deepEqual(weeks.map(w=>w.end),[R.addDays(TODAY,-14),R.addDays(TODAY,-7),TODAY]);assert.equal(weeks[2].start,R.addDays(TODAY,-6));
   assert.deepEqual(weeks.map(w=>w.minutes),[1,2,3]);assert.deepEqual(weeks.map(w=>w.minutesPerStudent),[.5,1,1.5]);assert.deepEqual(weeks.map(w=>w.activeStudents),[1,1,1]);
-  assert.deepEqual(weeks.map(w=>w.confirmed),[10,30,61]);assert.deepEqual(weeks.map(w=>w.confirmedPercent),[8.2,24.6,50]);assert.equal(weeks[2].activePercent,50);
+  assert.deepEqual(weeks.map(w=>w.confirmed),[10,30,52]);assert.deepEqual(weeks.map(w=>w.confirmedPercent),[9.6,28.8,50]);assert.equal(weeks[2].activePercent,50);
 });
 
 test('CSV export is spreadsheet-safe',()=>{

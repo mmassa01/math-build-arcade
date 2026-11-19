@@ -18,15 +18,22 @@
   const pick=n=>Math.min(n-1,Math.max(0,Math.floor((Number(random())||0)*n)));
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=pick(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
   const bank=[];const add=(op,a,b,answer,symbol)=>bank.push({id:op+':'+a+':'+b,op,a,b,answer,text:a+' '+symbol+' '+b});
-  // No +0, +1, −0, −1, ×0, ×1, ÷1 or 0÷ cards: they are not fluency practice.
+  // No +0, +1, −0, −1, ×0, ×1, ÷1 or 0÷ cards, and no n − n or n ÷ n: they are not fluency practice.
   for(let a=2;a<=20;a++)for(let b=a;a+b<=20;b++)add('add',a,b,a+b,'+');
   for(let a=2;a<=20;a++)for(let b=2;b<=a;b++)add('sub',a,b,a-b,'−');
   for(let a=2;a<=12;a++)for(let b=a;b<=12;b++)add('mul',a,b,a*b,'×');
   for(let b=2;b<=12;b++)for(let q=1;q<=12;q++)add('div',b*q,b,q,'÷');
-  const byId=new Map(bank.map(q=>[q.id,q]));let banks=Object.fromEntries(ALLOPS.map(op=>[op,bank.filter(q=>q.op===op)])),pool=bank;
+  // n − n and n ÷ n are retired: never dealt or counted, but still known so saves and checks that hold them keep loading.
+  const known=bank.slice();for(let i=bank.length-1;i>=0;i--)if((bank[i].op==='sub'||bank[i].op==='div')&&bank[i].a===bank[i].b)bank.splice(i,1);
+  const byId=new Map(known.map(q=>[q.id,q]));let banks=Object.fromEntries(ALLOPS.map(op=>[op,bank.filter(q=>q.op===op)])),pool=bank;
   let state={version:2,pathway:'mixed',facts:{},checks:[],trophies:{},activity:{},gameChecks:{},days:{}};
   let lastRound={answered:0,correct:0,steps:0,confirmed:0};let serial=0,activeRun=null,activeCheck=null,storageAvailable=!!storage,unsaved=false;
-  function save(){try{if(storage){storage.setItem(KEY,JSON.stringify(state));unsaved=false;}else unsaved=true;}catch{storageAvailable=false;unsaved=true;}}
+  // The save is bounded: answer-by-answer check detail is kept for DETAIL_DAYS (7), practice checks
+  // (not official) for the same window, and per-day logs for 400 days. Official check summaries,
+  // facts and trophies, which reports and mastery read, are always kept.
+  const DETAIL_DAYS=7,LOG_DAYS=400;
+  function compact(){const cutoff=plus(day(),-DETAIL_DAYS);state.checks=state.checks.filter(c=>c.official||!(c.day<cutoff));for(const c of state.checks)if(c.day<cutoff&&Array.isArray(c.responses)&&c.responses.length)c.responses=[];for(const log of [state.days,state.activity]){const kept=Object.keys(log).sort();while(kept.length>LOG_DAYS)delete log[kept.shift()];}}
+  function save(){try{if(storage){compact();storage.setItem(KEY,JSON.stringify(state));unsaved=false;storageAvailable=true;}else unsaved=true;}catch{storageAvailable=false;unsaved=true;}}
   try{const raw=JSON.parse(storage?.getItem(KEY));if(raw?.version===2){state.pathway=PATHS.includes(raw.pathway)?raw.pathway:'mixed';if(Number.isInteger(raw.grade)&&raw.grade>=1&&raw.grade<=12)state.grade=raw.grade;if(raw.facts&&typeof raw.facts==='object'&&!Array.isArray(raw.facts))state.facts=raw.facts;if(Array.isArray(raw.checks))state.checks=raw.checks.filter(c=>c&&typeof c==='object'&&PATHS.includes(c.pathway)&&validDay(c.day)&&c.rulesVersion===rules.version).map(c=>Array.isArray(c.responses)?c:{...c,responses:[]});if(raw.trophies&&typeof raw.trophies==='object')state.trophies=raw.trophies;if(raw.activity&&typeof raw.activity==='object')state.activity=raw.activity;if(raw.days&&typeof raw.days==='object'&&!Array.isArray(raw.days))for(const [d,v]of Object.entries(raw.days))if(validDay(d)&&v&&typeof v==='object'){const n=k=>Math.max(0,Math.round(Number(v[k])||0));state.days[d]={cards:n('cards'),correct:n('correct'),ms:n('ms'),steps:n('steps'),confirmed:n('confirmed')};}if(raw.gameChecks&&typeof raw.gameChecks==='object'&&!Array.isArray(raw.gameChecks))for(const p of PATHS){const g=raw.gameChecks[p];if(g&&typeof g==='object'&&validDay(g.day)&&Number.isFinite(g.elapsed)&&g.elapsed>=0&&Array.isArray(g.responses))state.gameChecks[p]={day:g.day,elapsed:g.elapsed,started:Number(g.started)||0,responses:g.responses.filter(r=>r&&byId.has(r.id)).map(r=>({id:r.id,op:byId.get(r.id).op,value:r.correct===true?byId.get(r.id).answer:null,correct:r.correct===true,ms:Math.max(0,Number(r.ms)||0),skipped:r.skipped===true}))};}}}catch{}
   // Existing coins and the old fact record remain untouched. Earlier successes
   // can establish one starting milestone, never new retention or check passes.

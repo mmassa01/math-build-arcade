@@ -52,6 +52,9 @@
     {at:497,title:'One continuous learning story',copy:'The games motivate practice while reports turn each answer into useful instructional evidence.',src:'./?tourStage=1',transition:'fade'},
     {at:527,title:'Fluency is built, not guessed',copy:'Ten adventures, one continuous learning story, and a stronger mathematical foundation for McIntosh County.',src:'./?tourStage=1',continuation:true}
   ];
+  // Every scene runs against an in-memory copy of the save (tour-sandbox.js): pages get
+  // ?tourStage=1, and games run inside explainer/stage.html, which acts as their arcade.
+  function stageSrc(scene){const src=scene.src;if(src.startsWith('./?tourStage=1')||src.startsWith('educators/')||src.startsWith('district.html'))return src;if(src.startsWith('store.html'))return src+(src.includes('?')?'&':'?')+'tourStage=1';return 'explainer/stage.html?tourStage=1&scene='+encodeURIComponent(src);}
   let sceneIndex=-1;
   let pendingAction='';
   let pendingFocus='';
@@ -183,11 +186,11 @@
     pendingReadyPrime=null;
     loading.hidden=true;
     loading.textContent='Opening '+next.title+'...';
-    const current=activeStage.getAttribute('src')||'';
-    if(current===next.src){pendingAction='';pendingFocus='';pendingCommand='';pendingStageSrc='';pendingTransition='';runCommand(next.command||'',activeStage);runAction(next.action||'',activeStage);focusScene(next.focus||'',activeStage);return;}
-    pendingStageSrc=next.src;
+    const current=activeStage.getAttribute('src')||'',target=stageSrc(next);
+    if(current===target){pendingAction='';pendingFocus='';pendingCommand='';pendingStageSrc='';pendingTransition='';runCommand(next.command||'',activeStage);runAction(next.action||'',activeStage);focusScene(next.focus||'',activeStage);return;}
+    pendingStageSrc=target;
     standbyStage.hidden=true;
-    standbyStage.setAttribute('src',next.src);
+    standbyStage.setAttribute('src',target);
     stageLoadingTimer=setTimeout(()=>{if(token===stageLoadToken&&!frameReady(standbyStage))loading.hidden=false;},1200);
     stageLoadTimer=setTimeout(()=>{
       if(frameReady(standbyStage))finishStageLoad(token,standbyStage);
@@ -204,7 +207,8 @@
     const current=Number(audio.currentTime)||0;
     seek.value=String(current);
     time.textContent=format(current);
-    showScene(indexFor(current),false);
+    // No scene loads until the tour is opened.
+    if(dialog.open)showScene(indexFor(current),false);
     play.textContent=audio.paused?'Play':'Pause';
   }
   function start(){
@@ -222,7 +226,7 @@
   document.getElementById('explainerBack').addEventListener('click',()=>{const target=Math.max(0,indexFor(audio.currentTime)-1);audio.currentTime=scenes[target].at;showScene(target,true);});
   document.getElementById('explainerNext').addEventListener('click',()=>{const target=Math.min(scenes.length-1,indexFor(audio.currentTime)+1);audio.currentTime=scenes[target].at;showScene(target,true);});
   document.getElementById('explainerCaptions').addEventListener('click',event=>{const on=event.currentTarget.getAttribute('aria-pressed')==='true';event.currentTarget.setAttribute('aria-pressed',String(!on));event.currentTarget.textContent=on?'Captions off':'Captions on';caption.hidden=on;});
-  seek.addEventListener('input',()=>{audio.currentTime=Number(seek.value);showScene(indexFor(audio.currentTime),false);sync();});
+  seek.addEventListener('input',()=>{audio.currentTime=Number(seek.value);if(dialog.open)showScene(indexFor(audio.currentTime),false);sync();});
   if(!qaMode){
     audio.addEventListener('timeupdate',sync);
     audio.addEventListener('play',sync);
