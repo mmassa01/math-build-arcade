@@ -186,13 +186,13 @@ test('Pong: a miss starts a new rally instead of ending the game, until the roun
 
 test('no card adds, subtracts, multiplies or divides by 0 or 1',()=>{
   const l=learner('mixed'),bank=l.api.getBank('mixed');
-  assert.equal(bank.length,469);
+  assert.equal(bank.length,439);
   for(const q of bank){
     if(q.op==='add'||q.op==='mul')assert(q.a>=2&&q.b>=2,q.text);
     if(q.op==='sub')assert(q.b>=2,q.text);
     if(q.op==='div')assert(q.b>=2&&q.a>0,q.text);
   }
-  assert(bank.some(q=>q.text==='7 − 7'),'a difference of zero is still a real fact');
+  assert(!bank.some(q=>(q.op==='sub'||q.op==='div')&&q.a===q.b),'no n − n or n ÷ n cards: they are trivial, not fluency practice');
   const old=new Map([['mathArcadePathways.v2',JSON.stringify({version:2,pathway:'add',facts:{'add:0:5':{stage:4},'add:1:5':{stage:2}},checks:[],trophies:{},gameChecks:{add:{day:'2026-11-10',elapsed:3000,started:1,responses:[{id:'add:0:5',correct:true,ms:900},{id:'add:2:5',correct:true,ms:900}]}}})]]);
   const saved=learner('add',old);
   assert.equal(saved.api.stats().mastered,0,'progress on removed cards no longer counts');
