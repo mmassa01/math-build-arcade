@@ -339,3 +339,6 @@ main:has(.flashcard-workbench) .garden{flex:1 1 0!important;min-height:0!importa
  .card-console-card .number-problem:not(.number-division),.numeric-host.three-pile-host .card-console-card .number-problem:not(.number-division){font-size:var(--stack-font)!important;line-height:1!important;padding:0 5px!important;margin:0 auto!important}
  .card-console-card .number-problem:not(.number-division) .number-bottom{padding-bottom:var(--stack-rule-gap)}
 }
+
+/* Round 2: the card face shows the whole fact during a correction, so the small pad hint stays quiet. */
+html body .number-entry.is-holding .number-hint{visibility:hidden!important}
