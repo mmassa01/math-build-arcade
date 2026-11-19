@@ -342,3 +342,5 @@ main:has(.flashcard-workbench) .garden{flex:1 1 0!important;min-height:0!importa
 
 /* Round 2: the card face shows the whole fact during a correction, so the small pad hint stays quiet. */
 html body .number-entry.is-holding .number-hint{visibility:hidden!important}
+/* Round 2: before the first card is dealt (start gate) there is no answer box, so the dock does not jump when the card arrives. */
+html body .number-entry:not([data-card-key]) .number-work>.number-input{display:none!important}
