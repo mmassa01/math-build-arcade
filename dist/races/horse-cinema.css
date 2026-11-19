@@ -65,3 +65,5 @@ body.horse-cinematic.ride-rosenbaum .race-stage .qcard{background:#faf5e5!import
 }
 @media(max-height:550px) and (min-width:701px){.horse-cinematic .race-heading{display:none}.horse-cinematic .race-stage{padding:6px 12px!important}.horse-cinematic .horse-controls{min-height:43px;padding:4px 12px}.horse-cinematic .qcard{min-height:75px!important;margin-top:6px!important;padding:6px 14px!important}.horse-cinematic .cbtn{min-height:49px!important}.horse-cinematic .track2 .runner2{width:clamp(150px,42vh,220px)}.horse-cinematic .track2 #gh{width:clamp(140px,38vh,205px)}}
 @media(prefers-reduced-motion:reduce){.horse-cinematic *{animation:none!important;transition:none!important}}
+/* Start gate: the empty card has no answer slot yet, so keep its answer box out of the row and the dock height steady when the first card arrives. */
+.horse-cinematic .has-start-gate .number-work>.number-input{display:none!important}
