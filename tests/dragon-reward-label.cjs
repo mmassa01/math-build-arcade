@@ -15,4 +15,5 @@ assert(!/'\+(?:25|50)'/.test(flight),'the 3D scene no longer invents +25/+50');
 assert(/ring\.coins>0\?'\+'\+ring\.coins/.test(flight),'the 3D scene labels the ring with its paid amount');
 assert(game.includes('power:e.power,coins:demo?0:(e.coins||0)})'),'rings carry the amount the wallet receives (none in demo)');
 assert(/amount:e\.coins/.test(game),'the wallet is paid from the same event amount');
+assert(game.includes("!demo&&e.coins>0?'RIVAL '+e.passed+' • +'+e.coins+' COINS'"),'the rival banner names coins only when they are paid');
 console.log('PASS dragon reward label: shown coins match the 10 paid, nothing shown for unpaid targets or demo');
