@@ -45,3 +45,8 @@ a.userBack();assert.equal(a.node('room').hidden,true,'Back past the hub never re
 a.run("openWorld('castle')");a.flush();const depth=a.joint.entries.length;a.run("switchPathway(window.ArcadePractice.getPathway()==='add'?'sub':'add')");a.flush();
 assert.equal(a.joint.entries.length,depth,'a skill switch inside the room adds no history');a.userBack();assert.equal(a.node('room').hidden,true);
 console.log('PASS arcade Back button: Back closes the room to the hub, Forward reopens the same game, frames add no history');
+// The room's own back button (an onclick handler that receives a click event) also steps over the room entry.
+{const b=arcade();b.run("openWorld('seed')");b.flush();b.node('back').onclick({type:'click'});b.flush();
+ assert.equal(b.node('room').hidden,true);assert.equal(b.location.hash,'','the hub button leaves no room entry behind');
+ b.userForward();assert.equal(b.node('room').hidden,false,'Forward after the hub button reopens the game');assert.equal(b.node('roomTitle').textContent,'Seed of Genius');
+ console.log('PASS arcade back button: the room button and browser Back agree');}
