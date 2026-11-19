@@ -69,8 +69,8 @@ for(const name of ['dirt','wave']){
  g.until(()=>g.run('race.ready'));g.document.hidden=true;g.run("document.dispatchEvent({type:'visibilitychange'})");assert.equal(g.run('paused'),true);assert.equal(W.discards,2);g.document.hidden=false;g.run('setRacePaused(false)');
 
  // Idle: third timeout raises arcade-idle-pause from inside record(); resume ends the hold and deals fresh.
- g.until(()=>g.run('race.ready'));card=g.run('race.question');const orig=L.record;L.record=function(q,c,ms,o){const r=orig.call(this,q,c,ms,o);g.emit('arcade-idle-pause');return r;};
- g.until(()=>g.run('paused'),80);L.record=orig;assert(W.lastTimeout,'the card timed out at three seconds');assert.equal(W.discards,2,'the timed-out card was answered, not discarded');const el2=el0();for(let i=0;i<100;i++)g.step();assert.equal(el0(),el2,'idle freezes the race');
+ g.until(()=>g.run('race.ready'));card=g.run('race.question');const attempts=g.run('race.attempts');const orig=L.record;L.record=function(q,c,ms,o){const r=orig.call(this,q,c,ms,o);g.emit('arcade-idle-pause');return r;};
+ g.until(()=>g.run('paused'),80);L.record=orig;assert(W.lastTimeout,'the card timed out at three seconds');assert.equal(W.discards,2,'the timed-out card was answered, not discarded');assert.equal(g.run('race.attempts'),attempts,'the idle card is not counted in the race accuracy');const el2=el0();for(let i=0;i<100;i++)g.step();assert.equal(el0(),el2,'idle freezes the race');
  g.emit('arcade-idle-resume');assert.equal(g.run('paused'),false);assert.equal(W.holding,false,'resume skips the stale correction');const gapIdle=g.until(()=>g.run('race.ready')&&g.run('race.question')!==card);assert(gapIdle<=300,'a fresh card follows at once');
 
  // Race end: correction hold finished, held timeouts flushed before completion is posted.
