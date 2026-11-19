@@ -1,5 +1,5 @@
 /* During the launch countdown, reserve the full dock without exposing a fact. */
-.race-awaiting .card-console-card .number-problem,.race-awaiting .card-console-card .card-console-tag,.race-awaiting .card-console-card .card-console-timer,.race-awaiting .number-answer-row{visibility:hidden!important}
+.race-awaiting .card-console-card .number-problem,.race-awaiting .card-console-card .card-console-tag,.race-awaiting .card-console-card .card-console-timer,.race-awaiting .number-answer-row,.race-awaiting .number-answer-row>.number-work{visibility:hidden!important}
 .race-awaiting .card-console-card::after{content:'GET READY';position:absolute;inset:0;display:grid;place-items:center;color:#76896d;font:800 11px system-ui;letter-spacing:1.5px}
 /* A bright, full-width racing scene with a compact math console beneath it. */
 body{background:#d7efeb;color:#123d4a}
