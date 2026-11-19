@@ -84,7 +84,7 @@
     const active=typeof K!=='undefined'&&K.stage==='race'&&K.R&&!K.R.finished;
     if(active){
       if(race!==K.R){race=K.R;clock=distance=previousCorrect=surge=0;actors.clear();}
-      bind();const state=window.HorseRaceStatus?.()||{},paused=state.paused||document.hidden;
+      bind();const state=window.HorseRaceStatus?.()||{},paused=state.paused||state.waiting||document.hidden;
       const correct=K.R.res.filter(r=>r.status==='correct').length;
       if(correct>previousCorrect){surge=.8;previousCorrect=correct;}if(!paused){clock+=dt;surge=Math.max(0,surge-dt);}
       const lastAnswer=K.R.res.at(-1),target=lastAnswer?.status==='correct'?clamp(2.7/Math.max(.8,lastAnswer.rt||3),.85,1.35):.88;
