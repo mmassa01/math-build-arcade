@@ -182,6 +182,131 @@ main:has(.flashcard-workbench) .garden{flex:1 1 0!important;min-height:0!importa
  .numeric-host.three-pile-host .number-answer-row,.workbench.flashcard-workbench .numeric-host .number-answer-row{width:265px!important;max-width:265px!important}
 }
 
+/* Round 2 card. The current card is about twice the size of the piles beside it, its digits are
+   about twice the old size and the answer box sits on the card for every operation, so the pad
+   never moves between stacked and division cards. The pad sits beside the card at every size.
+   Wide hosts: [cleared | CARD | practice] [pad]. Narrow tall hosts (phones, side panels): the
+   card sits over two mini piles with the pad beside it. Narrow short hosts: card and pad only.
+   Selectors are deliberately specific: they must beat the legacy contract above, the clearance
+   blocks below and per-game console rules without editing any game file. */
+:root{--r2-card-h:206px;--r2-font:52px;--r2-input-h:54px;--r2-input-font:40px;--r2-key-h:44px;--r2-key-font:23px;--r2-pad-w:264px;--r2-pile-h:118px;--r2-tag:18px;--r2-foot:16px;--r2-tag-font:8px;--r2-count-font:34px}
+@media(max-width:650px){:root{--r2-card-h:172px;--r2-font:40px;--r2-input-h:44px;--r2-input-font:32px;--r2-key-h:46px;--r2-key-font:24px;--r2-pile-h:40px;--r2-tag:16px;--r2-foot:14px;--r2-tag-font:7px;--r2-count-font:20px}}
+@media(max-width:380px){:root{--r2-card-h:166px;--r2-font:38px;--r2-input-h:42px;--r2-input-font:30px;--r2-key-h:44px}}
+@media(max-height:600px) and (min-width:650px){:root{--r2-card-h:138px;--r2-font:30px;--r2-input-h:36px;--r2-input-font:27px;--r2-key-h:30px;--r2-key-font:19px;--r2-pad-w:228px;--r2-pile-h:84px;--r2-tag:13px;--r2-foot:11px;--r2-tag-font:7px;--r2-count-font:26px}}
+@media(max-height:420px) and (min-width:650px){:root{--r2-card-h:126px;--r2-font:28px;--r2-input-h:32px;--r2-input-font:24px;--r2-key-h:28px;--r2-key-font:18px;--r2-pad-w:216px;--r2-pile-h:76px;--r2-tag:13px;--r2-foot:10px}}
+.numeric-host.three-pile-host{container:arcade-card/inline-size}
+/* Shared console: one dock holds the arena and the answer row. */
+.numeric-host.three-pile-host>.number-entry.shared-card-console{display:flex!important;flex-direction:column!important;gap:4px!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-dock,.workbench.flashcard-workbench.flashcard-workbench{display:grid!important;grid-template-columns:minmax(0,600px) var(--r2-pad-w)!important;justify-content:center!important;align-items:center!important;gap:6px 22px!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-dock{width:100%!important;margin:0 auto!important;grid-template-areas:"arena pad"!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.card-console-arena,.workbench.flashcard-workbench.flashcard-workbench>.arena{grid-area:arena!important;display:grid!important;grid-template-columns:minmax(0,.62fr) minmax(0,1.3fr) minmax(0,.62fr)!important;grid-template-rows:auto!important;grid-template-areas:"left card right"!important;align-items:center!important;gap:12px!important;width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;margin:0!important;flex:none!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.number-answer-row,.workbench.flashcard-workbench.flashcard-workbench>.answerchoices{grid-area:pad!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-arena>.card-console-pile.cleared,.workbench.flashcard-workbench.flashcard-workbench>.arena>.pile:not(.practice){grid-area:left!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-arena>.card-console-pile.practice,.workbench.flashcard-workbench.flashcard-workbench>.arena>.pile.practice{grid-area:right!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-arena>.card-console-center,.workbench.flashcard-workbench.flashcard-workbench>.arena>.center{grid-area:card!important;padding:0!important;min-width:0!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-arena>.card-console-pile,.workbench.flashcard-workbench.flashcard-workbench>.arena>.pile{padding:0!important;min-width:0!important;align-self:center!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-pile>.card-pile-stack,.workbench.flashcard-workbench.flashcard-workbench>.arena>.pile>.stack{height:var(--r2-pile-h)!important;min-height:var(--r2-pile-h)!important;max-height:var(--r2-pile-h)!important;width:100%!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-pile .card-pile-count,.workbench.flashcard-workbench.flashcard-workbench>.arena .pilecount{font-size:var(--r2-count-font)!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-arena>.card-console-center:before,.workbench.flashcard-workbench.flashcard-workbench>.arena>.center:before{top:0!important;height:var(--r2-card-h)!important}
+/* The card. Tag at the top, timer bar at the bottom, the problem and its answer box between. */
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-center>.card-console-card,.workbench.flashcard-workbench.flashcard-workbench>.arena>.center>.card{box-sizing:border-box!important;height:var(--r2-card-h)!important;min-height:var(--r2-card-h)!important;max-height:var(--r2-card-h)!important;width:100%!important;padding:var(--r2-tag) 6px var(--r2-foot)!important;justify-content:center!important;align-items:center!important;gap:0!important;container-type:inline-size;overflow:visible}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card>.card-console-tag,.workbench.flashcard-workbench.flashcard-workbench>.arena .card>.cardtag{position:absolute!important;top:6px!important;left:6px!important;right:6px!important;margin:0!important;font:600 var(--r2-tag-font)/1 system-ui,sans-serif!important;letter-spacing:.4px!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card>.card-console-timer,.workbench.flashcard-workbench.flashcard-workbench>.arena .card>.timer{bottom:6px!important;left:12px!important;right:12px!important;height:3px!important}
+.workbench.flashcard-workbench.flashcard-workbench>.arena .card>.reveal{position:absolute!important;left:6px!important;right:6px!important;bottom:calc(var(--r2-foot) - 6px)!important;height:auto!important;min-height:0!important;margin:0!important;font:650 8px/1 system-ui,sans-serif!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card>.number-problem,.workbench.flashcard-workbench.flashcard-workbench>.arena .card>.number-problem{font:800 var(--r2-font)/1 system-ui,sans-serif!important;padding:0 4px!important;margin:0 auto!important;letter-spacing:.03em!important;color:#365f58!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card .number-problem .number-bottom,.workbench.flashcard-workbench.flashcard-workbench>.arena .card .number-problem .number-bottom{padding-bottom:3px!important;border-bottom-width:3px!important}
+.number-answer-slot{display:flex;justify-content:flex-end;margin-top:4px;min-height:var(--r2-input-h)}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card .number-input,.workbench.flashcard-workbench.flashcard-workbench>.arena .card .number-input{box-sizing:border-box!important;height:var(--r2-input-h)!important;min-width:0!important;width:calc(var(--answer-digits,2)*.62em + 22px)!important;max-width:none!important;margin:0 0 0 auto!important;padding:2px 8px!important;font:800 var(--r2-input-font)/1 system-ui,sans-serif!important;border-radius:10px!important;letter-spacing:.04em!important}
+/* Long division keeps its bracket; the answer box above it uses the same size as a stacked card. */
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card>.number-problem.number-division,.workbench.flashcard-workbench.flashcard-workbench>.arena .card>.number-problem.number-division{padding:0!important;line-height:1!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card .division-quotient,.workbench.flashcard-workbench.flashcard-workbench>.arena .card .division-quotient{min-height:var(--r2-input-h)!important;display:flex!important;justify-content:flex-end!important;align-items:flex-end!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card .division-quotient .number-input,.workbench.flashcard-workbench.flashcard-workbench>.arena .card .division-quotient .number-input{margin:0 0 4px auto!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-card .division-dividend,.workbench.flashcard-workbench.flashcard-workbench>.arena .card .division-dividend{padding:3px 6px 0 8px!important;line-height:1!important}
+/* The answer row is the pad with the unchanged hint under it. Division keeps the hint's line
+   (hidden, as before) so the pad cannot shift. */
+.numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.number-answer-row,.workbench.flashcard-workbench.flashcard-workbench .numeric-host .number-entry.external-problem>.number-answer-row{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;grid-column:auto;grid-row:auto}
+.workbench.flashcard-workbench.flashcard-workbench>.answerchoices{height:auto!important;min-height:0!important;max-height:none!important;width:100%!important;max-width:none!important;margin:0!important;align-self:center!important}
+.workbench.flashcard-workbench.flashcard-workbench .numeric-host .number-entry.external-problem{max-width:none!important;width:100%!important;margin:0!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .number-answer-row>.number-work,.workbench.flashcard-workbench.flashcard-workbench .number-entry.external-problem .number-answer-row>.number-work{order:2;display:flex!important;visibility:visible;min-height:12px;width:100%}
+.numeric-host.three-pile-host>.number-entry.shared-card-console.has-division .number-answer-row>.number-work,.workbench.flashcard-workbench.flashcard-workbench .number-entry.external-problem.has-division .number-answer-row>.number-work{visibility:hidden!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .number-answer-row .number-hint,.workbench.flashcard-workbench.flashcard-workbench .number-entry.external-problem .number-hint{margin:0 auto!important;max-width:none!important;font:650 9px/12px system-ui,sans-serif!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .number-answer-row>.number-pad,.workbench.flashcard-workbench.flashcard-workbench .number-entry.external-problem .number-answer-row>.number-pad{order:1;width:100%!important;max-width:var(--r2-pad-w)!important;margin:0 auto!important;gap:5px!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .number-pad>.number-key,.workbench.flashcard-workbench.flashcard-workbench .number-entry.external-problem .number-pad>.number-key{height:var(--r2-key-h)!important;min-height:var(--r2-key-h)!important;max-height:var(--r2-key-h)!important;font-size:var(--r2-key-font)!important}
+.numeric-host.three-pile-host>.number-entry.shared-card-console .number-pad>.number-key.number-edit,.workbench.flashcard-workbench.flashcard-workbench .number-entry.external-problem .number-pad>.number-key.number-edit{font-size:12px!important}
+/* Build games: the workbench is one grid around the same card and pad. */
+.workbench.flashcard-workbench.flashcard-workbench{grid-template-rows:auto auto auto auto!important;grid-template-areas:"tool tool" "arena pad" "status status" "foot prev"!important;flex:0 0 auto!important;height:auto!important;min-height:0!important;max-height:none!important;padding:8px 16px 10px!important}
+.workbench.flashcard-workbench.flashcard-workbench>.toolbar{grid-area:tool!important;width:100%!important;max-width:calc(600px + 22px + var(--r2-pad-w))!important;justify-self:center!important}
+.workbench.flashcard-workbench.flashcard-workbench>.status{grid-area:status!important;justify-self:center!important}
+.workbench.flashcard-workbench.flashcard-workbench>.footer{grid-area:foot!important;width:100%!important;justify-content:center!important}
+.workbench.flashcard-workbench.flashcard-workbench>.preview{grid-area:prev!important;justify-self:center!important;align-self:center!important}
+/* Narrow and tall: the card sits over two mini piles, the pad beside it. */
+@media(max-width:650px) and (min-height:601px){
+ .numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-dock,.workbench.flashcard-workbench.flashcard-workbench{grid-template-columns:minmax(0,1.04fr) minmax(0,1fr)!important;gap:6px 12px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.card-console-arena,.workbench.flashcard-workbench.flashcard-workbench>.arena{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-areas:"card card" "left right"!important;gap:6px 8px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-pile>.card-pile-label,.workbench.flashcard-workbench.flashcard-workbench>.arena>.pile>h2{font-size:7px!important;height:9px!important;line-height:9px!important;margin:0 0 2px!important;letter-spacing:.2px!important;white-space:nowrap!important;overflow:hidden!important}
+ .workbench.flashcard-workbench.flashcard-workbench{padding:8px 12px 10px!important;grid-template-areas:"tool tool" "arena pad" "status status" "foot foot" "prev prev"!important;grid-template-rows:auto auto auto auto auto!important}
+}
+@container arcade-card (max-width:559px){
+ .numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-dock{grid-template-columns:minmax(0,1.04fr) minmax(0,1fr)!important;gap:6px 12px!important}
+}
+@media(min-height:601px){@container arcade-card (max-width:559px){
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.card-console-arena{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-areas:"card card" "left right"!important;gap:6px 8px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console{--r2-pile-h:40px;--r2-count-font:20px}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-pile>.card-pile-label{font-size:7px!important;height:9px!important;line-height:9px!important;margin:0 0 2px!important;letter-spacing:.2px!important;white-space:nowrap!important;overflow:hidden!important}
+}}
+@media(max-height:600px){@container arcade-card (max-width:559px){
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.card-console-arena{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"card"!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-arena>.card-console-pile{display:none!important}
+}}
+@container arcade-card (min-width:560px){
+ .numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-dock{grid-template-columns:minmax(0,600px) var(--r2-pad-w)!important;gap:6px 22px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .card-console-dock>.card-console-arena{grid-template-columns:minmax(0,.62fr) minmax(0,1.3fr) minmax(0,.62fr)!important;grid-template-areas:"left card right"!important;gap:12px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console{--r2-pile-h:var(--r2-wide-pile-h,118px)}
+}
+@media(max-height:600px){.numeric-host.three-pile-host>.number-entry.shared-card-console{--r2-wide-pile-h:84px}}
+@media(max-height:420px){.numeric-host.three-pile-host>.number-entry.shared-card-console{--r2-wide-pile-h:76px}}
+/* Short landscape: the dock is the card row and the pad, nothing else. */
+@media(max-height:600px) and (min-width:650px){
+ .workbench.flashcard-workbench.flashcard-workbench{padding:5px 12px 6px!important;gap:3px 18px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-dock{gap:4px 18px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console .number-answer-row .number-hint{font-size:8px!important;line-height:10px!important}
+ .numeric-host.three-pile-host>.number-entry.shared-card-console>.card-console-meta{display:none!important}
+ /* Horse Race: the chips row, track and console fit above the fold, so the bottom pad row is reachable. */
+ body.horse-cinematic .horse-controls{flex-wrap:nowrap!important;min-height:0!important;padding:4px 10px!important;gap:5px!important}
+ body.horse-cinematic .horse-controls::before{flex:1 1 auto!important;width:auto!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:9px!important;letter-spacing:1px!important}
+ body.horse-cinematic .horse-controls button,body.horse-cinematic .horse-controls select,body.horse-cinematic .horse-controls .roundClock{min-height:30px!important;flex:0 0 auto!important}
+ body.horse-cinematic .race-wrap>.race-hud{height:auto!important;flex:0 0 auto!important;min-height:0!important;margin:0 0 4px!important}
+ body.horse-cinematic .race-wrap>.race-hud .chip2{padding-top:3px!important;padding-bottom:3px!important}
+ body.horse-cinematic .race-wrap>.track2{min-height:62px!important}
+ body.horse-cinematic .race-stage .qcard:has(.three-pile-host){margin-top:3px!important;padding:4px 10px!important}
+}
+/* Miss correction: the whole fact, large, on one line, sized to the card's width. */
+.number-problem.number-correction{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;max-width:100%!important;text-align:center!important;white-space:nowrap!important;letter-spacing:0!important}
+.number-problem.number-correction .correction-fact{display:block;font-size:.72em;font-size:min(1em,12.5cqi);line-height:1.1;font-variant-numeric:tabular-nums}
+.number-problem.number-correction .correction-left{margin-right:.28em}
+.number-problem.number-correction .correction-answer{display:inline-block;color:#a8431d;font-weight:900;padding:0 .14em;border-radius:.14em;background:#ffe3c9}
+.number-problem.number-correction .correction-note{display:block;margin-top:6px;font:800 12px/1.2 system-ui,sans-serif;letter-spacing:.3px;color:#8a5a22;text-transform:uppercase}
+.card-console-card.is-holding,.workbench .card:has(.number-correction){background:#fff7e6!important}
+/* Paused: the live problem and its answer box are covered, so a paused card cannot be read. */
+.number-problem.number-covered{visibility:hidden!important;position:relative!important}
+.number-problem.number-covered::after{content:attr(data-cover);visibility:visible;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:800 max(14px,.42em)/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7c9272;white-space:nowrap}
+/* Start gate: Start, then 3-2-1, over the answer area, in the card's own look. */
+.has-start-gate{position:relative!important}
+.number-start-gate{position:absolute;inset:0;z-index:30;display:grid;place-items:center;padding:6px;border-radius:14px;background:#f7f6e9e6;font-family:system-ui,sans-serif;color:#365f58}
+.number-start-gate.is-fixed{position:fixed;z-index:2147483640;background:#1d2a2c99}
+.start-gate-card{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:min(300px,100%);max-width:100%;min-height:min(170px,100%);padding:14px 22px;border:1px solid #dfdfc7;border-radius:16px;background:linear-gradient(145deg,#fffdf0,#eef0df);box-shadow:0 5px 0 #cdd8bd,0 12px 26px #56704224;text-align:center}
+.start-gate-title{font:900 clamp(18px,4vw,26px)/1.1 system-ui,sans-serif;letter-spacing:.02em}
+.start-gate-button{min-width:180px;min-height:56px;padding:10px 26px;border:1px solid #d3b65e;border-radius:16px;background:linear-gradient(#fff0b8,#ffdd77);box-shadow:0 5px 0 #c1a14e;color:#443817;font:900 26px/1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+.start-gate-button:active{translate:0 3px;box-shadow:0 2px 0 #c1a14e}
+.start-gate-button:focus-visible{outline:3px solid #1d8fba;outline-offset:3px}
+.start-gate-button[hidden]{display:none}
+.start-gate-count{font:900 clamp(56px,12vw,96px)/1 system-ui,sans-serif;color:#365f58;font-variant-numeric:tabular-nums}
+.start-gate-count:empty{display:none}
+.start-gate-count.pop{animation:start-gate-pop .45s cubic-bezier(.2,.8,.3,1.2)}
+.number-start-gate.is-paused .start-gate-count{opacity:.45}
+@keyframes start-gate-pop{from{transform:scale(1.5);opacity:.2}to{transform:scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.start-gate-count.pop{animation:none}}
+@media(max-height:420px){.start-gate-card{min-height:0;padding:8px 16px;gap:4px}.start-gate-button{min-height:44px;font-size:22px}.start-gate-count{font-size:56px}}
 /* Division timer clearance. The long-division house is taller than a stacked fact, so the
    card reserves a band above the 3-second bar and below the card tag; the bracket is sized
    to fit between them at every card height instead of being pushed down onto the bar. */
