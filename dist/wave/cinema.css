@@ -1,5 +1,5 @@
 /* During the launch countdown, reserve the full dock without exposing a fact. */
-.race-awaiting .card-console-card .number-problem,.race-awaiting .card-console-card .card-console-tag,.race-awaiting .card-console-card .card-console-timer,.race-awaiting .number-answer-row{visibility:hidden!important}
+.race-awaiting .card-console-card .number-problem,.race-awaiting .card-console-card .card-console-tag,.race-awaiting .card-console-card .card-console-timer,.race-awaiting .number-answer-row,.race-awaiting .number-answer-row>.number-work{visibility:hidden!important}
 .race-awaiting .card-console-card::after{content:'GET READY';position:absolute;inset:0;display:grid;place-items:center;color:#76896d;font:800 11px system-ui;letter-spacing:1.5px}
 /* A bright, full-width racing scene with a compact math console beneath it. */
 body{background:#d7efeb;color:#123d4a}
@@ -25,10 +25,6 @@ dialog{border:1px solid #e8ddb1;border-radius:23px;background:linear-gradient(15
 @media(max-width:560px){.brand b{display:block;margin:1px 0 0;font-size:6px;letter-spacing:1.5px}.raceStatus{top:66px;left:50%;right:auto;transform:translateX(-50%);text-align:center;min-width:185px;max-width:70%;padding:5px 10px;background:#073d55b8}.raceStatus>span{font-size:12px}.raceStatus small{font-size:6px}.raceMeter{margin:3px 0}.hud{right:10px;justify-content:space-between}.hud>div{min-width:65px}.math strong{font-size:33px}.math .kicker{display:none}.console{gap:5px 8px}.charge span{max-width:80px;font-size:6px;letter-spacing:.2px}.choices button{min-height:45px;font-size:25px}.consoleFoot #gear{max-width:100px}.banner{bottom:9px;max-width:80%;font-size:7px}.speed{bottom:39px}.speed strong{font-size:21px}#demoBadge{bottom:39px;font-size:5px}.console p{font-size:8px}.countdown{font-size:65px}}
 @media(max-height:500px) and (min-width:700px){main{grid-template-columns:minmax(0,1fr) 235px;grid-template-rows:auto minmax(0,1fr);padding:6px;gap:6px}.brand{font-size:17px}.brand b{font-size:6px}.console{display:flex;gap:8px;padding:12px;justify-content:center}.math{flex-direction:column;gap:3px;align-items:center}.math strong{font-size:31px}.choices{width:100%;grid-template-columns:repeat(2,1fr);gap:7px}.choices button{min-height:42px;font-size:25px}.consoleFoot{justify-content:space-between;width:100%}.console p{font-size:9px;text-align:center}.hud>div{min-width:56px;padding:5px 8px}.hud strong{font-size:16px}.raceStatus{top:66px;left:50%;right:auto;transform:translateX(-50%);text-align:center;min-width:170px}.speed{bottom:42px}.banner{font-size:8px}.charge{width:100%}}
 /* Miss feedback: the practice pile turns over to show the whole fact while the next card is already live. */
-.card-pile-stack .missFact{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:inherit;background:#fff8e2;border:2px solid #e2a54a;color:#3f4f3a;font:800 clamp(15px,2.4vh,20px)/1.1 system-ui;font-variant-numeric:tabular-nums;white-space:nowrap;animation:missFact 5s ease both;pointer-events:none}
-.missFact b{font-size:1.3em;color:#a8611a}
-@keyframes missFact{0%{opacity:0;transform:scale(.92)}5%{opacity:1;transform:none}88%{opacity:1}100%{opacity:0}}
-.race-paused .missFact{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* Real-time 3D scene: the WebGL canvas sits under the original 2D canvas, which then carries only rider tags and coins. */
