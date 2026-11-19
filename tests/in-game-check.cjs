@@ -179,7 +179,7 @@ test('Pong: a miss starts a new rally instead of ending the game, until the roun
   match.finish();assert.equal(match.phase,'finished');
   assert.equal(match.drain().filter(e=>e.type==='finish').length,1);match.finish();assert.equal(match.drain().length,0,'finishing twice is harmless');
   const game=fs.readFileSync('dist/pong/game.js','utf8'),page=fs.readFileSync('dist/pong/index.html','utf8');
-  assert(game.includes("continuous:!isDemo&&!!round?.enabled")&&game.includes("if(round?.tick(rawDt/1000,match.phase!=='finished'))match.finish();"));
+  assert(game.includes("continuous:!isDemo&&!!round?.enabled")&&game.includes("if(round?.tick(rawDt/1000,match.phase!=='finished'&&!holding()))match.finish();"),'the round clock ends the game and stands still during a miss correction');
   assert(page.includes('round-timer.js'));
   assert(fs.readFileSync('dist/round-timer.css','utf8').includes('.roundClock[hidden]{display:none!important}'),'the clock is hidden in demo');
 });
