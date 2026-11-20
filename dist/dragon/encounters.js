@@ -18,5 +18,8 @@ class Flight{
  // three-second clock wait (no card is live, so no heart can be lost); the scenery keeps flying.
  // discardCard(): pause or idle abandons the live card unrecorded; the next update deals a fresh one.
  discardCard(){const q=this.question;if(!this.active||this.ready||!q||q.completed)return null;this.practiceAnsweredQuestion=q;this.ready=true;this.cooldown=0;this.elapsed=0;return q;}
+ // settle(): the round clock ran out while fire from a correct answer was still in flight. That
+ // answer is already recorded for the teacher's check, so its rivals are tagged and paid now, once.
+ settle(){let landed=0;for(const shot of this.shots){if(shot.done||shot.miss)continue;shot.done=true;const enemy=this.enemies.find(e=>e.id===shot.targetId);if(!enemy)continue;this.enemies=this.enemies.filter(e=>e.id!==enemy.id);this.passed++;this.level=1+Math.floor(this.passed/4);const coins=shot.coins||0;this.coins+=coins;landed++;this.events.push({type:'pass',coins,power:shot.power,passed:this.passed,x:enemy.x,z:enemy.z,targetId:enemy.id,pose:{...enemy}});}this.shots=this.shots.filter(s=>!s.done);return landed;}
  get progress(){return Math.min(1,this.elapsed/this.duration);}drain(){const events=this.events;this.events=[];return events;}
 }return{Flight};});
