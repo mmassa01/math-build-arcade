@@ -1,4 +1,6 @@
-// Dragon wiring of the round-2 shared card behaviours: one Start + 3-2-1 gate before any card,
+// Dragon wiring of the round-2 shared card behaviours: one press (Take flight / Fly again) runs the
+// shared gate's 3-2-1 at once (auto, like Ping-Pong and Star Defenders; it used to wait for a second
+// "Start" tap on the gate) before any card,
 // the miss-correction hold keeps the next card (and its 3-second clock) waiting without costing a
 // heart, pause/hidden/idle hide and discard the live card and deal a fresh one on resume, and the
 // round end ends the hold, drops the unanswered card and flushes held timeouts before completion.
@@ -37,12 +39,13 @@ function page(){const nodes={},listeners={},docListeners={},messages=[],log=[],g
  const run=t=>vm.runInContext(t,s);
  return{run,node,widget,log,gates,messages,emit:t=>(docListeners[t]||[]).forEach(f=>f({type:t})),step(ms){now+=ms;widget.tick(ms);run('loop('+now+')')},get now(){return now}};}
 
-// 1. Start gate: no engine, no card, no clock until the 3-2-1 ends.
-const p=page();p.node('start').onclick();assert.equal(p.gates.length,1,'Take flight opens the shared start gate');assert.equal(p.run('game'),null,'no card is live under the gate');
+// 1. Start gate: Take flight is the only press; the 3-2-1 runs straight away (auto) and there is
+// no engine, no card and no clock until it ends.
+const p=page();p.node('start').onclick();assert.equal(p.gates.length,1,'Take flight opens the shared start gate');assert.equal(p.gates[0].o.auto,true,'one press: the gate counts down without a second Start tap');assert.equal(p.node('setup').open,false,'the setup dialog is closed for the count');assert.equal(p.run('game'),null,'no card is live under the gate');
 for(let i=0;i<50;i++)p.step(100);assert.equal(p.run('game'),null);assert.equal(p.log.filter(l=>l[0]==='set').length,0);
 assert.equal(p.gates[0].o.isPaused(),false);p.node('pause').onclick();assert.equal(p.gates[0].o.isPaused(),true,'the count stops while the game is paused');p.node('pause').onclick();
 p.node('start').onclick();assert(p.gates[0].cancelled&&p.gates.length===2,'starting again replaces the gate, never stacks two flows');
-p.gates[1].o.onStart();p.step(16);assert(p.run('game.active'));assert.equal(p.log.filter(l=>l[0]==='set').length,1,'the first card is dealt when the count ends');assert(p.run('game.elapsed')<.02);
+assert.equal(p.gates[1].o.auto,true);p.gates[1].o.onStart();p.step(16);assert(p.run('game.active'));assert.equal(p.log.filter(l=>l[0]==='set').length,1,'the first card is dealt when the count ends');assert(p.run('game.elapsed')<.02);
 
 // 2. Miss: the correction holds the next card and its clock; nothing else is lost.
 let card=p.run('game.question');p.run('answer(game.question.answer+1)');assert.deepEqual(p.log.at(-1),['resolve',false,false]);assert(p.widget.holding);
@@ -69,6 +72,11 @@ p.run('answer(game.question.answer+1)');assert(p.widget.holding);p.run("game.act
 const tail=p.log.slice(p.log.findIndex(l=>l[0]==='finishHold'));assert.equal(tail[0][0],'finishHold');const flushAt=tail.findIndex(l=>l[0]==='flush'),postAt=tail.findIndex(l=>l[1]==='arcade-complete');
 assert(flushAt>0&&postAt>flushAt,'ArcadeLearning.flush() runs before arcade-complete');assert(!p.widget.holding);
 
+// Fly again after the round end is also one press straight into the 3-2-1.
+p.node('again').onclick();assert.equal(p.gates.length,3);assert.equal(p.gates[2].o.auto,true,'Fly again needs no second Start');assert.equal(p.run('game'),null);
+// A skill switch reloads the page: setup is shown first, then Take flight is the one press.
+{const r=page();assert.equal(r.node('setup').open,true,'a fresh load (skill switch) shows setup first');assert.equal(r.gates.length,0);r.node('start').onclick();assert.equal(r.gates.length,1);assert.equal(r.gates[0].o.auto,true);assert.equal(r.run('game'),null);}
+
 // Demo: no gate, and the demo still pays nothing.
 const d=page();d.node('demo').onclick();assert.equal(d.gates.length,0,'the demo starts at once');for(let i=0;i<600;i++)d.step(100);assert.equal(d.messages.filter(m=>m.type==='arcade-reward'||m.type==='arcade-complete').length,0);
-console.log('PASS dragon round-2 cards: start gate before any card, miss hold keeps the next card and clock waiting at no cost, pause/hidden/idle discard and redeal, round end flushes before completion, demo pays nothing');
+console.log('PASS dragon round-2 cards: one press then the 3-2-1 before any card, miss hold keeps the next card and clock waiting at no cost, pause/hidden/idle discard and redeal, round end flushes before completion, demo pays nothing');
