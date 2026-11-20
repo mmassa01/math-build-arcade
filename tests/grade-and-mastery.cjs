@@ -31,7 +31,7 @@ test('grade 2 practises addition and subtraction within 20; grade 3 and up get a
   for(const grade of [3,7,12]){
     const l=learner(grade);
     assert.deepEqual(l.api.pathways,['add','sub','mul','div','mixed']);
-    assert.equal(l.api.getBank('mixed').length,439);
+    assert.equal(l.api.getBank('mixed').length,469);
     assert(l.api.getBank('mul').some(q=>q.text==='12 × 12'),'11s and 12s start in grade 3');
   }
   assert.equal(learner().api.getGrade(),3,'with no grade set, all four operations are open');

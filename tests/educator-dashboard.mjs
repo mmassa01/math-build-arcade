@@ -53,7 +53,7 @@ win.window=win;win.console=console;const context=vm.createContext(win);
 for(const file of scripts['district.html'].slice(0,5))vm.runInContext(read(file),context,{filename:file});
 const R=context.ArcadeReporting,sample=context.ArcadeReportingSample.load();
 const one=R.summarize(sample.students[0].record,sample.students[0].roster,{today:sample.today});
-assert.equal(one.facts.total,52);assert.equal(sample.students.length>=250,true);assert.equal(sample.fictional,true);
+assert.equal(one.facts.total,61);assert.equal(sample.students.length>=250,true);assert.equal(sample.fictional,true);
 assert.deepEqual(touched,[],'the report scripts never open the browser’s own storage');
 assert.equal(context.ArcadePractice.stats().storageAvailable,true);assert.equal(Object.isFrozen(context.ArcadeStorage),true);
 

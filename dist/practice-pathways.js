@@ -18,14 +18,12 @@
   const pick=n=>Math.min(n-1,Math.max(0,Math.floor((Number(random())||0)*n)));
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=pick(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
   const bank=[];const add=(op,a,b,answer,symbol)=>bank.push({id:op+':'+a+':'+b,op,a,b,answer,text:a+' '+symbol+' '+b});
-  // No +0, +1, −0, −1, ×0, ×1, ÷1 or 0÷ cards, and no n − n or n ÷ n: they are not fluency practice.
+  // No +0, +1, −0, −1, ×0, ×1, ÷1 or 0÷ cards: they are not fluency practice.
   for(let a=2;a<=20;a++)for(let b=a;a+b<=20;b++)add('add',a,b,a+b,'+');
   for(let a=2;a<=20;a++)for(let b=2;b<=a;b++)add('sub',a,b,a-b,'−');
   for(let a=2;a<=12;a++)for(let b=a;b<=12;b++)add('mul',a,b,a*b,'×');
   for(let b=2;b<=12;b++)for(let q=1;q<=12;q++)add('div',b*q,b,q,'÷');
-  // n − n and n ÷ n are retired: never dealt or counted, but still known so saves and checks that hold them keep loading.
-  const known=bank.slice();for(let i=bank.length-1;i>=0;i--)if((bank[i].op==='sub'||bank[i].op==='div')&&bank[i].a===bank[i].b)bank.splice(i,1);
-  const byId=new Map(known.map(q=>[q.id,q]));let banks=Object.fromEntries(ALLOPS.map(op=>[op,bank.filter(q=>q.op===op)])),pool=bank;
+  const byId=new Map(bank.map(q=>[q.id,q]));let banks=Object.fromEntries(ALLOPS.map(op=>[op,bank.filter(q=>q.op===op)])),pool=bank;
   let state={version:2,pathway:'mixed',facts:{},checks:[],trophies:{},activity:{},gameChecks:{},days:{}};
   let lastRound={answered:0,correct:0,steps:0,confirmed:0};let serial=0,activeRun=null,activeCheck=null,storageAvailable=!!storage,unsaved=false;
   // The save is bounded: answer-by-answer check detail is kept for DETAIL_DAYS (7), practice checks
