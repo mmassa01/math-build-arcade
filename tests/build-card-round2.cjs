@@ -37,14 +37,14 @@ function game(name,shared){const d=lib.dom(),L=shared?learning(d.messages):{acti
   // 2. Answers: correct goes straight on; a miss waits for the correction hold.
   for(const shared of [true,false]){const {d,L,run,w,gate}=game(name,shared);run('begin(false)');await flush();gate().finish();await flush();
    const first=run('current');run('resolve(true,false)');await flush();assert.deepEqual(w().resolves.at(-1),{ok:true,timeout:false});assert.notEqual(run('current'),first,'a correct answer is not slowed');assert.equal(run('mastered'),1);
-   const missed=run('current');run('resolve(false,false)');await flush();assert(w().holding);assert.equal(w().holdMs,1500);assert.equal(run('current'),missed,'the next card waits for the correction');assert.equal(d.el('reveal').textContent,'','the card itself shows the correction, not a second answer line');assert.equal(d.el('practice').textContent,'0');
-   w().endHold();await flush();assert.notEqual(run('current'),missed,'then the next card comes');assert.equal(d.el('practice').textContent,'1');
+   const missed=run('current');run('resolve(false,false)');await flush();assert(w().holding);assert.equal(w().holdMs,1500);assert.equal(run('current'),missed,'the next card waits for the correction');assert.notEqual(d.el('answerChoices').style.visibility,'hidden','the pad stays in view, greyed out, during the correction');assert.equal(d.el('reveal').textContent,'','the card itself shows the correction, not a second answer line');assert.equal(d.el('practice').textContent,'0');
+   w().endHold();await flush();assert.notEqual(run('current'),missed,'then the next card comes');assert.notEqual(d.el('answerChoices').style.visibility,'hidden','the pad never leaves between cards');assert.equal(d.el('practice').textContent,'1');
    const late=run('current');run('resolve(false,true)');await flush();assert.deepEqual(w().resolves.at(-1),{ok:false,timeout:true},'a timeout resolves as a timeout');assert.equal(run('current'),late);w().finishHold();await flush();
    if(shared)assert.deepEqual(L.records.map(r=>r.ok),[true,false,false],'each first response is recorded once');}
   // 3. Pause discards the live card without recording it; resume deals a fresh card.
   for(const shared of [true,false]){const {d,L,E,run,w,gate}=game(name,shared);run('begin(false)');await flush();gate().finish();await flush();
    const live=run('current'),deckBefore=run('deck.length');d.el('pause').onclick();assert(w().paused,'the widget is paused');assert.deepEqual(E.discarded,[live],'the live card is discarded');assert.equal(run('current'),null);
-   if(shared){assert.equal(L.records.length,0,'a paused card is never recorded');assert(live.practiceRecorded&&live.stale)}assert.equal(run('deck.length'),deckBefore+1,'the abandoned card goes back into the deck');
+   if(shared){assert.equal(L.records.length,0,'a paused card is never recorded');assert(live.practiceRecorded);assert.equal(run('deck.length'),deckBefore,'the service, not the game deck, deals the abandoned fact again')}else assert.equal(run('deck.length'),deckBefore+1,'the abandoned card goes back into the deck');
    d.el('pause').onclick();await flush();assert(!w().paused);const fresh=run('current');assert(fresh&&fresh!==live,'resume deals a fresh card');assert.equal(run('busy'),false);
    if(shared){assert.notEqual(fresh.question.token,live.question.token);run('resolve(true,false)');await flush();assert.deepEqual(L.records.map(r=>r.token),[fresh.question.token]);
     // The abandoned card comes back as a fresh question, never as the voided one.

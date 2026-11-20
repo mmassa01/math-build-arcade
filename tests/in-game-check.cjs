@@ -147,7 +147,7 @@ test('games ask for the endless deck and no separate check stands in front of Pl
 test('Build games draw a 36-card build and tell the engine when each card is shown',()=>{
   for(const game of ['castle','seed','hangar']){
     const source=fs.readFileSync('dist/'+game+'/index.html','utf8');
-    assert(source.includes('for(let i=0;i<36;i++){const q=window.ArcadeLearning.next();'),game+' build is 36 cards');
+    assert(source.includes('const SHARED_ROUND=36;')&&source.includes('perDeck=total=deck.length?SHARED_ROUND:0;'),game+' build is 36 cards');assert(source.includes('function drawShared(){const q=window.ArcadeLearning.next();'),game+' draws each card from the engine as it is dealt, so a returning missed fact gets a fresh token');
     assert(source.includes('window.ArcadeLearning?.shown?.(current.question)'),game+' reports when a card appears');
   }
   const l=learner('add'),run=l.api.begin({endless:true}),deck=[];
