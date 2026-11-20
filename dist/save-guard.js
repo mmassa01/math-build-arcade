@@ -32,7 +32,7 @@
   }
   function showFailure(){
     if(failing)return;failing=true;
-    if(!warning){warning=el('p',{id:'saveFailedNotice',className:'saveFailedNotice',textContent:'Your progress is not saving right now: this browser’s storage is full or turned off. Keep this page open and ask a grown-up for help.'},'position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:2147483646;max-width:min(560px,calc(100% - 24px));box-sizing:border-box;margin:0;padding:10px 16px;border-radius:14px;background:#7c2e49;color:#fff;font:700 14px/1.4 system-ui,sans-serif;box-shadow:0 10px 30px #0006;text-align:center');warning.setAttribute('role','alert');}
+    if(!warning){warning=el('p',{id:'saveFailedNotice',className:'saveFailedNotice',textContent:'Your progress is not saving: this browser’s storage is full or turned off. Tell a grown-up. (Tap to hide)'},'position:fixed;left:8px;right:8px;top:6px;z-index:2147483646;max-width:560px;box-sizing:border-box;margin:0 auto;padding:6px 12px;border-radius:12px;cursor:pointer;background:#7c2e49;color:#fff;font:700 13px/1.35 system-ui,sans-serif;box-shadow:0 6px 18px #0006;text-align:center');warning.setAttribute('role','alert');warning.addEventListener?.('click',()=>{warning.hidden=true;});}
     (document.body||document.documentElement).append(warning);warning.hidden=false;
   }
   function clearFailure(){if(!failing)return;failing=false;if(warning)warning.hidden=true;}
