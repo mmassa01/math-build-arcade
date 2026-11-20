@@ -56,7 +56,7 @@ function arcadeHarness(){
 storageCases();
 const h=arcadeHarness();
 h.run("openWorld('horse','play')");
-assert.equal(h.node('game').src,'races/horse.html?v=review-58&practice=store-21');
+assert.equal(h.node('game').src,'races/horse.html?v=review-59&practice=store-21');
 h.emit({type:'arcade-reward',game:'horse',amount:25,id:'answer-1'});
 assert.equal(h.E.getState().coins,25);
 h.emit({type:'arcade-reward',game:'horse',amount:25,id:'answer-1'});

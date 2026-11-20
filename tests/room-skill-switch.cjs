@@ -84,7 +84,7 @@ test('the room picker offers only the grade\'s pathways and shows the live one',
 
 test('switching mid-round reloads the game, serves the new skill, and never double-awards',()=>{
   const a=arcade(3,'div');
-  a.run("openWorld('pong','play')");const src=a.node('game').src;assert.equal(src,'pong/index.html?v=review-58&practice=store-21');
+  a.run("openWorld('pong','play')");const src=a.node('game').src;assert.equal(src,'pong/index.html?v=review-59&practice=store-21');
   a.node('loading').hidden=true;a.emit({type:'arcade-mode',mode:'play'});
   // The round's live run is on Division.
   const run=a.P.begin({endless:true}),card=run.next();assert.equal(card.op,'div');

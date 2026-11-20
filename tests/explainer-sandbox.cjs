@@ -33,7 +33,7 @@ const stage=read('dist/explainer/stage.html');assert(stage.indexOf('tour-sandbox
 // 4. The stage only loads same-site game routes and relays commands both ways with origin and source checks.
 const stageJs=read('dist/explainer/stage.js');
 function stageRun(scene){const frame={src:'',contentWindow:{postMessage(){}}};const listeners=[];const win={location:{search:'?tourStage=1&scene='+encodeURIComponent(scene),origin:'https://arcade.test'},document:{getElementById:()=>frame},URLSearchParams,addEventListener:(t,f)=>listeners.push(f)};win.window=win;win.parent={postMessage(){}};vm.createContext(win);vm.runInContext(stageJs,win);return{frame,listeners,win}}
-assert.equal(stageRun('dragon/index.html?v=review-58').frame.src,'../dragon/index.html?v=review-58');
+assert.equal(stageRun('dragon/index.html?v=review-59').frame.src,'../dragon/index.html?v=review-59');
 for(const bad of ['https://evil.test/x.html','//evil.test/a.html','../../x.html','javascript:alert(1)','dragon/index.html#x'])assert.equal(stageRun(bad).frame.src,'',bad+' is refused');
 {const r=stageRun('pong/index.html');const toGame=[],toHost=[];r.frame.contentWindow.postMessage=d=>toGame.push(d);r.win.parent.postMessage=d=>toHost.push(d);
  r.listeners[0]({origin:'https://arcade.test',source:r.win.parent,data:{type:'arcade-command',action:'demo'}});assert.deepEqual(toGame,[{type:'arcade-command',action:'demo'}]);
