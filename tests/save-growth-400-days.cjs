@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
 const factory=require('../dist/practice-pathways.js').create,R=require('../dist/reporting/summary.js');
 const KEY='mathArcadePathways.v2',DAY=86400000,START=new Date(2026,0,5,9).getTime();
 const data=new Map();let now=START,writes=0,largest=0;
-const storage={getItem:k=>data.has(k)?data.get(k):null,setItem(k,v){v=String(v);writes++;largest=Math.max(largest,v.length);data.set(k,v)}};
+const storage={browserLocal:true,getItem:k=>data.has(k)?data.get(k):null,setItem(k,v){v=String(v);writes++;largest=Math.max(largest,v.length);data.set(k,v)}};
 let seed=7;const random=()=>(seed=seed*16807%2147483647)/2147483647;
 const PATHS=['add','sub','mul','div','mixed'];let officialTaken=0,officialPassed=new Set();
 const sizes=[];
@@ -37,4 +37,8 @@ for(const p of PATHS){const passes=new Set([...officialPassed].filter(k=>k.start
 const s=R.summarize(rec,{id:'s',name:'Ada B.',grade:3,classId:'c'},{today:rec.checks.at(-1).day});
 assert.equal(s.checks.history.length,officialTaken,'the report history lists every official check');
 assert.equal(s.checks.passedDays,[...officialPassed].length,'the report counts every passing check day');
+// Pathway's server-backed storage is never trimmed: its server refuses a save that drops a check.
+{const server=new Map(),host={getItem:k=>server.has(k)?server.get(k):null,setItem(k,v){server.set(k,String(v))}};let t=START;
+ for(let d=0;d<12;d++){t=START+d*DAY;const a=factory(host,()=>t,random);a.setGrade(3);a.setPathway('add');const c=a.startCheck();let q;while((q=c.next())){t+=1500;c.answer(q.token,q.answer)}t+=1000;c.finish()}
+ const kept=JSON.parse(server.get(KEY)).checks;assert.equal(kept.length,12,'every check kept on server-backed storage');assert(kept.every(c=>c.responses.length>0),'answer detail kept on server-backed storage');}
 console.log('PASS save growth: 400 days x 5 checks a day peaks at '+kb(largest)+' KB ('+Math.round(growthPerDay)+' bytes/day late), detail trimmed after 7 days, reports and mastery intact ('+writes+' saves)');

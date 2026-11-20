@@ -37,6 +37,8 @@
   }
   function clearFailure(){if(!failing)return;failing=false;if(warning)warning.hidden=true;}
   const storage={
+    // Browser storage has a size limit, so the practice engine keeps this save bounded (Pathway's server-backed storage never sets this).
+    browserLocal:true,
     getItem:key=>real.getItem(key),
     setItem(key,value){if(locked)return;try{real.setItem(key,value);clearFailure();}catch(error){showFailure();throw error;}},
     removeItem(key){if(locked)return;real.removeItem(key);},
